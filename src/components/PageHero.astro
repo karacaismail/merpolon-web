@@ -15,8 +15,8 @@ const { eyebrow, title, subtitle, image } = Astro.props;
       {subtitle && <p class="mt-5 max-w-2xl text-lg leading-relaxed text-navy-500">{subtitle}</p>}
     </div>
     {image && (
-      <div class="relative min-h-[260px] bg-navy-900 lg:min-h-full">
-        <img src={image} alt={title} width="1500" height="1000" class="h-full w-full object-cover" />
+      <div class="relative min-h-[260px] overflow-hidden bg-navy-900 lg:min-h-full">
+        <img data-zoom src={image} alt={title} width="1500" height="1000" class="h-full w-full object-cover" />
       </div>
     )}
   </div>

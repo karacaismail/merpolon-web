@@ -165,6 +165,58 @@ const jsonld = JSON.stringify({ '@context':'https://schema.org', '@graph': graph
   {lang === 'ar' && <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />}
   {lang === 'ru' && <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap&subset=cyrillic" rel="stylesheet" />}
   <style is:inline>
+    /* ── Hareket dili · mikro etkileşimler ─────────────────────────
+       Tailwind'in varsayılan geçiş eğrisi tailwind.config.mjs'te
+       cubic-bezier(.22,1,.36,1) / 320ms olarak ayarlı; buradakiler
+       onun üstüne özel durumlar. */
+    :root { --ease: cubic-bezier(.22,1,.36,1); --ease-spring: cubic-bezier(.34,1.56,.64,1); }
+
+    /* Başlık kaydırınca sıkışır */
+    header { transition: box-shadow .4s var(--ease), background-color .4s var(--ease); }
+    header.is-scrolled { box-shadow: 0 8px 30px -18px rgba(1,26,59,.45); }
+    header.is-scrolled .hdr-pad { padding-top: .5rem; padding-bottom: .5rem; }
+    .hdr-pad { transition: padding .45s var(--ease); }
+
+    /* Butonlar: hover'da hafif yükselme, tıklamada geri basma */
+    a[class*="bg-brand-red"], a[class*="border-2"], button[class*="bg-brand-red"] {
+      transition: transform .28s var(--ease-spring), background-color .3s var(--ease), color .3s var(--ease), box-shadow .3s var(--ease);
+    }
+    a[class*="bg-brand-red"]:hover, button[class*="bg-brand-red"]:hover { transform: translateY(-2px); }
+    a[class*="bg-brand-red"]:active, button[class*="bg-brand-red"]:active { transform: translateY(0) scale(.985); }
+
+    /* Kartlar: yumuşak kalkış */
+    .group { transition: transform .4s var(--ease), box-shadow .4s var(--ease), background-color .3s var(--ease); }
+    a.group:hover { transform: translateY(-3px); }
+
+    /* Görsel kapsayıcıları: hover'da içteki görsel yakınlaşsın */
+    .group img { transition: transform .7s var(--ease); }
+    a.group:hover img, .group:hover img { transform: scale(1.045); }
+
+    /* Menü bağlantıları: altı çizgi soldan açılır */
+    nav a { position: relative; }
+    nav a::after {
+      content: ""; position: absolute; left: .75rem; right: .75rem; bottom: .35rem; height: 2px;
+      background: currentColor; transform: scaleX(0); transform-origin: left;
+      transition: transform .35s var(--ease); opacity: .35;
+    }
+    nav a:hover::after { transform: scaleX(1); }
+    nav a[aria-current="page"]::after, nav a.bg-brand-red::after { display: none; }
+
+    /* Akordiyon panelleri: JS yüksekliği yönetir, geçiş GSAP'te */
+    [data-accordion] [data-accordion-icon] { transform-origin: 50% 50%; }
+
+    /* Form alanları */
+    input, select, textarea { transition: border-color .3s var(--ease), box-shadow .3s var(--ease), background-color .3s var(--ease); }
+
+    /* Parallax/zoom görselleri için performans ipucu */
+    [data-parallax], [data-zoom] { will-change: transform; }
+
+    /* Hareketi azalt tercihi: her şey anında ve sabit */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+      [data-parallax], [data-zoom] { transform: none !important; }
+    }
+
     /* Arapça: harf bağlarını kıran letter-spacing'i iptal et, Arapça fontu zorla,
        yön-bağımlı kenarlık/hizalamaları çevir. */
     [dir="rtl"] { --ar-font: 'IBM Plex Sans Arabic', 'Noto Sans Arabic', system-ui, sans-serif; }

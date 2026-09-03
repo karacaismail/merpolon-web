@@ -1,12 +1,18 @@
-import flowbite from 'flowbite/plugin';
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
     './src/**/*.{astro,html,js,ts,md}',
-    './node_modules/flowbite/**/*.js',
   ],
   theme: {
     extend: {
+      // Global hareket dili: sitedeki HER `transition` sınıfı bu eğriyi ve süreyi alır.
+      transitionTimingFunction: {
+        DEFAULT: 'cubic-bezier(.22,1,.36,1)',   // yumuşak çıkış (power3.out)
+        'in-out': 'cubic-bezier(.65,0,.35,1)',
+        spring:   'cubic-bezier(.34,1.56,.64,1)',
+      },
+      transitionDuration: { DEFAULT: '320ms' },
+
       fontWeight: { 400:'400', 500:'500', 600:'600', 700:'700', 800:'800' },
       colors: {
         navy:   { DEFAULT:'#16233F', 900:'#0B1424', 800:'#101B31', 700:'#16233F', 600:'#233254', 500:'#33456C' },
@@ -38,5 +44,5 @@ export default {
       }
     }
   },
-  plugins: [flowbite]
+  plugins: []
 }
