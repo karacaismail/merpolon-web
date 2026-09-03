@@ -36,20 +36,33 @@ export const positioning = {
 };
 
 export const nav = {
-  tr: [['/kurumsal/','Kurumsal'],['/urunler/','Ürünler'],['/hizmetler/','Hizmetler'],['/sektorler/','Sektörler'],['/galeri/','Portföy'],['/referanslar/','Referanslar'],['/iletisim/','İletişim']],
-  en: [['/en/kurumsal/','Corporate'],['/en/urunler/','Products'],['/en/hizmetler/','Services'],['/en/sektorler/','Industries'],['/en/galeri/','Portfolio'],['/en/referanslar/','References'],['/en/iletisim/','Contact']],
-  de: [['/de/kurumsal/','Unternehmen'],['/de/urunler/','Produkte'],['/de/hizmetler/','Leistungen'],['/de/sektorler/','Branchen'],['/de/galeri/','Portfolio'],['/de/referanslar/','Referenzen'],['/de/iletisim/','Kontakt']],
-  ru: [['/ru/kurumsal/','О компании'],['/ru/urunler/','Продукция'],['/ru/hizmetler/','Услуги'],['/ru/sektorler/','Отрасли'],['/ru/galeri/','Портфолио'],['/ru/referanslar/','Референсы'],['/ru/iletisim/','Контакты']],
-  ar: [['/ar/kurumsal/','عن الشركة'],['/ar/urunler/','المنتجات'],['/ar/hizmetler/','الخدمات'],['/ar/sektorler/','القطاعات'],['/ar/galeri/','معرض الأعمال'],['/ar/referanslar/','المراجع'],['/ar/iletisim/','اتصل بنا']],
+  tr: [['/kurumsal/','Kurumsal'],['/urunler/','Ürünler'],['/hizmetler/','Hizmetler'],['/sektorler/','Sektörler'],['/galeri/','Portföy'],['/iletisim/','İletişim']],
+  en: [['/en/kurumsal/','Corporate'],['/en/urunler/','Products'],['/en/hizmetler/','Services'],['/en/sektorler/','Industries'],['/en/galeri/','Portfolio'],['/en/iletisim/','Contact']],
+  de: [['/de/kurumsal/','Unternehmen'],['/de/urunler/','Produkte'],['/de/hizmetler/','Leistungen'],['/de/sektorler/','Branchen'],['/de/galeri/','Portfolio'],['/de/iletisim/','Kontakt']],
+  ru: [['/ru/kurumsal/','О компании'],['/ru/urunler/','Продукция'],['/ru/hizmetler/','Услуги'],['/ru/sektorler/','Отрасли'],['/ru/galeri/','Портфолио'],['/ru/iletisim/','Контакты']],
+  ar: [['/ar/kurumsal/','عن الشركة'],['/ar/urunler/','المنتجات'],['/ar/hizmetler/','الخدمات'],['/ar/sektorler/','القطاعات'],['/ar/galeri/','معرض الأعمال'],['/ar/iletisim/','اتصل بنا']],
+} as const;
+
+// Header dropdown'larında ilk satır: ana sayfanın kendisi
+export const navOverview = { tr:'Genel bakış', en:'Overview', de:'Überblick', ru:'Обзор', ar:'نظرة عامة' } as const;
+
+// Kurumsal dropdown'ı — şirket güvenilirlik sayfaları (B2B alıcısının ilk baktığı yer).
+// Ürünler / Sektörler / Portföy dropdown'ları veriden üretilir, burada tekrarlanmaz.
+export const corporateChildren = {
+  tr: [['/uretim/','Üretim & Tesis'],['/kalite/','Kalite & Garanti'],['/belgeler/','Sertifikalar'],['/referanslar/','Referanslar']],
+  en: [['/en/uretim/','Production & Plant'],['/en/kalite/','Quality & Warranty'],['/en/belgeler/','Certificates'],['/en/referanslar/','References']],
+  de: [['/de/uretim/','Produktion & Werk'],['/de/kalite/','Qualität & Garantie'],['/de/belgeler/','Zertifikate'],['/de/referanslar/','Referenzen']],
+  ru: [['/ru/uretim/','Производство и завод'],['/ru/kalite/','Качество и гарантия'],['/ru/belgeler/','Сертификаты'],['/ru/referanslar/','Референсы']],
+  ar: [['/ar/uretim/','الإنتاج والمنشأة'],['/ar/kalite/','الجودة والضمان'],['/ar/belgeler/','الشهادات'],['/ar/referanslar/','المراجع']],
 } as const;
 
 // Extra pages surfaced in the footer menu (not the top bar)
 export const footerExtra = {
-  tr: [['/uretim/','Üretim & Tesis'],['/kalite/','Kalite & Garanti'],['/belgeler/','Sertifikalar'],['/teklif/','Teklif Formu'],['/rehber/kaucuk-mu-poliuretan-mi/','Kauçuk mu, PU mu?'],['/sozluk/','Sözlük'],['/sss/','S.S.S.'],['/gizlilik/','Gizlilik & KVKK']],
-  en: [['/en/uretim/','Production'],['/en/kalite/','Quality & Warranty'],['/en/belgeler/','Certificates'],['/en/teklif/','Quote form'],['/en/rehber/kaucuk-mu-poliuretan-mi/','Rubber or PU?'],['/en/sozluk/','Glossary'],['/en/sss/','FAQ'],['/en/gizlilik/','Privacy']],
-  de: [['/de/uretim/','Produktion'],['/de/kalite/','Qualität & Garantie'],['/de/belgeler/','Zertifikate'],['/de/teklif/','Angebotsformular'],['/de/rehber/kaucuk-mu-poliuretan-mi/','Gummi oder PU?'],['/de/sozluk/','Glossar'],['/de/sss/','FAQ'],['/de/gizlilik/','Datenschutz']],
-  ru: [['/ru/uretim/','Производство'],['/ru/kalite/','Качество и гарантия'],['/ru/belgeler/','Сертификаты'],['/ru/teklif/','Форма запроса'],['/ru/rehber/kaucuk-mu-poliuretan-mi/','Резина или ПУ?'],['/ru/sozluk/','Словарь'],['/ru/sss/','Вопросы и ответы'],['/ru/gizlilik/','Конфиденциальность']],
-  ar: [['/ar/uretim/','الإنتاج والمنشأة'],['/ar/kalite/','الجودة والضمان'],['/ar/belgeler/','الشهادات'],['/ar/teklif/','نموذج طلب عرض سعر'],['/ar/rehber/kaucuk-mu-poliuretan-mi/','مطاط أم بولي يوريثان؟'],['/ar/sozluk/','المعجم'],['/ar/sss/','الأسئلة الشائعة'],['/ar/gizlilik/','الخصوصية']],
+  tr: [['/referanslar/','Referanslar'],['/uretim/','Üretim & Tesis'],['/kalite/','Kalite & Garanti'],['/belgeler/','Sertifikalar'],['/teklif/','Teklif Formu'],['/rehber/kaucuk-mu-poliuretan-mi/','Kauçuk mu, PU mu?'],['/sozluk/','Sözlük'],['/sss/','S.S.S.'],['/gizlilik/','Gizlilik & KVKK']],
+  en: [['/en/referanslar/','References'],['/en/uretim/','Production'],['/en/kalite/','Quality & Warranty'],['/en/belgeler/','Certificates'],['/en/teklif/','Quote form'],['/en/rehber/kaucuk-mu-poliuretan-mi/','Rubber or PU?'],['/en/sozluk/','Glossary'],['/en/sss/','FAQ'],['/en/gizlilik/','Privacy']],
+  de: [['/de/referanslar/','Referenzen'],['/de/uretim/','Produktion'],['/de/kalite/','Qualität & Garantie'],['/de/belgeler/','Zertifikate'],['/de/teklif/','Angebotsformular'],['/de/rehber/kaucuk-mu-poliuretan-mi/','Gummi oder PU?'],['/de/sozluk/','Glossar'],['/de/sss/','FAQ'],['/de/gizlilik/','Datenschutz']],
+  ru: [['/ru/referanslar/','Референсы'],['/ru/uretim/','Производство'],['/ru/kalite/','Качество и гарантия'],['/ru/belgeler/','Сертификаты'],['/ru/teklif/','Форма запроса'],['/ru/rehber/kaucuk-mu-poliuretan-mi/','Резина или ПУ?'],['/ru/sozluk/','Словарь'],['/ru/sss/','Вопросы и ответы'],['/ru/gizlilik/','Конфиденциальность']],
+  ar: [['/ar/referanslar/','المراجع'],['/ar/uretim/','الإنتاج والمنشأة'],['/ar/kalite/','الجودة والضمان'],['/ar/belgeler/','الشهادات'],['/ar/teklif/','نموذج طلب عرض سعر'],['/ar/rehber/kaucuk-mu-poliuretan-mi/','مطاط أم بولي يوريثان؟'],['/ar/sozluk/','المعجم'],['/ar/sss/','الأسئلة الشائعة'],['/ar/gizlilik/','الخصوصية']],
 } as const;
 
 export const visionMission = {

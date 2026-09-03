@@ -1,11 +1,46 @@
 ---
-import { company, nav, ui, galleryCats } from '../data/site';
+import { company, nav, ui, galleryCats, sectors, sectorGroups, corporateChildren, navOverview } from '../data/site';
+import { productTypes } from '../data/products';
 import Icon from './Icon.astro';
 import Logo from './Logo.astro';
+
 const { lang = 'tr', seg = '' } = Astro.props;
 const items = nav[lang];
 const base = lang === 'tr' ? '' : '/' + lang;
-const portChildren = galleryCats.filter(c => c.key !== 'all').map(c => [base + '/galeri/kategori/' + c.key + '/', c[lang]]);
+const path = Astro.url.pathname.replace(/\/$/, '') + '/';
+
+/* ── Dropdown içerikleri ────────────────────────────────────────────
+   Kurumsal   → sabit liste (şirket güvenilirlik sayfaları)
+   Ürünler    → 8 ürün türü, veriden
+   Sektörler  → 21 sektör, 3 gruba bölünmüş mega menü
+   Portföy    → galeri kategorileri, veriden
+   Hizmetler / İletişim → dropdown yok
+   Not: /merdane-kaplama/ il sayfaları bilinçli olarak menüde YOK —
+   onlar pSEO açılış sayfaları, /hizmetler/ içinden linkleniyor.        */
+const strip = (h) => h.replace(/^\/(en|de|ru|ar)\//, '/');
+
+const menuFor = (href) => {
+  const s = strip(href);
+  if (s === '/kurumsal/')
+    return { kind:'list', cols:[{ items: corporateChildren[lang].map(([h,l]) => [base + strip(h), l]) }] };
+  if (s === '/urunler/')
+    return { kind:'list', cols:[{ items: productTypes.map(p => [`${base}/urunler/${p.slug}/`, p.name[lang]]) }] };
+  if (s === '/galeri/')
+    return { kind:'list', cols:[{ items: galleryCats.filter(c => c.key !== 'all').map(c => [`${base}/galeri/kategori/${c.key}/`, c[lang]]) }] };
+  if (s === '/sektorler/')
+    return { kind:'mega', cols: sectorGroups.map(g => ({
+      title: g[lang],
+      items: sectors.filter(x => x.group === g.key).map(x => [`${base}/sektorler/${x.slug}/`, x[lang]]),
+    })) };
+  return null;
+};
+
+const act = (href) => {
+  const s = strip(href);
+  if (s === '/') return path === base + '/';
+  return path === base + s || path.startsWith(base + s);
+};
+
 const langs = [
   { code:'tr', label:'TR', name:'Türkçe',   href:'/' + seg },
   { code:'en', label:'EN', name:'English',  href:'/en/' + seg },
@@ -13,9 +48,6 @@ const langs = [
   { code:'ru', label:'RU', name:'Русский',  href:'/ru/' + seg },
   { code:'ar', label:'AR', name:'العربية',  href:'/ar/' + seg },
 ];
-const isPort = (href) => href.endsWith('/galeri/');
-const path = Astro.url.pathname.replace(/\/$/, '') + '/';
-const act = (href) => href === path || (isPort(href) && path.startsWith(base + '/galeri'));
 ---
 <header class="sticky top-0 z-40 border-b border-steel-200/70 bg-steel-50/80 backdrop-blur-md">
   <div class="hdr-pad mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3">
@@ -24,24 +56,42 @@ const act = (href) => href === path || (isPort(href) && path.startsWith(base + '
     </a>
 
     <nav class="hidden items-center gap-0.5 lg:flex">
-      {items.map(([href, label]) => (
-        isPort(href) ? (
+      {items.map(([href, label]) => {
+        const m = menuFor(href);
+        const on = act(href);
+        const cls = `flex items-center gap-1 rounded-lg px-3 py-2 text-sm transition ${on ? 'bg-brand-red font-700 text-white' : 'font-600 text-navy-600 hover:bg-white hover:text-navy-800'}`;
+        return m ? (
           <div class="group relative">
-            <a href={href} class={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm transition ${act(href) ? 'bg-brand-red font-700 text-white' : 'font-600 text-navy-600 hover:bg-white hover:text-navy-800'}`}>
+            <a href={href} aria-current={on ? 'page' : undefined} aria-haspopup="true" class={cls}>
               {label}
               <svg class="h-3.5 w-3.5 transition group-hover:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
             </a>
-            <div class="invisible absolute left-0 top-full z-50 w-60 translate-y-1 border border-steel-200 bg-white opacity-0 shadow-soft transition duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
-              <a href={href} class="block border-b border-steel-100 px-4 py-2.5 text-sm font-700 text-navy-800 hover:bg-steel-50">{lang==='tr'?'Tüm Portföy':lang==='en'?'All Portfolio':'Gesamtes Portfolio'}</a>
-              {portChildren.map(([h, l]) => (
-                <a href={h} class="block px-4 py-2.5 text-sm font-600 text-navy-600 transition hover:bg-steel-50 hover:text-brand-red">{l}</a>
-              ))}
+            <div class={`invisible absolute left-0 top-full z-50 translate-y-1 border border-steel-200 bg-white opacity-0 shadow-soft transition duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 ${m.kind === 'mega' ? 'w-[46rem]' : 'w-64'}`}>
+              <a href={href} class="block border-b border-steel-100 px-4 py-2.5 text-sm font-700 text-navy-800 transition hover:bg-steel-50 hover:text-brand-red">{navOverview[lang]}</a>
+              {m.kind === 'mega' ? (
+                <div class="grid grid-cols-3 gap-x-2 p-2">
+                  {m.cols.map(c => (
+                    <div>
+                      <p class="px-3 pb-1.5 pt-2 text-[11px] font-700 uppercase tracking-wider text-brand-red">{c.title}</p>
+                      {c.items.map(([h, l]) => (
+                        <a href={h} class="block rounded px-3 py-1.5 text-sm font-600 text-navy-600 transition hover:bg-steel-50 hover:text-brand-red">{l}</a>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div class="py-1">
+                  {m.cols[0].items.map(([h, l]) => (
+                    <a href={h} class="block px-4 py-2.5 text-sm font-600 text-navy-600 transition hover:bg-steel-50 hover:text-brand-red">{l}</a>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         ) : (
-          <a href={href} class={`rounded-lg px-3 py-2 text-sm transition ${act(href) ? 'bg-brand-red font-700 text-white' : 'font-600 text-navy-600 hover:bg-white hover:text-navy-800'}`}>{label}</a>
-        )
-      ))}
+          <a href={href} aria-current={on ? 'page' : undefined} class={cls}>{label}</a>
+        );
+      })}
     </nav>
 
     <div class="flex items-center gap-2">
@@ -56,26 +106,32 @@ const act = (href) => href === path || (isPort(href) && path.startsWith(base + '
         ))}
       </div>
       <a href={base + '/teklif/'} class="hidden rounded-lg bg-brand-red px-4 py-2.5 text-sm font-700 text-white transition hover:bg-navy-900 sm:inline-block">{ui.quote[lang]}</a>
-      <button id="mopen" class="rounded-lg border border-steel-300 p-2 text-navy-700 lg:hidden" aria-label="Menu">
+      <button id="mopen" class="rounded-lg border border-steel-300 p-2 text-navy-700 lg:hidden" aria-label="Menu" aria-expanded="false" aria-controls="mmenu">
         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
     </div>
   </div>
 
-  <div id="mmenu" class="hidden border-t border-steel-200 bg-white lg:hidden">
+  <!-- mobil menü: dropdown'lar açılır-kapanır bölüm olarak -->
+  <div id="mmenu" class="hidden max-h-[75vh] overflow-y-auto border-t border-steel-200 bg-white lg:hidden">
     <nav class="mx-auto flex max-w-7xl flex-col px-5 py-2">
-      {items.map(([href, label]) => (
-        isPort(href) ? (
+      {items.map(([href, label]) => {
+        const m = menuFor(href);
+        const on = act(href);
+        return m ? (
           <div class="border-b border-steel-100 py-1">
-            <a href={href} class="block rounded-lg px-3 py-3 text-sm font-700 text-navy-800">{label}</a>
+            <a href={href} class={`block rounded-lg px-3 py-3 text-sm font-700 ${on ? 'text-brand-red' : 'text-navy-800'}`}>{label}</a>
             <div class="flex flex-wrap gap-1.5 px-3 pb-3">
-              {portChildren.map(([h, l]) => (<a href={h} class="border border-steel-200 px-2.5 py-1 text-xs font-600 text-navy-600">{l}</a>))}
+              {m.cols.flatMap(c => c.items).map(([h, l]) => (
+                <a href={h} class="border border-steel-200 px-2.5 py-1.5 text-xs font-600 text-navy-600 transition hover:border-brand-red hover:text-brand-red">{l}</a>
+              ))}
             </div>
           </div>
         ) : (
-          <a href={href} class={`rounded-lg px-3 py-3 text-sm transition ${act(href) ? 'bg-brand-red font-700 text-white' : 'font-600 text-navy-700 hover:bg-steel-50'}`}>{label}</a>
-        )
-      ))}
+          <a href={href} class={`rounded-lg px-3 py-3 text-sm transition ${on ? 'bg-brand-red font-700 text-white' : 'font-600 text-navy-700 hover:bg-steel-50'}`}>{label}</a>
+        );
+      })}
+      <a href={base + '/teklif/'} class="mt-2 rounded-lg bg-brand-red px-3 py-3 text-center text-sm font-700 text-white sm:hidden">{ui.quote[lang]}</a>
       <div class="mt-2 flex gap-1.5 border-t border-steel-200 pt-3 pb-2 sm:hidden">
         {langs.map((l) => (
           <a href={l.href} hreflang={l.code} lang={l.code} aria-current={l.code===lang ? 'true' : undefined}
@@ -86,7 +142,12 @@ const act = (href) => href === path || (isPort(href) && path.startsWith(base + '
   </div>
 </header>
 <script is:inline>
-  document.getElementById('mopen')?.addEventListener('click', () => {
-    document.getElementById('mmenu')?.classList.toggle('hidden');
-  });
+  (function () {
+    var b = document.getElementById('mopen'), m = document.getElementById('mmenu');
+    if (!b || !m) return;
+    b.addEventListener('click', function () {
+      var open = m.classList.toggle('hidden') === false;
+      b.setAttribute('aria-expanded', String(open));
+    });
+  })();
 </script>
