@@ -55,7 +55,9 @@ jobs:
       - name: Önizlemeyi yayınla
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          deploy_key: ${{ secrets.PREVIEW_DEPLOY_KEY }}
+          external_repository: karacaismail/merpolon
           publish_branch: gh-pages
           publish_dir: ./dist
           force_orphan: true
+          commit_message: "önizleme ${{ github.sha }}"
