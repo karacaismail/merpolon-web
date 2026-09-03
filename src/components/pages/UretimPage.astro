@@ -1,0 +1,197 @@
+---
+// Üretim & Tesis sayfası — TEK kaynak, 5 dil. Her dil rotası bu bileşeni `lang` ile çağırır,
+// böylece TR/EN/DE/RU/AR yapısal olarak birebir aynı içeriği alır (içerik paritesi).
+import Base from '../../layouts/Base.astro';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import Icon from '../Icon.astro';
+import { process } from '../../data/site';
+
+const { lang = 'tr' } = Astro.props;
+const base = lang === 'tr' ? '' : '/' + lang;
+
+const H = {
+  tr: {
+    title:'Üretim & Tesis — Merpolon | Merteks Elastomer',
+    eyebrow:'Üretim & Tesis',
+    h1:'Kendi tesisimizde,<br/>mühendis kontrolünde',
+    lede:"İkitelli OSB'deki tesisimizde çelik çekirdek imalatından kaplamaya, taşlamadan kalite kontrole kadar tüm süreci tek çatı altında yürütüyoruz. Sürekli makine ve Ar-Ge yatırımıyla kaliteli ve uygun fiyatlı üretim.",
+    imgAlt:'Üretim',
+    caps:[
+      ['Ø1200 × 7000 mm','Maksimum kaplama boyutu'],
+      ['ST52','Özel alaşımlı çelik çekirdek'],
+      ['CNC','Hassas talaşlı imalat'],
+      ['Laboratuvar','Kendi kauçuk formülasyonu'],
+    ],
+    capEy:'Yetkinlikler', capH:'Makine parkuru & kabiliyetler',
+    capP:'Rebrakır, çekim ve finisör merdanelerini pres tezgahlarımızda özel kalıplarla imal ediyoruz. Rektifiye taşlaması yapılsa bile çalışma ömrü uzayan silindirler.',
+    capList:['CNC torna & taşlama','Vargel tezgahı','Kauçuk kaplama & vulkanizasyon','Poliüretan döküm','Düz / konik / bombeli taşlama','Baklava & helis kanal açma','Sertlik (Shore A) & balans kontrolü','Özel kalıp & pres imalat','Yeniden kaplama'],
+    prEy:'Süreç', prH:'Beş adımda üretim',
+    galEy:'Galeri', galH:'Ürünlerimizden',
+    galCaps:['Finisör merdanesi','Kauçuk Seydel','Poliüretan Seydel','Farklı sertlik & çaplar'],
+    galNote:'Tesis ve üretim fotoğrafları yakında eklenecektir.',
+    ctaH:'Tesisimizi ziyaret edin.', ctaBtn:'İletişim',
+  },
+  en: {
+    title:'Production & Facility — Merpolon | Merteks Elastomer',
+    eyebrow:'Production & Facility',
+    h1:'In our own plant,<br/>under engineer control',
+    lede:'At our facility in the İkitelli OIZ we run the whole process — from steel core machining to covering, from grinding to quality control — under one roof. Continuous machinery and R&D investment keeps production high in quality and fair in price.',
+    imgAlt:'Production',
+    caps:[
+      ['Ø1200 × 7000 mm','Max covering size'],
+      ['ST52','Special alloy steel core'],
+      ['CNC','Precision machining'],
+      ['Laboratory','In-house rubber formula'],
+    ],
+    capEy:'Capabilities', capH:'Machine park & capabilities',
+    capP:'Rebreaker, drawing and finisher rollers are pressed with custom moulds on our own presses. Cylinders whose service life stays long even after precision grinding.',
+    capList:['CNC lathe & grinding','Planing machine','Rubber covering & vulcanisation','Polyurethane casting','Straight / conical / crowned grinding','Diamond & helical grooving','Hardness (Shore A) & balance control','Custom mould & press manufacturing','Re-covering'],
+    prEy:'Process', prH:'Production in five steps',
+    galEy:'Gallery', galH:'From our products',
+    galCaps:['Finisher roller','Rubber Seydel','Polyurethane Seydel','Various hardness & diameters'],
+    galNote:'Facility and production photographs will be added shortly.',
+    ctaH:'Visit our facility.', ctaBtn:'Contact',
+  },
+  de: {
+    title:'Produktion & Werk — Merpolon | Merteks Elastomer',
+    eyebrow:'Produktion & Werk',
+    h1:'Im eigenen Werk,<br/>unter Ingenieuraufsicht',
+    lede:'In unserem Werk im OIZ İkitelli führen wir den gesamten Prozess — von der Stahlkernfertigung über die Beschichtung bis zu Schleifen und Qualitätskontrolle — unter einem Dach. Laufende Maschinen- und F&E-Investitionen sichern hohe Qualität zu einem fairen Preis.',
+    imgAlt:'Produktion',
+    caps:[
+      ['Ø1200 × 7000 mm','Max. Beschichtungsgröße'],
+      ['ST52','Speziallegierter Stahlkern'],
+      ['CNC','Präzisionsbearbeitung'],
+      ['Labor','Eigene Gummiformel'],
+    ],
+    capEy:'Kompetenzen', capH:'Maschinenpark & Kompetenzen',
+    capP:'Rebreaker-, Streck- und Finisherwalzen fertigen wir auf unseren Pressen mit Sonderformen. Walzen, deren Standzeit selbst nach dem Präzisionsschleifen lang bleibt.',
+    capList:['CNC-Drehen & Schleifen','Hobelmaschine','Gummibeschichtung & Vulkanisation','Polyurethan-Guss','Gerad- / konisches / balliges Schleifen','Rauten- & Wendelrillen','Härte- (Shore A) & Wuchtprüfung','Sonderform- & Pressenfertigung','Neubeschichtung'],
+    prEy:'Prozess', prH:'Produktion in fünf Schritten',
+    galEy:'Galerie', galH:'Aus unserer Fertigung',
+    galCaps:['Finisherwalze','Gummi-Seydel','Polyurethan-Seydel','Verschiedene Härten & Durchmesser'],
+    galNote:'Werks- und Produktionsfotos folgen in Kürze.',
+    ctaH:'Besuchen Sie unser Werk.', ctaBtn:'Kontakt',
+  },
+  ru: {
+    title:'Производство и завод — Merpolon | Merteks Elastomer',
+    eyebrow:'Производство и завод',
+    h1:'На собственном заводе,<br/>под контролем инженера',
+    lede:'На нашем предприятии в ОПЗ Икителли мы ведём весь процесс под одной крышей — от изготовления стального сердечника до покрытия, от шлифования до контроля качества. Постоянные инвестиции в оборудование и НИОКР обеспечивают высокое качество по доступной цене.',
+    imgAlt:'Производство',
+    caps:[
+      ['Ø1200 × 7000 мм','Максимальный размер покрытия'],
+      ['ST52','Сердечник из легированной стали'],
+      ['CNC','Прецизионная механообработка'],
+      ['Лаборатория','Собственная рецептура резины'],
+    ],
+    capEy:'Компетенции', capH:'Станочный парк и возможности',
+    capP:'Валы rebreaker, тянущие и финишные мы изготавливаем на собственных прессах в специальных формах. Цилиндры, срок службы которых остаётся долгим даже после прецизионного шлифования.',
+    capList:['Токарная обработка и шлифование на ЧПУ','Строгальный станок','Резиновое покрытие и вулканизация','Литьё полиуретана','Цилиндрическое / коническое / бомбированное шлифование','Нарезка ромбических и винтовых канавок','Контроль твёрдости (Shore A) и балансировки','Изготовление спецформ и прессование','Перепокрытие'],
+    prEy:'Процесс', prH:'Производство в пять шагов',
+    galEy:'Галерея', galH:'Из нашей продукции',
+    galCaps:['Финишный вал','Резиновый Seydel','Полиуретановый Seydel','Разные твёрдости и диаметры'],
+    galNote:'Фотографии завода и производства будут добавлены в ближайшее время.',
+    ctaH:'Приезжайте на наш завод.', ctaBtn:'Контакты',
+  },
+  ar: {
+    title:'الإنتاج والمنشأة — Merpolon | Merteks Elastomer',
+    eyebrow:'الإنتاج والمنشأة',
+    h1:'في منشأتنا الخاصة<br/>وبإشراف هندسي',
+    lede:'في منشأتنا بالمنطقة الصناعية المنظّمة في إكيتللي ندير العملية كاملة تحت سقف واحد — من تصنيع القلب الفولاذي إلى التكسية، ومن الجلخ إلى مراقبة الجودة. والاستثمار المتواصل في الماكينات والبحث والتطوير يضمن إنتاجًا عالي الجودة بسعر مناسب.',
+    imgAlt:'الإنتاج',
+    caps:[
+      ['Ø1200 × 7000 مم','أقصى مقاس للتكسية'],
+      ['ST52','قلب فولاذي من سبيكة خاصة'],
+      ['CNC','تصنيع دقيق بالقطع'],
+      ['مختبر','تركيبة مطاط من تطويرنا'],
+    ],
+    capEy:'الكفاءات', capH:'أسطول الماكينات والقدرات',
+    capP:'ننتج أسطوانات الريبريكر والسحب والتشطيب على مكابسنا بقوالب خاصة. أسطوانات يطول عمر تشغيلها حتى بعد الجلخ الدقيق.',
+    capList:['خراطة وجلخ CNC','مقشطة','تكسية بالمطاط وفلكنة','صبّ البولي يوريثان','جلخ مستقيم / مخروطي / محدّب','فتح أخاديد معيّنية ولولبية','فحص الصلادة (شور A) والاتزان','تصنيع قوالب خاصة ومكابس','إعادة التكسية'],
+    prEy:'العملية', prH:'الإنتاج في خمس خطوات',
+    galEy:'المعرض', galH:'من منتجاتنا',
+    galCaps:['أسطوانة تشطيب','سيدل مطاطية','سيدل بولي يوريثان','صلادات وأقطار مختلفة'],
+    galNote:'ستُضاف صور المنشأة والإنتاج قريبًا.',
+    ctaH:'زوروا منشأتنا.', ctaBtn:'اتصل بنا',
+  },
+}[lang];
+
+const gallerySrc = [
+  '/gallery/kaucuk-kapli-finisor-merdanesi.webp',
+  '/gallery/kaucuk-kapli-merdane-seti.webp',
+  '/gallery/grafit-kaucuk-merdaneler.webp',
+  '/gallery/poliuretan-merdane-uretimi.webp',
+];
+const gallery = gallerySrc.map((src, i) => [src, H.galCaps[i]]);
+---
+<Base title={H.title} lang={lang} path={`${base}/uretim/`}>
+  <Header lang={lang} seg="uretim/" />
+  <main id="main" class="bg-white">
+
+    <!-- 1 · HERO -->
+    <section class="border-b border-steel-200">
+      <div class="mx-auto grid max-w-7xl items-stretch lg:grid-cols-[1.2fr_1fr]">
+        <div class="flex flex-col justify-center px-6 py-16 lg:py-20 lg:pr-14" data-reveal-group>
+          <p data-reveal class="flex items-center gap-3 text-xs font-700 uppercase tracking-[0.22em] text-brand-red"><span class="h-px w-10 bg-brand-red"></span>{H.eyebrow}</p>
+          <h1 data-reveal class="mt-6 font-display text-4xl font-800 leading-[1.04] tracking-tight text-navy-900 sm:text-5xl" set:html={H.h1}></h1>
+          <p data-reveal class="mt-6 max-w-lg text-lg leading-relaxed text-navy-500">{H.lede}</p>
+        </div>
+        <div class="relative min-h-[280px] bg-navy-900 lg:min-h-full"><img src="/gallery/poliuretan-merdane-uretimi.webp" srcset="/gallery/poliuretan-merdane-uretimi-480.webp 480w, /gallery/poliuretan-merdane-uretimi-960.webp 960w, /gallery/poliuretan-merdane-uretimi.webp 1500w" sizes="(max-width: 768px) 100vw, 50vw" alt={H.imgAlt} width="832" height="666" class="h-full w-full object-cover"/></div>
+      </div>
+    </section>
+
+    <!-- 2 · SPEC STRIP -->
+    <section class="border-b border-steel-200 bg-steel-50">
+      <div class="mx-auto grid max-w-7xl grid-cols-2 divide-x divide-steel-200 lg:grid-cols-4">
+        {H.caps.map(([v,l]) => (<div class="px-6 py-8"><div class="font-display text-xl font-800 text-navy-900 sm:text-2xl">{v}</div><div class="mt-1 text-xs uppercase tracking-wider text-navy-500">{l}</div></div>))}
+      </div>
+    </section>
+
+    <!-- 3 · CAPABILITIES -->
+    <section class="mx-auto max-w-7xl px-6 py-20">
+      <div class="grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:gap-16">
+        <div data-reveal-group>
+          <p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.capEy}</p>
+          <h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.capH}</h2>
+          <p data-reveal class="mt-5 leading-relaxed text-navy-500">{H.capP}</p>
+        </div>
+        <ul class="grid border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 sm:grid-cols-2" data-reveal-group>
+          {H.capList.map(x => (
+            <li data-reveal class="flex items-center gap-3 bg-white px-5 py-4 text-sm font-600 text-navy-800"><Icon name="check" class="h-4 w-4 shrink-0 text-brand-red"/>{x}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- 4 · PROCESS -->
+    <section class="border-y border-steel-200 bg-steel-50">
+      <div class="mx-auto max-w-7xl px-6 py-20">
+        <div class="max-w-2xl" data-reveal-group><p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.prEy}</p><h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.prH}</h2></div>
+        <div class="mt-12 grid border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 md:grid-cols-5" data-reveal-group>
+          {process.map(s => (<div data-reveal class="bg-white p-6"><div class="flex items-center justify-between"><span class="font-display text-3xl font-800 text-steel-300">{s.no}</span><Icon name={s.icon} class="h-5 w-5 text-brand-red"/></div><h3 class="mt-5 font-display font-700 text-navy-900">{s[lang]}</h3><p class="mt-2 text-sm leading-relaxed text-navy-500">{s.d[lang]}</p></div>))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 · GALLERY -->
+    <section class="mx-auto max-w-7xl px-6 py-20">
+      <div class="max-w-2xl" data-reveal-group><p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.galEy}</p><h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.galH}</h2></div>
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-reveal-group>
+        {gallery.map(([src,cap]) => (<figure data-reveal class="overflow-hidden border border-steel-200"><img src={src} alt={cap} loading="lazy" class="aspect-square w-full object-cover transition duration-500 hover:scale-105"/><figcaption class="px-4 py-3 text-xs font-600 uppercase tracking-wider text-navy-500">{cap}</figcaption></figure>))}
+      </div>
+      <p class="mt-6 text-sm text-navy-400">{H.galNote}</p>
+    </section>
+
+    <!-- 6 · CTA -->
+    <section class="bg-navy-900 text-white">
+      <div class="mx-auto flex max-w-7xl flex-col items-start gap-8 px-6 py-20 lg:flex-row lg:items-center lg:justify-between">
+        <h2 class="font-display text-3xl font-800 tracking-tight sm:text-4xl">{H.ctaH}</h2>
+        <a href={`${base}/iletisim/`} class="inline-flex shrink-0 items-center gap-2 bg-brand-red px-6 py-4 text-sm font-700 uppercase tracking-wider transition hover:bg-white hover:text-navy-900">{H.ctaBtn} <Icon name="arrow" class="h-4 w-4"/></a>
+      </div>
+    </section>
+
+  </main>
+  <Footer lang={lang} />
+</Base>

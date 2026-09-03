@@ -1,0 +1,7 @@
+---
+import GalleryCategory from '../../../../components/GalleryCategory.astro';
+import { galleryCats } from '../../../../data/site';
+export function getStaticPaths(){ return galleryCats.filter(c => c.key !== 'all').map(c => ({ params:{ cat:c.key }, props:{ c } })); }
+const { c } = Astro.props;
+---
+<GalleryCategory c={c} lang="ru" />

@@ -1,0 +1,214 @@
+---
+// Rehber: Kauçuk mu poliüretan mı? — Topical / AEO / Zero-click içeriği
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import Icon from './Icon.astro';
+import Breadcrumb from './Breadcrumb.astro';
+import RelatedLinks from './RelatedLinks.astro';
+import { company } from '../data/site';
+
+const { lang = 'tr' } = Astro.props;
+const base = lang === 'tr' ? '' : '/' + lang;
+const path = `${base}/rehber/kaucuk-mu-poliuretan-mi/`;
+const SITE = (Astro.site ? Astro.site.href : '').replace(/\/$/, '');
+
+const C = {
+  tr: {
+    crumb:'Rehber', h1:'Kauçuk mu, poliüretan mı?', lede:'Merdane kaplamasında malzeme seçimi tek bir “daha iyi” cevaba indirgenmez — hattınızdaki baskın zorlanmaya göre değişir. Aşağıdaki dört soru, doğru malzemeyi pratikte belirler.',
+    answer:'Kısa cevap', answerP:'Aşınma ve yırtılma baskınsa poliüretan; statik elektrik, ısı ve hassas yüzey davranışı öne çıkıyorsa kauçuk seçilir. Elyaf-iplik ve tekstil hatlarında genellikle kauçuk, çekim ve finisör gibi yüksek aşınmalı konumlarda poliüretan tercih edilir.',
+    steps:'Dört soruda seçim', tbl:'Yan yana karşılaştırma', crit:'Kriter', rub:'Kauçuk (elastomer)', pu:'Poliüretan (PU)',
+    rows:[
+      ['Aşınma direnci','İyi','Çok yüksek'],
+      ['Yırtılma direnci','Orta','Yüksek'],
+      ['Antistatik davranış','Güçlü (katkılı)','Orta'],
+      ['Isı yönetimi','Isı barındırmaz','Isıyı dışarı atar'],
+      ['Geri esneme','Orta','Yüksek'],
+      ['Tipik konum','Koparma / converter','Çekim / finisör'],
+      ['Tipik sektör','Tekstil, elyaf-iplik, kağıt','Elyaf-iplik, ambalaj, metal'],
+    ],
+    qs:[
+      ['Hattaki baskın zorlanma ne?','Malzeme sürtünerek aşındırıyorsa poliüretan; ısı ve statik elektrik sorun çıkarıyorsa kauçuk öne çıkar.'],
+      ['Yüzey neyi taşıyor?','İnce film, folyo ve hassas elyafta iz bırakmayan, antistatik bir kauçuk yüzey genellikle daha güvenlidir.'],
+      ['Sertlik ne olmalı?','Sertlik (Shore A) baskı izinin genişliğini belirler. Yumuşak kaplama daha geniş temas, sert kaplama daha keskin baskı verir; çalışma şartına göre seçilir.'],
+      ['Mevcut merdane nasıl davranıyor?','Erken aşınma poliüretana, sarma ve elektriklenme kauçuğa işaret eder. Eski merdaneyi incelememiz çoğu zaman en hızlı yoldur.'],
+    ],
+    note:'Emin değilseniz', noteP:'Merdanenizin fotoğrafını ve ölçülerini gönderin; hangi malzemenin uygun olduğunu birlikte belirleyelim. Mevcut çekirdeğiniz yeniden kaplanabilir.',
+    cta:'Teklif Formu', rel:'İlgili', gl:'Merdane sözlüğü', gld:'Shore A, vulkanizasyon, ST52 ve diğer terimler.',
+    pr1:'Kauçuk Seydel merdanesi', pr1d:'Isı barındırmayan, antistatik kauçuk kaplı silindir.',
+    pr2:'Poliüretan Seydel merdanesi', pr2d:'Üstün aşınma ve yırtılma direnci.',
+  },
+  en: {
+    crumb:'Guide', h1:'Rubber or polyurethane?', lede:'Covering choice does not reduce to a single “better” answer — it follows the dominant stress on your line. These four questions settle it in practice.',
+    answer:'Short answer', answerP:'Choose polyurethane when abrasion and tearing dominate; choose rubber when static electricity, heat and gentle surface behaviour matter most. Fiber-yarn and textile lines usually run rubber, while high-wear positions such as drawing and finisher favour polyurethane.',
+    steps:'Four questions', tbl:'Side by side', crit:'Criterion', rub:'Rubber (elastomer)', pu:'Polyurethane (PU)',
+    rows:[
+      ['Abrasion resistance','Good','Very high'],
+      ['Tear resistance','Medium','High'],
+      ['Antistatic behaviour','Strong (compounded)','Medium'],
+      ['Heat management','Retains no heat','Dissipates heat'],
+      ['Rebound','Medium','High'],
+      ['Typical position','Breaking / converter','Drawing / finisher'],
+      ['Typical industry','Textile, fiber-yarn, paper','Fiber-yarn, packaging, metal'],
+    ],
+    qs:[
+      ['What is the dominant stress?','If material rubs and wears the surface, polyurethane; if heat and static cause the trouble, rubber leads.'],
+      ['What does the surface carry?','For thin film, foil and delicate fibre, a non-marking antistatic rubber surface is usually the safer choice.'],
+      ['What hardness is right?','Hardness (Shore A) sets the nip width. Softer gives a wider contact, harder a sharper nip; it follows operating conditions.'],
+      ['How does the current roller behave?','Early wear points to polyurethane; wrapping and static point to rubber. Inspecting the old roller is often the fastest route.'],
+    ],
+    note:'Not sure?', noteP:'Send a photo and the dimensions of your roller and we will determine the material together. Your existing core can be re-coated.',
+    cta:'Quote form', rel:'Related', gl:'Roller glossary', gld:'Shore A, vulcanisation, ST52 and other terms.',
+    pr1:'Rubber Seydel roller', pr1d:'Heat-free, antistatic rubber-coated cylinder.',
+    pr2:'Polyurethane Seydel roller', pr2d:'Superior abrasion and tear resistance.',
+  },
+  de: {
+    crumb:'Leitfaden', h1:'Gummi oder Polyurethan?', lede:'Die Materialwahl lässt sich nicht auf ein einziges „besser“ reduzieren — sie folgt der dominanten Belastung Ihrer Linie. Vier Fragen klären es in der Praxis.',
+    answer:'Kurze Antwort', answerP:'Polyurethan, wenn Abrieb und Rissbildung dominieren; Gummi, wenn statische Aufladung, Wärme und schonendes Oberflächenverhalten im Vordergrund stehen. Faser-Garn- und Textillinien fahren meist Gummi, stark beanspruchte Positionen wie Streck- und Finisher-Walzen eher Polyurethan.',
+    steps:'Vier Fragen', tbl:'Direkter Vergleich', crit:'Kriterium', rub:'Gummi (Elastomer)', pu:'Polyurethan (PU)',
+    rows:[
+      ['Abriebfestigkeit','Gut','Sehr hoch'],
+      ['Reißfestigkeit','Mittel','Hoch'],
+      ['Antistatisches Verhalten','Stark (compoundiert)','Mittel'],
+      ['Wärmemanagement','Speichert keine Wärme','Leitet Wärme ab'],
+      ['Rückprallelastizität','Mittel','Hoch'],
+      ['Typische Position','Abreiß / Converter','Streck / Finisher'],
+      ['Typische Branche','Textil, Faser-Garn, Papier','Faser-Garn, Verpackung, Metall'],
+    ],
+    qs:[
+      ['Was ist die dominante Belastung?','Reibt das Material die Oberfläche ab, spricht das für Polyurethan; verursachen Wärme und Statik Probleme, für Gummi.'],
+      ['Was trägt die Oberfläche?','Bei Dünnfilm, Folie und empfindlicher Faser ist eine markierungsfreie, antistatische Gummioberfläche meist sicherer.'],
+      ['Welche Härte ist richtig?','Die Härte (Shore A) bestimmt die Nipbreite. Weicher gibt breiteren Kontakt, härter einen schärferen Nip — nach Betriebsbedingungen.'],
+      ['Wie verhält sich die aktuelle Walze?','Früher Verschleiß deutet auf Polyurethan, Wickeln und Statik auf Gummi. Die alte Walze zu prüfen ist oft der schnellste Weg.'],
+    ],
+    note:'Unsicher?', noteP:'Senden Sie ein Foto und die Maße Ihrer Walze — wir bestimmen das Material gemeinsam. Ihr vorhandener Kern kann neu beschichtet werden.',
+    cta:'Angebotsformular', rel:'Verwandt', gl:'Walzen-Glossar', gld:'Shore A, Vulkanisation, ST52 und weitere Begriffe.',
+    pr1:'Gummi-Seydel-Walze', pr1d:'Wärmefreie, antistatische gummibeschichtete Walze.',
+    pr2:'Polyurethan-Seydel-Walze', pr2d:'Hohe Abrieb- und Reißfestigkeit.',
+  },
+  ru: {
+    crumb:'Руководство', h1:'Резина или полиуретан?', lede:'Выбор покрытия вала не сводится к одному «лучше» — он определяется преобладающей нагрузкой на вашей линии. Четыре вопроса ниже решают это на практике.',
+    answer:'Короткий ответ', answerP:'Если преобладают износ и разрыв — выбирают полиуретан; если на первый план выходят статическое электричество, тепло и бережное поведение поверхности — резину. На линиях волокна-пряжи и текстиля обычно применяют резину, а в высокоизносных позициях, таких как вытяжка и финишер, предпочитают полиуретан.',
+    steps:'Выбор в четырёх вопросах', tbl:'Сравнение рядом', crit:'Критерий', rub:'Резина (эластомер)', pu:'Полиуретан (PU)',
+    rows:[
+      ['Износостойкость','Хорошая','Очень высокая'],
+      ['Стойкость к разрыву','Средняя','Высокая'],
+      ['Антистатическое поведение','Сильное (с добавками)','Среднее'],
+      ['Управление теплом','Не удерживает тепло','Отводит тепло наружу'],
+      ['Упругость','Средняя','Высокая'],
+      ['Типичная позиция','Отрывной / конверторный','Тянущий / финишный'],
+      ['Типичная отрасль','Текстиль, волокно-пряжа, бумага','Волокно-пряжа, упаковка, металл'],
+    ],
+    qs:[
+      ['Какая нагрузка преобладает на линии?','Если материал истирает поверхность трением — полиуретан; если проблемы создают тепло и статическое электричество — резина.'],
+      ['Что несёт поверхность?','Для тонкой плёнки, фольги и деликатного волокна обычно безопаснее антистатическая резиновая поверхность, не оставляющая следов.'],
+      ['Какой должна быть твёрдость?','Твёрдость (Shore A) определяет ширину пятна контакта. Мягкое покрытие даёт более широкий контакт, жёсткое — более острое давление; выбор идёт по условиям работы.'],
+      ['Как ведёт себя нынешний вал?','Ранний износ указывает на полиуретан, наматывание и статика — на резину. Чаще всего быстрее всего осмотреть старый вал.'],
+    ],
+    note:'Если вы не уверены', noteP:'Пришлите фотографию вала и его размеры; подходящий материал определим вместе. Ваш существующий сердечник можно перепокрыть.',
+    cta:'Форма запроса', rel:'Похожее', gl:'Словарь по валам', gld:'Shore A, вулканизация, ST52 и другие термины.',
+    pr1:'Резиновый вал Seydel', pr1d:'Антистатичный вал с резиновым покрытием, не удерживающий тепло.',
+    pr2:'Полиуретановый вал Seydel', pr2d:'Высокая стойкость к износу и разрыву.',
+  },
+  ar: {
+    crumb:'دليل', h1:'مطاط أم بولي يوريثان؟', lede:'لا يُختزل اختيار مادة تكسية الأسطوانة في إجابة واحدة «أفضل» — بل يتبع الإجهاد الغالب على خطكم. والأسئلة الأربعة التالية تحسم الأمر عمليًا.',
+    answer:'الإجابة المختصرة', answerP:'يُختار البولي يوريثان عندما يغلب التآكل والتمزّق، ويُختار المطاط عندما تتقدّم الكهرباء الساكنة والحرارة وسلوك السطح اللطيف. وتعمل خطوط الألياف والغزل والنسيج بالمطاط عادةً، بينما يُفضَّل البولي يوريثان في المواضع عالية التآكل مثل السحب والتشطيب.',
+    steps:'الاختيار في أربعة أسئلة', tbl:'مقارنة جنبًا إلى جنب', crit:'المعيار', rub:'مطاط (إيلاستومر)', pu:'بولي يوريثان (PU)',
+    rows:[
+      ['مقاومة التآكل','جيدة','عالية جدًا'],
+      ['مقاومة التمزّق','متوسطة','عالية'],
+      ['السلوك المضاد للكهرباء الساكنة','قوي (بإضافات)','متوسط'],
+      ['إدارة الحرارة','لا يحتفظ بالحرارة','يطرد الحرارة للخارج'],
+      ['الارتداد المرن','متوسط','عالٍ'],
+      ['الموضع النموذجي','القطع / التحويل','السحب / التشطيب'],
+      ['القطاع النموذجي','النسيج، الألياف والغزل، الورق','الألياف والغزل، التغليف، المعادن'],
+    ],
+    qs:[
+      ['ما الإجهاد الغالب على الخط؟','إذا كانت المادة تُحدث تآكلًا بالاحتكاك فالبولي يوريثان، وإذا كانت الحرارة والكهرباء الساكنة تسبّب المشكلات فالمطاط.'],
+      ['ماذا يحمل السطح؟','مع الأفلام والرقائق الرقيقة والألياف الحسّاسة يكون السطح المطاطي المضاد للكهرباء الساكنة والذي لا يترك أثرًا أكثر أمانًا عادةً.'],
+      ['ما الصلادة المناسبة؟','تحدّد الصلادة (شور A) عرض أثر الضغط. فالتكسية اللينة تعطي تلامسًا أوسع، والصلبة تعطي ضغطًا أكثر حدّة؛ ويجري الاختيار حسب ظروف التشغيل.'],
+      ['كيف تتصرّف الأسطوانة الحالية؟','التآكل المبكر يشير إلى البولي يوريثان، والالتفاف والشحن الكهربائي يشيران إلى المطاط. وفحصنا للأسطوانة القديمة هو الطريق الأسرع غالبًا.'],
+    ],
+    note:'إذا لم تكونوا متأكدين', noteP:'أرسلوا صورة الأسطوانة ومقاساتها؛ ولنحدّد معًا المادة المناسبة. ويمكن إعادة تكسية قلبكم الحالي.',
+    cta:'نموذج طلب عرض سعر', rel:'ذات صلة', gl:'معجم الأسطوانات', gld:'شور A والفلكنة وST52 ومصطلحات أخرى.',
+    pr1:'أسطوانة سيدل مطاطية', pr1d:'أسطوانة مكسوّة بمطاط مضاد للكهرباء الساكنة ولا يحتفظ بالحرارة.',
+    pr2:'أسطوانة سيدل بولي يوريثان', pr2d:'مقاومة فائقة للتآكل والتمزّق.',
+  },
+}[lang];
+
+const schema = [
+  { '@type':'Article', '@id': `${SITE}${path}#article`, headline: C.h1, description: C.answerP,
+    inLanguage: lang, author: { '@id': `${SITE}/#organization` }, publisher: { '@id': `${SITE}/#organization` },
+    mainEntityOfPage: `${SITE}${path}`, image: `${SITE}/gallery/grafit-kaucuk-merdaneler.webp` },
+  { '@type':'FAQPage', '@id': `${SITE}${path}#faq`,
+    mainEntity: C.qs.map(q => ({ '@type':'Question', name:q[0], acceptedAnswer:{ '@type':'Answer', text:q[1] } })) },
+];
+---
+<Base title={`${C.h1} | Merpolon`} lang={lang} path={path} schema={schema} image="/gallery/grafit-kaucuk-merdaneler.webp">
+  <Header lang={lang} />
+  <Breadcrumb lang={lang} items={[{ href:path, label:C.h1 }]} />
+  <main id="main" class="bg-white">
+    <section class="border-b border-steel-200">
+      <div class="mx-auto max-w-4xl px-6 py-12 lg:py-16">
+        <p class="flex items-center gap-3 text-xs font-700 uppercase tracking-[0.22em] text-brand-red"><span class="h-px w-10 bg-brand-red"></span>{C.crumb}</p>
+        <h1 class="mt-5 font-display text-3xl font-800 leading-[1.06] tracking-tight text-navy-900 sm:text-4xl">{C.h1}</h1>
+        <p class="mt-4 text-lg leading-relaxed text-navy-500">{C.lede}</p>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-4xl px-6 pt-10">
+      <div class="border-l-2 border-brand-red bg-steel-50 p-6">
+        <h2 class="font-display text-sm font-800 uppercase tracking-widest text-brand-red">{C.answer}</h2>
+        <p class="mt-3 text-lg leading-relaxed text-navy-800">{C.answerP}</p>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-4xl px-6 py-12">
+      <h2 class="font-display text-2xl font-800 tracking-tight text-navy-900">{C.steps}</h2>
+      <ol class="mt-6 border-t border-steel-200">
+        {C.qs.map((q, i) => (
+          <li class="flex gap-5 border-b border-steel-200 py-6">
+            <span class="font-display text-2xl font-800 text-steel-300">{String(i+1).padStart(2,'0')}</span>
+            <div>
+              <h3 class="font-display text-lg font-700 text-navy-900">{q[0]}</h3>
+              <p class="mt-2 leading-relaxed text-navy-600">{q[1]}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="border-y border-steel-200 bg-steel-50">
+      <div class="mx-auto max-w-4xl px-6 py-12">
+        <h2 class="font-display text-2xl font-800 tracking-tight text-navy-900">{C.tbl}</h2>
+        <div class="mt-6 overflow-x-auto border border-steel-200 bg-white">
+          <table class="w-full text-left text-sm">
+            <thead><tr class="bg-navy-900 text-white">
+              <th scope="col" class="px-4 py-3 font-700">{C.crit}</th>
+              <th scope="col" class="px-4 py-3 font-700">{C.rub}</th>
+              <th scope="col" class="px-4 py-3 font-700">{C.pu}</th>
+            </tr></thead>
+            <tbody class="divide-y divide-steel-200">
+              {C.rows.map(r => (<tr><th scope="row" class="px-4 py-3 text-left font-600 text-navy-500">{r[0]}</th><td class="px-4 py-3 font-600 text-navy-900">{r[1]}</td><td class="px-4 py-3 font-600 text-navy-900">{r[2]}</td></tr>))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-4xl px-6 py-12">
+      <div class="border border-steel-200 p-6">
+        <h2 class="font-display text-xl font-700 text-navy-900">{C.note}</h2>
+        <p class="mt-2 leading-relaxed text-navy-600">{C.noteP}</p>
+        <a href={`${base}/teklif/`} class="mt-5 inline-flex items-center gap-2 bg-brand-red px-6 py-3.5 text-sm font-700 uppercase tracking-wider text-white transition hover:bg-navy-900">{C.cta} <Icon name="arrow" class="h-4 w-4"/></a>
+      </div>
+    </section>
+
+    <RelatedLinks lang={lang} title={C.rel} items={[
+      { href:`${base}/urunler/kaucuk-seydel-merdanesi/`, label:C.pr1, desc:C.pr1d },
+      { href:`${base}/urunler/poliuretan-seydel-merdanesi/`, label:C.pr2, desc:C.pr2d },
+      { href:`${base}/sozluk/`, label:C.gl, desc:C.gld },
+    ]} />
+  </main>
+  <Footer lang={lang} />
+</Base>

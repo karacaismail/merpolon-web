@@ -1,0 +1,31 @@
+---
+// Animated "liquid rubber" morphing blob — evokes the fluid coating compound.
+// Pure CSS border-radius morph (GPU-cheap, mobile-friendly). accent = rubber colour.
+const { accent = '#D62B23', accent2 = '#8f1c16', class: cls = '', opacity = '1' } = Astro.props;
+const id = 'b' + Math.random().toString(36).slice(2, 7);
+---
+<div class={'lb ' + cls} style={`--a:${accent};--a2:${accent2};opacity:${opacity}`} aria-hidden="true">
+  <div class={'lb-shape ' + id}></div>
+</div>
+<style define:vars={{}}>
+  .lb { position: relative; aspect-ratio: 1; }
+  .lb-shape {
+    width: 100%; height: 100%;
+    background: radial-gradient(60% 55% at 38% 32%, color-mix(in srgb, var(--a) 78%, #fff) 0%, var(--a) 42%, var(--a2) 100%);
+    box-shadow: inset -14px -18px 40px rgba(0,0,0,.28), inset 12px 14px 30px rgba(255,255,255,.28);
+    border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
+    animation: lbmorph 9s ease-in-out infinite, lbspin 24s linear infinite;
+  }
+  .lb-shape::after {
+    content:''; position:absolute; top:14%; left:18%; width:34%; height:26%;
+    background: radial-gradient(closest-side, rgba(255,255,255,.55), transparent);
+    border-radius:50%; filter: blur(2px);
+  }
+  @keyframes lbmorph {
+    0%,100% { border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%; }
+    33%     { border-radius: 62% 38% 34% 66% / 56% 60% 40% 44%; }
+    66%     { border-radius: 34% 66% 57% 43% / 38% 46% 54% 62%; }
+  }
+  @keyframes lbspin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .lb-shape { animation: none; } }
+</style>

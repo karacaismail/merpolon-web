@@ -1,0 +1,57 @@
+---
+// Merdane sözlüğü — Semantic / Entity SEO (DefinedTermSet)
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import Breadcrumb from './Breadcrumb.astro';
+import RelatedLinks from './RelatedLinks.astro';
+import { glossary } from '../data/products';
+
+const { lang = 'tr' } = Astro.props;
+const base = lang === 'tr' ? '' : '/' + lang;
+const path = `${base}/sozluk/`;
+const t = {
+  tr: { crumb:'Sözlük', h1:'Merdane sözlüğü', lede:'Teklif ve teknik görüşmelerde en sık geçen terimler — sade açıklamalarla.', rel:'Devamı', gg:'Rehber: Kauçuk mu poliüretan mı?', gp:'Malzeme seçimini adım adım karşılaştırın.', pr:'Ürünler', pd:'Kauçuk, poliüretan, ofset, mürekkep ve su merdaneleri.', qq:'Teklif Formu', qd:'Ölçü ve sertliği iletin, hızlı dönüş alın.' },
+  en: { crumb:'Glossary', h1:'Roller glossary', lede:'The terms that come up most in quotes and technical calls — explained plainly.', rel:'Next', gg:'Guide: rubber or polyurethane?', gp:'Compare the material choice step by step.', pr:'Products', pd:'Rubber, polyurethane, offset, ink and dampening rollers.', qq:'Quote form', qd:'Send dimensions and hardness, get a fast reply.' },
+  de: { crumb:'Glossar', h1:'Walzen-Glossar', lede:'Die häufigsten Begriffe aus Angeboten und technischen Gesprächen — klar erklärt.', rel:'Weiter', gg:'Leitfaden: Gummi oder Polyurethan?', gp:'Materialwahl Schritt für Schritt vergleichen.', pr:'Produkte', pd:'Gummi-, Polyurethan-, Offset-, Farb- und Feuchtwalzen.', qq:'Angebotsformular', qd:'Maße und Härte senden, schnelle Rückmeldung.' },
+  ru: { crumb:'Словарь', h1:'Словарь по валам', lede:'Термины, которые чаще всего встречаются в запросах цен и технических разговорах — объяснены просто.', rel:'Далее', gg:'Руководство: резина или полиуретан?', gp:'Сравните выбор материала шаг за шагом.', pr:'Продукция', pd:'Резиновые, полиуретановые, офсетные, красочные и увлажняющие валы.', qq:'Форма запроса', qd:'Пришлите размеры и твёрдость — ответим быстро.' },
+  ar: { crumb:'المعجم', h1:'معجم الأسطوانات', lede:'أكثر المصطلحات ورودًا في طلبات الأسعار والمحادثات الفنية — بشرح مبسّط.', rel:'التالي', gg:'دليل: مطاط أم بولي يوريثان؟', gp:'قارنوا اختيار المادة خطوة بخطوة.', pr:'المنتجات', pd:'أسطوانات المطاط والبولي يوريثان والأوفست والحبر والترطيب.', qq:'نموذج طلب عرض سعر', qd:'أرسلوا المقاس والصلادة وتلقّوا ردًا سريعًا.' },
+}[lang];
+const SITE = (Astro.site ? Astro.site.href : '').replace(/\/$/, '');
+const schema = [{
+  '@type':'DefinedTermSet', '@id': `${SITE}${path}#glossary`, name: t.h1, inLanguage: lang,
+  hasDefinedTerm: glossary.map(g => ({
+    '@type':'DefinedTerm', '@id': `${SITE}${path}#${g.slug}`, name: g.term[lang], description: g.def[lang],
+    inDefinedTermSet: `${SITE}${path}#glossary`,
+  })),
+}];
+---
+<Base title={`${t.h1} | Merpolon`} lang={lang} path={path} schema={schema}>
+  <Header lang={lang} />
+  <Breadcrumb lang={lang} items={[{ href:path, label:t.crumb }]} />
+  <main id="main" class="bg-white">
+    <section class="border-b border-steel-200">
+      <div class="mx-auto max-w-4xl px-6 py-12 lg:py-16">
+        <p class="flex items-center gap-3 text-xs font-700 uppercase tracking-[0.22em] text-brand-red"><span class="h-px w-10 bg-brand-red"></span>{t.crumb}</p>
+        <h1 class="mt-5 font-display text-3xl font-800 leading-[1.06] tracking-tight text-navy-900 sm:text-4xl">{t.h1}</h1>
+        <p class="mt-4 max-w-2xl text-lg leading-relaxed text-navy-500">{t.lede}</p>
+      </div>
+    </section>
+    <section class="mx-auto max-w-4xl px-6 py-12">
+      <dl class="border-t border-steel-200">
+        {glossary.map(g => (
+          <div id={g.slug} class="grid gap-2 border-b border-steel-200 py-7 md:grid-cols-[220px_1fr] md:gap-8">
+            <dt class="font-display text-lg font-700 text-navy-900">{g.term[lang]}</dt>
+            <dd class="m-0 leading-relaxed text-navy-600">{g.def[lang]}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+    <RelatedLinks lang={lang} title={t.rel} items={[
+      { href:`${base}/rehber/kaucuk-mu-poliuretan-mi/`, label:t.gg, desc:t.gp },
+      { href:`${base}/urunler/`, label:t.pr, desc:t.pd },
+      { href:`${base}/teklif/`, label:t.qq, desc:t.qd },
+    ]} />
+  </main>
+  <Footer lang={lang} />
+</Base>

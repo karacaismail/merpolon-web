@@ -1,0 +1,71 @@
+---
+import Icon from './Icon.astro';
+const {
+  eyebrow, title, lede, cta1, cta2,
+  slides = [],
+} = Astro.props;
+const id = 'hs' + Math.random().toString(36).slice(2, 6);
+---
+<section class={`relative w-full overflow-hidden bg-navy-900 text-white ${id}`}>
+  <!-- slides -->
+  <div class="absolute inset-0">
+    {slides.map((s, i) => (
+      <div class={`hs-slide absolute inset-0 transition-opacity duration-[1200ms] ease-out ${i===0 ? 'opacity-100' : 'opacity-0'}`} data-i={i}>
+        <img src={s.src} alt={s.caption || ''} width="1500" height="900" loading={i===0 ? 'eager' : 'lazy'} class="h-full w-full object-cover" />
+      </div>
+    ))}
+    <div class="absolute inset-0 bg-gradient-to-r from-navy-900/90 via-navy-900/45 to-navy-900/5"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-navy-900/55 via-transparent to-navy-900/10"></div>
+  </div>
+
+  <!-- content -->
+  <div class="relative mx-auto flex min-h-[80vh] max-w-7xl flex-col justify-center px-6 py-24 lg:min-h-[86vh]">
+    <div class="max-w-2xl" data-reveal-group>
+      <p data-reveal class="flex items-center gap-3 text-xs font-700 uppercase tracking-[0.22em] text-brand-redlite"><span class="h-px w-10 bg-brand-red"></span>{eyebrow}</p>
+      <h1 data-reveal set:html={title} class="mt-6 font-display text-4xl font-800 leading-[1.02] tracking-tight sm:text-6xl lg:text-[4.2rem]"></h1>
+      <p data-reveal class="mt-6 max-w-xl text-lg leading-relaxed text-steel-300">{lede}</p>
+      <div data-reveal class="mt-9 flex flex-wrap items-center gap-x-8 gap-y-4">
+        <a href={cta1.href} class="group inline-flex items-center gap-2.5 bg-brand-red px-7 py-4 text-sm font-700 uppercase tracking-wider text-white transition hover:bg-white hover:text-navy-900">{cta1.label} <Icon name="arrow" class="h-4 w-4 transition group-hover:translate-x-1"/></a>
+        <a href={cta2.href} class="inline-flex items-center gap-2 border-b-2 border-white/40 pb-1 text-sm font-700 uppercase tracking-wider text-white transition hover:border-brand-redlite hover:text-brand-redlite">{cta2.label}</a>
+      </div>
+    </div>
+
+    <!-- caption + controls -->
+    <div class="mt-10 flex items-end justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <button class="hs-prev flex h-11 w-11 items-center justify-center border border-white/25 text-white transition hover:border-brand-red hover:bg-brand-red" aria-label="Önceki"><Icon name="arrow" class="h-5 w-5 rotate-180"/></button>
+        <button class="hs-next flex h-11 w-11 items-center justify-center border border-white/25 text-white transition hover:border-brand-red hover:bg-brand-red" aria-label="Sonraki"><Icon name="arrow" class="h-5 w-5"/></button>
+        <span class="hs-cap ml-3 hidden text-sm font-600 text-steel-300 sm:inline">{slides[0]?.caption}</span>
+      </div>
+      <div class="hs-dots flex items-center gap-2">
+        {slides.map((_, i) => (<button class={`hs-dot h-1.5 transition-all ${i===0 ? 'w-8 bg-brand-red' : 'w-4 bg-white/30'}`} data-i={i} aria-label={`Slayt ${i+1}`}></button>))}
+      </div>
+    </div>
+  </div>
+</section>
+<script is:inline define:vars={{ id, captions: slides.map(s => s.caption || '') }}>
+  (function(){
+    var root=document.querySelector('.'+id); if(!root) return;
+    var slides=[].slice.call(root.querySelectorAll('.hs-slide'));
+    var dots=[].slice.call(root.querySelectorAll('.hs-dot'));
+    var cap=root.querySelector('.hs-cap');
+    var i=0, n=slides.length, timer=null;
+    var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function go(k){
+      i=(k+n)%n;
+      slides.forEach(function(s,j){ s.style.opacity = j===i?'1':'0'; });
+      dots.forEach(function(d,j){ d.className='hs-dot h-1.5 transition-all '+(j===i?'w-8 bg-brand-red':'w-4 bg-white/30'); });
+      if(cap) cap.textContent=captions[i]||'';
+    }
+    function next(){ go(i+1); }
+    function prev(){ go(i-1); }
+    function play(){ if(reduce||n<2) return; stop(); timer=setInterval(next,5500); }
+    function stop(){ if(timer) clearInterval(timer); }
+    root.querySelector('.hs-next').addEventListener('click',function(){ next(); play(); });
+    root.querySelector('.hs-prev').addEventListener('click',function(){ prev(); play(); });
+    dots.forEach(function(d){ d.addEventListener('click',function(){ go(+d.dataset.i); play(); }); });
+    root.addEventListener('mouseenter',stop); root.addEventListener('mouseleave',play);
+    document.addEventListener('keydown',function(e){ if(e.key==='ArrowRight'){next();play();} if(e.key==='ArrowLeft'){prev();play();} });
+    play();
+  })();
+</script>

@@ -1,0 +1,192 @@
+---
+// Sektörler sayfası — TEK kaynak, 5 dil. Her dil rotası bu bileşeni `lang` ile çağırır,
+// böylece TR/EN/DE/RU/AR yapısal olarak birebir aynı içeriği alır (içerik paritesi).
+import Base from '../../layouts/Base.astro';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import Icon from '../Icon.astro';
+import { sectors, sectorGroups, sectorDetail, company } from '../../data/site';
+
+const { lang = 'tr' } = Astro.props;
+const base = lang === 'tr' ? '' : '/' + lang;
+const n = sectors.length;
+const byGroup = (k) => sectors.filter(s => s.group === k);
+
+// Sayı uyumu: RU 3 biçimli, AR 4 biçimli çekim ister; TR sayıdan sonra çoğul almaz.
+const ruPl = (k, one, few, many) => {
+  const m10 = k % 10, m100 = k % 100;
+  if (m10 === 1 && m100 !== 11) return one;
+  if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return few;
+  return many;
+};
+const arPl = (k) => (k === 1 ? 'قطاع' : k === 2 ? 'قطاعان' : k >= 3 && k <= 10 ? 'قطاعات' : 'قطاعًا');
+const ruSector = (k) => ruPl(k, 'отрасль', 'отрасли', 'отраслей');
+
+const H = {
+  tr: {
+    title:'Sektörler — Endüstriyel Merdane | Merpolon',
+    eyebrow:'Sektörler',
+    h1:`${n} sektöre,<br/>tek uzmanlık`,
+    lede:'Tekstilden ağır sanayiye, baskıdan ambalaja kadar merdane kullanılan her hatta; çalışma şartlarına özel kauçuk ve poliüretan kaplı silindirler.',
+    heroAlt:'Farklı sertlik ve çaplarda merdaneler',
+    metrics:['Hizmet sektörü','Kaplama aralığı','Malzeme (kauçuk/PU)','Garanti'],
+    materials:'2', warranty:'3 ay',
+    featEy:'Uzmanlık Alanımız', featH:'Tekstil & elyaf-iplik',
+    featP:'Akrilik elyaf-iplik sektöründe TWO / NSC / Seydel makineleri için koparma ve converter merdaneleri; rebrakır, çekim ve finisör silindirleri. 25 yılı aşkın tecrübeyle bu alan en güçlü olduğumuz yer.',
+    featAlt:'Elyaf-iplik merdaneleri',
+    chips:['Koparma','Converter','Rebrakır','Çekim','Finisör'],
+    secWord:() => 'sektör',
+    ctaH:'Sektörünüz listede yok mu?',
+    ctaP:'Merdane kullanılan her hatta çözüm üretiyoruz. Uygulamanızı anlatın, doğru malzeme ve sertliği birlikte belirleyelim.',
+    contact:'İletişim',
+  },
+  en: {
+    title:'Industries — Industrial Rollers | Merpolon',
+    eyebrow:'Industries',
+    h1:`${n} industries,<br/>one field of expertise`,
+    lede:'From textile to heavy industry, from printing to packaging — rubber and polyurethane coated cylinders made for your operating conditions, on every line that runs rollers.',
+    heroAlt:'Rollers in different hardness values and diameters',
+    metrics:['Industries served','Covering range','Materials (rubber/PU)','Warranty'],
+    materials:'2', warranty:'3 months',
+    featEy:'Our field of expertise', featH:'Textile & fiber-yarn',
+    featP:'Breaking and converter rollers for TWO / NSC / Seydel machines in the acrylic fiber-yarn industry; rebreaker, drawing and finisher cylinders. With over 25 years of experience, this is where we are strongest.',
+    featAlt:'Fiber and yarn rollers',
+    chips:['Breaking','Converter','Rebreaker','Drawing','Finisher'],
+    secWord:(k) => (k === 1 ? 'industry' : 'industries'),
+    ctaH:'Your industry not on the list?',
+    ctaP:'We deliver solutions for every line that runs rollers. Tell us about your application and we will determine the right material and hardness together.',
+    contact:'Contact',
+  },
+  de: {
+    title:'Branchen — Industriewalzen | Merpolon',
+    eyebrow:'Branchen',
+    h1:`${n} Branchen,<br/>eine Expertise`,
+    lede:'Von Textil bis Schwerindustrie, von Druck bis Verpackung — gummi- und polyurethanbeschichtete Walzen nach Ihren Betriebsbedingungen, auf jeder Linie, in der Walzen laufen.',
+    heroAlt:'Walzen in verschiedenen Härten und Durchmessern',
+    metrics:['Belieferte Branchen','Beschichtungsbereich','Materialien (Gummi/PU)','Garantie'],
+    materials:'2', warranty:'3 Monate',
+    featEy:'Unser Spezialgebiet', featH:'Textil & Faser-Garn',
+    featP:'Abreiß- und Converterwalzen für TWO- / NSC- / Seydel-Maschinen in der Acryl-Faser-Garn-Branche; Rebreaker-, Streck- und Finisherwalzen. Mit über 25 Jahren Erfahrung sind wir hier am stärksten.',
+    featAlt:'Faser-Garn-Walzen',
+    chips:['Abreißen','Converter','Rebreaker','Strecken','Finisher'],
+    secWord:(k) => (k === 1 ? 'Branche' : 'Branchen'),
+    ctaH:'Ihre Branche ist nicht dabei?',
+    ctaP:'Wir liefern Lösungen für jede Linie, in der Walzen laufen. Beschreiben Sie uns Ihre Anwendung — das richtige Material und die passende Härte bestimmen wir gemeinsam.',
+    contact:'Kontakt',
+  },
+  ru: {
+    title:'Отрасли — промышленные валы | Merpolon',
+    eyebrow:'Отрасли',
+    h1:`${n} ${ruSector(n)},<br/>одна экспертиза`,
+    lede:'От текстиля до тяжёлой промышленности, от печати до упаковки — валы с резиновым и полиуретановым покрытием под ваши условия работы, на каждой линии, где используются валы.',
+    heroAlt:'Валы различной твёрдости и диаметров',
+    metrics:['Обслуживаемых отраслей','Диапазон покрытия','Материала (резина/ПУ)','Гарантия'],
+    materials:'2', warranty:'3 месяца',
+    featEy:'Наша специализация', featH:'Текстиль и волокно-пряжа',
+    featP:'Отрывные и конверторные валы для машин TWO / NSC / Seydel в производстве акрилового волокна и пряжи; валы rebreaker, тянущие и финишные. С опытом более 25 лет именно здесь мы сильнее всего.',
+    featAlt:'Валы для волокна и пряжи',
+    chips:['Отрыв','Конвертор','Ребрейкер','Вытяжка','Финишер'],
+    secWord:ruSector,
+    ctaH:'Вашей отрасли нет в списке?',
+    ctaP:'Мы создаём решения для любой линии, где используются валы. Расскажите о вашем применении — подходящий материал и твёрдость определим вместе.',
+    contact:'Контакты',
+  },
+  ar: {
+    title:'القطاعات — أسطوانات صناعية | Merpolon',
+    eyebrow:'القطاعات',
+    h1:`${n} قطاعًا،<br/>وخبرة واحدة`,
+    lede:'من النسيج إلى الصناعات الثقيلة، ومن الطباعة إلى التغليف — أسطوانات مكسوّة بالمطاط والبولي يوريثان مصنوعة وفق ظروف تشغيلكم، في كل خط تعمل فيه الأسطوانات.',
+    heroAlt:'أسطوانات بصلادات وأقطار مختلفة',
+    metrics:['قطاعًا نخدمه','نطاق التكسية','مادتان (مطاط/بولي يوريثان)','الضمان'],
+    materials:'2', warranty:'3 أشهر',
+    featEy:'مجال تخصصنا', featH:'النسيج والألياف والغزل',
+    featP:'أسطوانات القطع والتحويل لآلات TWO / NSC / Seydel في قطاع الألياف والغزل الأكريليكي؛ وأسطوانات الريبريكر والسحب والتشطيب. وبخبرة تتجاوز 25 عامًا، هذا هو المجال الذي نحن فيه الأقوى.',
+    featAlt:'أسطوانات الألياف والغزل',
+    chips:['القطع','التحويل','الريبريكر','السحب','التشطيب'],
+    secWord:arPl,
+    ctaH:'ألا يوجد قطاعكم في القائمة؟',
+    ctaP:'ننتج حلولًا لكل خط تُستخدم فيه الأسطوانات. صِفوا لنا تطبيقكم لنحدّد معًا المادة والصلادة المناسبتين.',
+    contact:'اتصل بنا',
+  },
+}[lang];
+---
+<Base title={H.title} lang={lang} path={`${base}/sektorler/`}>
+  <Header lang={lang} seg="sektorler/" />
+  <main id="main" class="bg-white">
+
+    <!-- HERO (light) -->
+    <section class="border-b border-steel-200">
+      <div class="mx-auto grid max-w-7xl items-stretch lg:grid-cols-[1.2fr_1fr]">
+        <div class="flex flex-col justify-center px-6 py-16 lg:py-20 lg:pr-14" data-reveal-group>
+          <p data-reveal class="flex items-center gap-3 text-xs font-700 uppercase tracking-[0.22em] text-brand-red"><span class="h-px w-10 bg-brand-red"></span>{H.eyebrow}</p>
+          <h1 data-reveal class="mt-6 font-display text-4xl font-800 leading-[1.04] tracking-tight text-navy-900 sm:text-5xl" set:html={H.h1}></h1>
+          <p data-reveal class="mt-6 max-w-lg text-lg leading-relaxed text-navy-500">{H.lede}</p>
+        </div>
+        <div class="relative min-h-[280px] bg-navy-900 lg:min-h-full">
+          <img src="/gallery/poliuretan-merdane-uretimi.webp" srcset="/gallery/poliuretan-merdane-uretimi-480.webp 480w, /gallery/poliuretan-merdane-uretimi-960.webp 960w, /gallery/poliuretan-merdane-uretimi.webp 1500w" sizes="(max-width: 768px) 100vw, 50vw" alt={H.heroAlt} width="832" height="666" class="h-full w-full object-cover"/>
+        </div>
+      </div>
+    </section>
+
+    <!-- METRIC STRIP -->
+    <section class="border-b border-steel-200 bg-steel-50">
+      <div class="mx-auto grid max-w-7xl grid-cols-2 divide-x divide-steel-200 lg:grid-cols-4">
+        {[[String(n),H.metrics[0]],['Ø1200 × 7000 mm',H.metrics[1]],[H.materials,H.metrics[2]],[H.warranty,H.metrics[3]]].map(([v,l]) => (
+          <div class="px-6 py-8"><div class="font-display text-2xl font-800 text-navy-900">{v}</div><div class="mt-1 text-xs uppercase tracking-wider text-navy-500">{l}</div></div>
+        ))}
+      </div>
+    </section>
+
+    <!-- FEATURED: textile / fiber-yarn -->
+    <section class="mx-auto max-w-7xl px-6 py-20 lg:py-24">
+      <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+        <div data-reveal class="overflow-hidden border border-steel-200"><img src="/gallery/poliuretan-kapli-besleme-merdaneleri.webp" srcset="/gallery/poliuretan-kapli-besleme-merdaneleri-480.webp 480w, /gallery/poliuretan-kapli-besleme-merdaneleri-960.webp 960w, /gallery/poliuretan-kapli-besleme-merdaneleri.webp 1500w" sizes="(max-width: 768px) 100vw, 50vw" alt={H.featAlt} width="1010" height="758" class="aspect-[4/3] w-full object-cover"/></div>
+        <div data-reveal-group>
+          <p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.featEy}</p>
+          <h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.featH}</h2>
+          <p data-reveal class="mt-5 leading-relaxed text-navy-500">{H.featP}</p>
+          <div data-reveal class="mt-6 flex flex-wrap gap-2">{H.chips.map(x => (<span class="border border-steel-300 px-3 py-1.5 text-xs font-600 text-navy-600">{x}</span>))}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GROUPED SECTORS -->
+    {sectorGroups.map((g, gi) => (
+      <section class={gi % 2 === 0 ? 'border-t border-steel-200 bg-steel-50' : 'border-t border-steel-200 bg-white'}>
+        <div class="mx-auto max-w-7xl px-6 py-16 lg:py-20">
+          <div class="flex items-center gap-4" data-reveal>
+            <span class="font-display text-sm font-800 text-brand-red">0{gi+1}</span>
+            <h2 class="font-display text-2xl font-800 tracking-tight text-navy-900 sm:text-3xl">{g[lang]}</h2>
+            <span class="h-px flex-1 bg-steel-200"></span>
+            <span class="text-xs font-600 uppercase tracking-wider text-navy-400">{byGroup(g.key).length} {H.secWord(byGroup(g.key).length)}</span>
+          </div>
+          <div class="mt-10 grid border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 sm:grid-cols-2 lg:grid-cols-4" data-reveal-group>
+            {byGroup(g.key).map(s => (
+              <a href={`${base}/sektorler/${s.slug}/`} data-reveal class="group flex flex-col bg-white p-6 transition hover:bg-navy-900">
+                <Icon name={s.icon} class="h-7 w-7 text-brand-red"/>
+                <h3 class="mt-5 font-display text-base font-700 text-navy-900 transition group-hover:text-white">{s[lang]}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-navy-500 transition group-hover:text-steel-300">{sectorDetail[s.tr][lang]}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    ))}
+
+    <!-- CTA -->
+    <section class="bg-navy-900 text-white">
+      <div class="mx-auto flex max-w-7xl flex-col items-start gap-8 px-6 py-20 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <h2 class="font-display text-3xl font-800 tracking-tight sm:text-4xl">{H.ctaH}</h2>
+          <p class="mt-4 max-w-xl text-steel-300">{H.ctaP}</p>
+        </div>
+        <div class="flex shrink-0 flex-wrap gap-3">
+          <a href={'tel:'+company.order.replace(/\s/g,'')} class="inline-flex items-center gap-2 bg-brand-red px-6 py-4 text-sm font-700 uppercase tracking-wider transition hover:bg-white hover:text-navy-900"><Icon name="phone" class="h-4 w-4"/>{company.order}</a>
+          <a href={`${base}/iletisim/`} class="inline-flex items-center gap-2 border border-white/30 px-6 py-4 text-sm font-700 uppercase tracking-wider transition hover:bg-white/10">{H.contact}</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <Footer lang={lang} />
+</Base>

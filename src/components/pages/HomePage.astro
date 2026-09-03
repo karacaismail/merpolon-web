@@ -1,0 +1,612 @@
+---
+// Ana sayfa — TEK kaynak, 5 dil. Her dil rotası bu bileşeni `lang` ile çağırır,
+// böylece TR/EN/DE/RU/AR yapısal olarak birebir aynı içeriği alır (içerik paritesi).
+import Base from '../../layouts/Base.astro';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import Icon from '../Icon.astro';
+import HeroSlider from '../HeroSlider.astro';
+import { company, productLines, features, services, sectors, references, process, faqs, qualityPoints } from '../../data/site';
+
+const { lang = 'tr' } = Astro.props;
+const base = lang === 'tr' ? '' : '/' + lang;
+const n = sectors.length;
+
+const H = {
+  tr: {
+    title:'Merpolon — Kauçuk & Poliüretan Seydel Merdaneleri | Merteks Elastomer',
+    eyebrow:"Merteks Elastomer · 1989'dan beri",
+    h1:"Kaplı merdanede<br/>geliştirme <span class='text-brand-redlite'>ortağınız</span>",
+    lede:"Kauçuk ve poliüretan kaplı Seydel silindirleri. Isı barındırmayan, antistatik, sabit sertlikte yüzeyler; Ø1200 × 7000 mm'e kadar kaplama, hassas taşlama ve kanal açma.",
+    cta1:'Ürünler', cta2:'Portföy',
+    caps:['Poliüretan besleme merdaneleri','Poliüretan merdane üretimi','Grafit kauçuk merdaneler','Kauçuk kaplı merdane seti','Kauçuk kaplı finisör merdanesi'],
+    spec:['Kuruluş','Max kaplama','Sektör','Garanti'], warranty:'3 ay',
+    trust:'Bize güvenenler',
+    posEy:'Merteks Elastomer',
+    pos:'Karışıma ilave ettiğimiz özel kimyasallar ve Ar-Ge ile geliştirdiğimiz yapıştırma tekniği sayesinde; <span class="text-brand-red">ısı barındırmayan, elektriklenmeyen ve çalışma boyunca sertliğini koruyan</span> merdaneler üretiyoruz.',
+    about:'Hakkımızda',
+    whyEy:'Neden Merpolon', whyH:'Sahada fark yaratan üç temel',
+    pillars:[
+      ['Ar-Ge temelli formül','Karışıma ilave özel kimyasallar ve kendi geliştirdiğimiz yapıştırma tekniği ile ısı barındırmayan, elektriklenmeyen kaplamalar.'],
+      ['Uçtan uca imalat','ST52 çelik çekirdekten kaplamaya, hassas taşlamadan kanal açmaya kadar tüm süreç mühendis kontrolünde tek çatı altında.'],
+      ['Ölçüye özel üretim','Sertlik (Shore A), çap ve boy çalışma şartlarınıza göre; Ø1200 × 7000 mm’e kadar. İmalat hatalarına karşı 3 ay garanti.'],
+    ],
+    techEy:'Teknik Üstünlükler', techH:'Ar-Ge ile geliştirilmiş kaplama formülü',
+    matEy:'Malzeme Seçimi', matH:'Kauçuk mu, poliüretan mı?', matP:'Uygulamanıza göre en doğru malzemeyi birlikte belirliyoruz. Genel kıyaslama:',
+    compare:[
+      ['Malzeme','Kauçuk (elastomer)','Poliüretan (PU)'],
+      ['Öne çıkan güç','Antistatik, ısı barındırmaz','Aşınma & yırtılma direnci'],
+      ['Sertlik davranışı','Çalışma boyunca sabit (SHA)','Yüksek geri esneme, sabit sertlik'],
+      ['Tipik kullanım','Koparma / converter merdaneleri','Çekim / finisör merdaneleri'],
+      ['Sektör','Tekstil, elyaf-iplik, kağıt','Elyaf-iplik, ambalaj, metal'],
+    ],
+    plEy:'Ürün Hatları', plH:'İki marka, tek kalite anlayışı',
+    pl1:'Kauçuk Seydel silindirleri', pl1b:['Isı barındırmaz','Antistatik','Sabit sertlik (SHA)','Metale mükemmel yapışma'],
+    pl2:'Poliüretan Seydel silindirleri', pl2b:['Üstün aşınma direnci','Yırtılmaya dayanıklı','Çalışma ısısını atar','Laboratuvar kontrollü'],
+    metrics:['Yıllık tecrübe','Hizmet sektörü','Max çap (mm)','Max boy (mm)'],
+    prEy:'Üretim Süreci', prH:'Çelikten sahaya, beş adımda',
+    capEy:'Üretim & Hizmet', capH:'Uçtan uca kendi tesisimizde',
+    capP:'Mühendis kontrolünde ST52 çelik çekirdek imalatından kaplamaya, hassas taşlamadan kanal açmaya kadar tüm süreç tek çatı altında.',
+    chips:['Düz Taşlama','Konik','Bombeli','Baklava Kanal','Helis Kanal'],
+    appEy:'Uygulama', appH:'Akrilik elyaf-iplik hatları için',
+    appP:'TWO / NSC / Seydel makinelerinde koparma ve converter merdaneleri; rebrakır, çekim ve finisör silindirleri. Kauçuk sertlikleri ve kaplama çapları çalışma şartlarına birebir uygun üretilir — rektifiye taşlaması yapılsa bile çalışma ömrü uzar.',
+    sectors:'Sektörler',
+    qEy:'Kalite Sözü', qH:'Kalite ve güven bizim işimiz',
+    indH:`${n} sektöre çözüm`, all:'Tümü',
+    quote:'“Özel yapıştırma tekniğimiz sayesinde metalden ayrılmalara son verdik. 25 yılı aşkın tecrübeyle her merdanede aynı standardı sunuyoruz.”',
+    refEy:'Referanslar', refH:'Türkiye genelinde tercih ediliyor',
+    faqEy:'Sıkça Sorulanlar', faqAll:'Tüm sorular',
+    exp:'Keşfedin', explore:'İncele',
+    links:[
+      ['Kauçuk & poliüretan merdaneler','Merteks ve Merpolon Seydel silindirleri, tip tablosu ve teknik özellikler.'],
+      ['Kaplama, taşlama & kanal açma','Ø1200 × 7000 mm’e kadar kaplama, hassas taşlama ve yeniden kaplama.'],
+      [`${n} sektöre çözüm`,'Tekstil, baskı, ambalaj ve ağır sanayi için merdane uygulamaları.'],
+      ['Üretim & tesis','ST52 çelik çekirdek, CNC ve vargel tezgahıyla mühendis kontrolünde imalat.'],
+      ['Kalite & 3 ay garanti','Sertlik (Shore A) ve balans kontrolü, Ar-Ge temelli kaplama formülü.'],
+      ['Referanslar & kapsam','15+ ilde tekstil ve sanayi üreticileri tarafından tercih ediliyor.'],
+    ],
+    ctaH:'Projeniz için doğru merdaneyi belirleyelim.',
+    ctaP:`Çalışma şartlarınıza uygun sertlik, çap ve kaplama için teklif alın — Türkiye'nin her yerinden ${company.phone}.`,
+    email:'E-posta',
+  },
+  en: {
+    title:'Merpolon — Rubber & Polyurethane Seydel Rollers | Merteks Elastomer',
+    eyebrow:'Merteks Elastomer · since 1989',
+    h1:"Your development<br/>partner in <span class='text-brand-redlite'>coated rollers</span>",
+    lede:'Rubber and polyurethane coated Seydel cylinders. Heat-free, antistatic surfaces with stable hardness; covering, precision grinding and grooving up to Ø1200 × 7000 mm.',
+    cta1:'Products', cta2:'Portfolio',
+    caps:['Polyurethane feed rollers','Polyurethane roller production','Graphite rubber rollers','Rubber coated roller set','Rubber coated finisher roller'],
+    spec:['Founded','Max covering','Industries','Warranty'], warranty:'3 months',
+    trust:'Trusted by',
+    posEy:'Merteks Elastomer',
+    pos:'Thanks to the special chemicals we add to the compound and the bonding technique we developed in-house, we produce rollers that <span class="text-brand-red">hold no heat, do not build up static and keep their hardness throughout service</span>.',
+    about:'About us',
+    whyEy:'Why Merpolon', whyH:'Three fundamentals that show on the line',
+    pillars:[
+      ['R&D-based formula','Special chemicals in the compound and our own bonding technique deliver coverings that hold no heat and build up no static.'],
+      ['End-to-end manufacturing','From the ST52 steel core to covering, from precision grinding to grooving — the whole process under one roof, engineer-supervised.'],
+      ['Made to your dimensions','Hardness (Shore A), diameter and length to your operating conditions, up to Ø1200 × 7000 mm. Three months warranty against manufacturing defects.'],
+    ],
+    techEy:'Technical advantages', techH:'A covering formula developed through R&D',
+    matEy:'Material choice', matH:'Rubber or polyurethane?', matP:'We determine the right material together, based on your application. General comparison:',
+    compare:[
+      ['Material','Rubber (elastomer)','Polyurethane (PU)'],
+      ['Key strength','Antistatic, holds no heat','Abrasion & tear resistance'],
+      ['Hardness behaviour','Stable throughout service (SHA)','High rebound, stable hardness'],
+      ['Typical use','Break / converter rollers','Drawing / finisher rollers'],
+      ['Industry','Textile, fiber-yarn, paper','Fiber-yarn, packaging, metal'],
+    ],
+    plEy:'Product lines', plH:'Two brands, one standard of quality',
+    pl1:'Rubber Seydel cylinders', pl1b:['Holds no heat','Antistatic','Stable hardness (SHA)','Perfect bond to metal'],
+    pl2:'Polyurethane Seydel cylinders', pl2b:['Superior abrasion resistance','Tear resistant','Releases working heat','Laboratory controlled'],
+    metrics:['Years of experience','Industries served','Max diameter (mm)','Max length (mm)'],
+    prEy:'Production process', prH:'From steel to the shop floor, in five steps',
+    capEy:'Production & service', capH:'End to end in our own plant',
+    capP:'From engineer-supervised ST52 steel core manufacturing to covering, from precision grinding to grooving — the entire process under one roof.',
+    chips:['Straight grinding','Tapered','Crowned','Diamond groove','Helical groove'],
+    appEy:'Application', appH:'For acrylic fiber-yarn lines',
+    appP:'Break and converter rollers for TWO / NSC / Seydel machines; rebreaker, drawing and finisher cylinders. Rubber hardness and covering diameters are produced to match your operating conditions exactly — service life stays long even after precision grinding.',
+    sectors:'Industries',
+    qEy:'Quality promise', qH:'Quality and trust are our business',
+    indH:`Solutions for ${n} industries`, all:'View all',
+    quote:'“With our special bonding technique we put an end to separation from the metal. With over 25 years of experience we deliver the same standard in every roller.”',
+    refEy:'References', refH:'Chosen across Türkiye',
+    faqEy:'Frequently asked', faqAll:'All questions',
+    exp:'Explore', explore:'View',
+    links:[
+      ['Rubber & polyurethane rollers','Merteks and Merpolon Seydel cylinders, type table and technical specifications.'],
+      ['Covering, grinding & grooving','Covering up to Ø1200 × 7000 mm, precision grinding and re-covering.'],
+      [`Solutions for ${n} industries`,'Roller applications for textile, printing, packaging and heavy industry.'],
+      ['Production & plant','ST52 steel core, CNC and planing machines, engineer-supervised manufacturing.'],
+      ['Quality & 3-month warranty','Hardness (Shore A) and balance control, R&D-based covering formula.'],
+      ['References & coverage','Chosen by textile and industrial producers in 15+ provinces.'],
+    ],
+    ctaH:'Let us define the right roller for your project.',
+    ctaP:`Request a quote for the hardness, diameter and covering that match your operating conditions — from anywhere in Türkiye, ${company.phone}.`,
+    email:'Email',
+  },
+  de: {
+    title:'Merpolon — Gummi- & Polyurethan-Seydel-Walzen | Merteks Elastomer',
+    eyebrow:'Merteks Elastomer · seit 1989',
+    h1:"Ihr Entwicklungs-<br/>partner für <span class='text-brand-redlite'>beschichtete Walzen</span>",
+    lede:'Gummi- und polyurethanbeschichtete Seydel-Walzen. Wärmefreie, antistatische Oberflächen mit konstanter Härte; Beschichtung, Präzisionsschleifen und Rillen bis Ø1200 × 7000 mm.',
+    cta1:'Produkte', cta2:'Portfolio',
+    caps:['Polyurethan-Zuführwalzen','Polyurethan-Walzenfertigung','Graphit-Gummiwalzen','Gummibeschichteter Walzensatz','Gummibeschichtete Finisherwalze'],
+    spec:['Gegründet','Max. Beschichtung','Branchen','Garantie'], warranty:'3 Monate',
+    trust:'Vertrauen uns',
+    posEy:'Merteks Elastomer',
+    pos:'Dank der Spezialchemikalien in unserer Mischung und der selbst entwickelten Haftungstechnik fertigen wir Walzen, die <span class="text-brand-red">keine Wärme speichern, sich nicht statisch aufladen und ihre Härte über die gesamte Laufzeit behalten</span>.',
+    about:'Über uns',
+    whyEy:'Warum Merpolon', whyH:'Drei Grundlagen, die in der Praxis zählen',
+    pillars:[
+      ['F&E-basierte Formel','Spezialchemikalien in der Mischung und unsere eigene Haftungstechnik ergeben Beschichtungen ohne Wärmestau und ohne statische Aufladung.'],
+      ['Fertigung aus einer Hand','Vom ST52-Stahlkern bis zur Beschichtung, vom Präzisionsschleifen bis zum Rillen — der gesamte Prozess unter einem Dach, ingenieurüberwacht.'],
+      ['Fertigung nach Maß','Härte (Shore A), Durchmesser und Länge nach Ihren Betriebsbedingungen, bis Ø1200 × 7000 mm. Drei Monate Garantie auf Fertigungsfehler.'],
+    ],
+    techEy:'Technische Vorteile', techH:'Eine in der F&E entwickelte Beschichtungsformel',
+    matEy:'Materialwahl', matH:'Gummi oder Polyurethan?', matP:'Das passende Material bestimmen wir gemeinsam anhand Ihrer Anwendung. Allgemeiner Vergleich:',
+    compare:[
+      ['Material','Gummi (Elastomer)','Polyurethan (PU)'],
+      ['Kernstärke','Antistatisch, speichert keine Wärme','Abrieb- & Reißfestigkeit'],
+      ['Härteverhalten','Konstant über die Laufzeit (SHA)','Hohe Rückprallelastizität, konstante Härte'],
+      ['Typischer Einsatz','Abreiß- / Converterwalzen','Streck- / Finisherwalzen'],
+      ['Branche','Textil, Faser-Garn, Papier','Faser-Garn, Verpackung, Metall'],
+    ],
+    plEy:'Produktlinien', plH:'Zwei Marken, ein Qualitätsanspruch',
+    pl1:'Gummi-Seydel-Walzen', pl1b:['Speichert keine Wärme','Antistatisch','Konstante Härte (SHA)','Perfekte Haftung am Metall'],
+    pl2:'Polyurethan-Seydel-Walzen', pl2b:['Höchste Abriebfestigkeit','Reißfest','Führt Betriebswärme ab','Laborkontrolliert'],
+    metrics:['Jahre Erfahrung','Belieferte Branchen','Max. Durchmesser (mm)','Max. Länge (mm)'],
+    prEy:'Fertigungsprozess', prH:'Vom Stahl in die Produktion, in fünf Schritten',
+    capEy:'Fertigung & Service', capH:'Alles im eigenen Werk',
+    capP:'Von der ingenieurüberwachten ST52-Stahlkernfertigung bis zur Beschichtung, vom Präzisionsschleifen bis zum Rillen — der gesamte Prozess unter einem Dach.',
+    chips:['Geradschliff','Konisch','Ballig','Rautenrille','Wendelrille'],
+    appEy:'Anwendung', appH:'Für Acryl-Faser-Garn-Linien',
+    appP:'Abreiß- und Converterwalzen für TWO- / NSC- / Seydel-Maschinen; Rebreaker-, Streck- und Finisherwalzen. Gummihärten und Beschichtungsdurchmesser werden exakt auf Ihre Betriebsbedingungen gefertigt — die Laufzeit bleibt auch nach dem Präzisionsschleifen lang.',
+    sectors:'Branchen',
+    qEy:'Qualitätsversprechen', qH:'Qualität und Vertrauen sind unser Geschäft',
+    indH:`Lösungen für ${n} Branchen`, all:'Alle ansehen',
+    quote:'„Mit unserer speziellen Haftungstechnik haben wir das Ablösen vom Metall beendet. Mit über 25 Jahren Erfahrung liefern wir bei jeder Walze denselben Standard.“',
+    refEy:'Referenzen', refH:'Türkeiweit gewählt',
+    faqEy:'Häufige Fragen', faqAll:'Alle Fragen',
+    exp:'Entdecken', explore:'Ansehen',
+    links:[
+      ['Gummi- & Polyurethanwalzen','Merteks- und Merpolon-Seydel-Walzen, Typentabelle und technische Daten.'],
+      ['Beschichten, Schleifen & Rillen','Beschichtung bis Ø1200 × 7000 mm, Präzisionsschleifen und Neubeschichtung.'],
+      [`Lösungen für ${n} Branchen`,'Walzenanwendungen für Textil, Druck, Verpackung und Schwerindustrie.'],
+      ['Fertigung & Werk','ST52-Stahlkern, CNC- und Hobelmaschinen, ingenieurüberwachte Fertigung.'],
+      ['Qualität & 3 Monate Garantie','Härte- (Shore A) und Rundlaufprüfung, F&E-basierte Beschichtungsformel.'],
+      ['Referenzen & Reichweite','Von Textil- und Industriebetrieben in über 15 Provinzen gewählt.'],
+    ],
+    ctaH:'Bestimmen wir die richtige Walze für Ihr Projekt.',
+    ctaP:`Fordern Sie ein Angebot für Härte, Durchmesser und Beschichtung passend zu Ihren Betriebsbedingungen an — aus der ganzen Türkei, ${company.phone}.`,
+    email:'E-Mail',
+  },
+  ru: {
+    title:'Merpolon — валы Seydel с резиновым и полиуретановым покрытием | Merteks Elastomer',
+    eyebrow:'Merteks Elastomer · с 1989 года',
+    h1:"Ваш партнёр по разработке<br/>валов <span class='text-brand-redlite'>с покрытием</span>",
+    lede:'Цилиндры Seydel с резиновым и полиуретановым покрытием. Поверхности, не удерживающие тепло, антистатичные, со стабильной твёрдостью; покрытие, прецизионное шлифование и нарезка канавок до Ø1200 × 7000 мм.',
+    cta1:'Продукция', cta2:'Портфолио',
+    caps:['Полиуретановые питающие валы','Производство полиуретановых валов','Графитовые резиновые валы','Комплект валов с резиновым покрытием','Финишный вал с резиновым покрытием'],
+    spec:['Основана','Макс. покрытие','Отраслей','Гарантия'], warranty:'3 месяца',
+    trust:'Нам доверяют',
+    posEy:'Merteks Elastomer',
+    pos:'Благодаря специальным химическим добавкам в смеси и собственной технике склейки мы производим валы, которые <span class="text-brand-red">не удерживают тепло, не электризуются и сохраняют твёрдость в течение всей работы</span>.',
+    about:'О нас',
+    whyEy:'Почему Merpolon', whyH:'Три основы, заметные на производстве',
+    pillars:[
+      ['Рецептура на базе НИОКР','Специальные химические добавки в смеси и собственная техника склейки дают покрытия, которые не удерживают тепло и не накапливают статику.'],
+      ['Полный цикл производства','От стального сердечника ST52 до покрытия, от прецизионного шлифования до нарезки канавок — весь процесс под одной крышей и под контролем инженера.'],
+      ['Изготовление по вашим размерам','Твёрдость (Shore A), диаметр и длина по вашим условиям работы, до Ø1200 × 7000 мм. Гарантия три месяца от производственных дефектов.'],
+    ],
+    techEy:'Технические преимущества', techH:'Рецептура покрытия, разработанная в НИОКР',
+    matEy:'Выбор материала', matH:'Резина или полиуретан?', matP:'Подходящий материал мы определяем вместе, исходя из вашего применения. Общее сравнение:',
+    compare:[
+      ['Материал','Резина (эластомер)','Полиуретан (PU)'],
+      ['Ключевая сила','Антистатичность, не удерживает тепло','Стойкость к износу и разрыву'],
+      ['Поведение твёрдости','Стабильна всю работу (SHA)','Высокая упругость, стабильная твёрдость'],
+      ['Типичное применение','Отрывные / конверторные валы','Тянущие / финишные валы'],
+      ['Отрасль','Текстиль, волокно-пряжа, бумага','Волокно-пряжа, упаковка, металл'],
+    ],
+    plEy:'Линейки продукции', plH:'Две марки, единый стандарт качества',
+    pl1:'Резиновые цилиндры Seydel', pl1b:['Не удерживает тепло','Антистатичность','Стабильная твёрдость (SHA)','Идеальная адгезия к металлу'],
+    pl2:'Полиуретановые цилиндры Seydel', pl2b:['Высокая износостойкость','Стойкость к разрыву','Отводит рабочее тепло','Лабораторный контроль'],
+    metrics:['Лет опыта','Обслуживаемых отраслей','Макс. диаметр (мм)','Макс. длина (мм)'],
+    prEy:'Производственный процесс', prH:'От стали до цеха, в пять шагов',
+    capEy:'Производство и сервис', capH:'Полный цикл на собственном заводе',
+    capP:'От изготовления стального сердечника ST52 под контролем инженера до покрытия, от прецизионного шлифования до нарезки канавок — весь процесс под одной крышей.',
+    chips:['Цилиндрическое шлифование','Коническое','Бомбированное','Ромбическая канавка','Винтовая канавка'],
+    appEy:'Применение', appH:'Для линий акрилового волокна и пряжи',
+    appP:'Отрывные и конверторные валы для машин TWO / NSC / Seydel; валы rebreaker, тянущие и финишные. Твёрдость резины и диаметры покрытия изготавливаются точно под ваши условия работы — срок службы остаётся долгим даже после прецизионного шлифования.',
+    sectors:'Отрасли',
+    qEy:'Обещание качества', qH:'Качество и доверие — наша работа',
+    indH:`Решения для ${n} отраслей`, all:'Смотреть все',
+    quote:'«Благодаря нашей особой технике склейки мы покончили с отслоением от металла. С опытом более 25 лет мы обеспечиваем один и тот же стандарт в каждом вале.»',
+    refEy:'Референсы', refH:'Выбирают по всей Турции',
+    faqEy:'Частые вопросы', faqAll:'Все вопросы',
+    exp:'Изучите', explore:'Смотреть',
+    links:[
+      ['Резиновые и полиуретановые валы','Цилиндры Seydel Merteks и Merpolon, таблица типов и технические характеристики.'],
+      ['Покрытие, шлифование и канавки','Покрытие до Ø1200 × 7000 мм, прецизионное шлифование и перепокрытие.'],
+      [`Решения для ${n} отраслей`,'Применение валов в текстиле, печати, упаковке и тяжёлой промышленности.'],
+      ['Производство и завод','Стальной сердечник ST52, станки с ЧПУ и строгальные станки, контроль инженера.'],
+      ['Качество и гарантия 3 месяца','Контроль твёрдости (Shore A) и балансировки, рецептура покрытия на базе НИОКР.'],
+      ['Референсы и охват','Выбирают текстильные и промышленные производители более чем в 15 регионах.'],
+    ],
+    ctaH:'Определим правильный вал для вашего проекта.',
+    ctaP:`Запросите предложение по твёрдости, диаметру и покрытию под ваши условия работы — из любой точки Турции, ${company.phone}.`,
+    email:'E-mail',
+  },
+  ar: {
+    title:'Merpolon — أسطوانات سيدل بالمطاط والبولي يوريثان | Merteks Elastomer',
+    eyebrow:'Merteks Elastomer · منذ عام 1989',
+    h1:"شريككم في تطوير<br/>الأسطوانات <span class='text-brand-redlite'>المكسوّة</span>",
+    lede:'أسطوانات سيدل مكسوّة بالمطاط والبولي يوريثان. أسطح لا تحتفظ بالحرارة، ومضادة للكهرباء الساكنة، وبصلادة ثابتة؛ تكسية وجلخ دقيق وفتح أخاديد حتى Ø1200 × 7000 مم.',
+    cta1:'المنتجات', cta2:'معرض الأعمال',
+    caps:['أسطوانات تغذية بولي يوريثان','إنتاج أسطوانات البولي يوريثان','أسطوانات مطاطية جرافيتية','طقم أسطوانات مكسوّة بالمطاط','أسطوانة تشطيب مكسوّة بالمطاط'],
+    spec:['التأسيس','أقصى تكسية','قطاعًا','الضمان'], warranty:'3 أشهر',
+    trust:'يثقون بنا',
+    posEy:'Merteks Elastomer',
+    pos:'بفضل المواد الكيميائية الخاصة التي نضيفها إلى الخلطة وتقنية اللصق التي طوّرناها بأنفسنا، ننتج أسطوانات <span class="text-brand-red">لا تحتفظ بالحرارة ولا تتكهرب وتحافظ على صلادتها طوال فترة العمل</span>.',
+    about:'من نحن',
+    whyEy:'لماذا Merpolon', whyH:'ثلاثة أسس يظهر أثرها في الميدان',
+    pillars:[
+      ['تركيبة قائمة على البحث والتطوير','مواد كيميائية خاصة في الخلطة وتقنية لصق من تطويرنا تمنح تكسيات لا تحتبس الحرارة ولا تتراكم عليها الكهرباء الساكنة.'],
+      ['تصنيع متكامل','من القلب الفولاذي ST52 إلى التكسية، ومن الجلخ الدقيق إلى فتح الأخاديد — العملية كاملة تحت سقف واحد وبإشراف هندسي.'],
+      ['إنتاج حسب مقاسكم','الصلادة (شور A) والقطر والطول وفق ظروف تشغيلكم، حتى Ø1200 × 7000 مم. وضمان ثلاثة أشهر ضد عيوب التصنيع.'],
+    ],
+    techEy:'المزايا الفنية', techH:'تركيبة تكسية مطوَّرة بالبحث والتطوير',
+    matEy:'اختيار المادة', matH:'مطاط أم بولي يوريثان؟', matP:'نحدّد المادة الأنسب معًا بحسب تطبيقكم. مقارنة عامة:',
+    compare:[
+      ['المادة','مطاط (إيلاستومر)','بولي يوريثان (PU)'],
+      ['القوة البارزة','مضاد للكهرباء الساكنة، لا يحتفظ بالحرارة','مقاومة التآكل والتمزّق'],
+      ['سلوك الصلادة','ثابتة طوال العمل (SHA)','ارتداد مرن عالٍ وصلادة ثابتة'],
+      ['الاستخدام النموذجي','أسطوانات القطع / التحويل','أسطوانات السحب / التشطيب'],
+      ['القطاع','النسيج، الألياف والغزل، الورق','الألياف والغزل، التغليف، المعادن'],
+    ],
+    plEy:'خطوط المنتجات', plH:'علامتان ومعيار جودة واحد',
+    pl1:'أسطوانات سيدل المطاطية', pl1b:['لا تحتفظ بالحرارة','مضادة للكهرباء الساكنة','صلادة ثابتة (SHA)','التصاق مثالي بالمعدن'],
+    pl2:'أسطوانات سيدل البولي يوريثانية', pl2b:['مقاومة تآكل فائقة','مقاومة للتمزّق','تطرد حرارة التشغيل','مضبوطة مختبريًا'],
+    metrics:['سنة خبرة','قطاعًا نخدمه','أقصى قطر (مم)','أقصى طول (مم)'],
+    prEy:'عملية الإنتاج', prH:'من الفولاذ إلى الميدان في خمس خطوات',
+    capEy:'الإنتاج والخدمة', capH:'دورة كاملة في منشأتنا',
+    capP:'من تصنيع القلب الفولاذي ST52 بإشراف هندسي إلى التكسية، ومن الجلخ الدقيق إلى فتح الأخاديد — العملية كاملة تحت سقف واحد.',
+    chips:['جلخ مستقيم','مخروطي','محدّب','أخدود معيّني','أخدود لولبي'],
+    appEy:'التطبيق', appH:'لخطوط الألياف والغزل الأكريليكي',
+    appP:'أسطوانات القطع والتحويل لآلات TWO / NSC / Seydel؛ وأسطوانات الريبريكر والسحب والتشطيب. وتُنتَج صلادات المطاط وأقطار التكسية مطابقة تمامًا لظروف تشغيلكم — ويبقى عمر التشغيل طويلًا حتى بعد الجلخ الدقيق.',
+    sectors:'القطاعات',
+    qEy:'وعد الجودة', qH:'الجودة والثقة هما عملنا',
+    indH:`حلول لـ ${n} قطاعًا`, all:'عرض الكل',
+    quote:'«بفضل تقنية اللصق الخاصة لدينا أنهينا مشكلة الانفصال عن المعدن. وبخبرة تتجاوز 25 عامًا نقدّم المعيار نفسه في كل أسطوانة.»',
+    refEy:'المراجع', refH:'خيار المصانع في عموم تركيا',
+    faqEy:'الأسئلة الشائعة', faqAll:'كل الأسئلة',
+    exp:'اكتشفوا', explore:'استعرض',
+    links:[
+      ['أسطوانات المطاط والبولي يوريثان','أسطوانات سيدل من Merteks وMerpolon، وجدول الأنواع والمواصفات الفنية.'],
+      ['التكسية والجلخ وفتح الأخاديد','تكسية حتى Ø1200 × 7000 مم، وجلخ دقيق وإعادة تكسية.'],
+      [`حلول لـ ${n} قطاعًا`,'تطبيقات الأسطوانات في النسيج والطباعة والتغليف والصناعات الثقيلة.'],
+      ['الإنتاج والمنشأة','قلب فولاذي ST52 وماكينات CNC ومقاشط، وتصنيع بإشراف هندسي.'],
+      ['الجودة وضمان 3 أشهر','فحص الصلادة (شور A) والاتزان، وتركيبة تكسية قائمة على البحث والتطوير.'],
+      ['المراجع ونطاق الخدمة','خيار منتجي النسيج والصناعة في أكثر من 15 محافظة.'],
+    ],
+    ctaH:'لنحدّد الأسطوانة المناسبة لمشروعكم.',
+    ctaP:`اطلبوا عرض سعر للصلادة والقطر والتكسية المناسبة لظروف تشغيلكم — من أي مكان في تركيا، ${company.phone}.`,
+    email:'البريد الإلكتروني',
+  },
+}[lang];
+
+const slideSrc = [
+  '/gallery/poliuretan-kapli-besleme-merdaneleri.webp',
+  '/gallery/poliuretan-merdane-uretimi.webp',
+  '/gallery/grafit-kaucuk-merdaneler.webp',
+  '/gallery/kaucuk-kapli-merdane-seti.webp',
+  '/gallery/kaucuk-kapli-finisor-merdanesi.webp',
+];
+const heroSlides = slideSrc.map((src, i) => ({ src, caption: H.caps[i] }));
+const crossHrefs = ['/urunler/','/hizmetler/','/sektorler/','/uretim/','/kalite/','/referanslar/'];
+---
+<Base title={H.title} lang={lang} path={lang === 'tr' ? '/' : `/${lang}/`}>
+  <Header lang={lang} />
+  <main id="main" class="bg-white">
+
+    <!-- 1 · HERO SLIDER -->
+    <HeroSlider
+      eyebrow={H.eyebrow}
+      title={H.h1}
+      lede={H.lede}
+      cta1={{ href:`${base}/urunler/`, label:H.cta1 }}
+      cta2={{ href:`${base}/galeri/`, label:H.cta2 }}
+      slides={heroSlides}
+    />
+
+    <!-- 2 · SPEC STRIP -->
+    <section class="border-b border-steel-200 bg-steel-50">
+      <div class="mx-auto grid max-w-7xl grid-cols-2 divide-x divide-steel-200 lg:grid-cols-4">
+        {[['1989',H.spec[0]],['Ø1200 × 7000 mm',H.spec[1]],[String(n),H.spec[2]],[H.warranty,H.spec[3]]].map(([v,l]) => (
+          <div class="px-6 py-8"><div class="font-display text-2xl font-800 text-navy-900">{v}</div><div class="mt-1 text-xs uppercase tracking-wider text-navy-500">{l}</div></div>
+        ))}
+      </div>
+    </section>
+
+    <!-- 3 · TRUST MARQUEE -->
+    <section class="overflow-hidden border-b border-steel-200 py-6">
+      <div class="flex items-center gap-3 px-6 text-xs font-700 uppercase tracking-widest text-navy-400"><span class="whitespace-nowrap">{H.trust}</span>
+        <div class="relative flex flex-1 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
+          <div class="flex shrink-0 animate-marquee items-center gap-10 pr-10">
+            {[...references, ...references].map(r => (<span class="whitespace-nowrap font-display text-base font-700 text-navy-300">{r.split('—')[0].trim()}</span>))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 · POSITIONING -->
+    <section class="mx-auto max-w-4xl px-6 py-20 lg:py-28" data-reveal-group>
+      <p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.posEy}</p>
+      <p data-reveal class="mt-6 font-display text-2xl font-600 leading-snug tracking-tight text-navy-900 sm:text-3xl lg:text-[2.1rem] lg:leading-[1.3]" set:html={H.pos}></p>
+      <div data-reveal class="mt-8"><a href={`${base}/kurumsal/`} class="inline-flex items-center gap-2 text-sm font-700 uppercase tracking-wider text-navy-900 hover:text-brand-red">{H.about} <Icon name="arrow" class="h-4 w-4"/></a></div>
+    </section>
+
+    <!-- 5 · WHY / PILLARS -->
+    <section class="border-y border-steel-200 bg-navy-900 text-white">
+      <div class="mx-auto max-w-7xl px-6 py-20 lg:py-24">
+        <div class="max-w-2xl" data-reveal-group>
+          <p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-redlite">{H.whyEy}</p>
+          <h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight sm:text-4xl">{H.whyH}</h2>
+        </div>
+        <div class="mt-14 grid border-l border-t border-white/10 [&>*]:border-b [&>*]:border-r [&>*]:border-white/10 sm:grid-cols-3" data-reveal-group>
+          {H.pillars.map(([t, d], i) => (
+            <div data-reveal class="bg-navy-900 p-8">
+              <div class="font-display text-5xl font-800 text-white/15">{'0' + (i + 1)}</div>
+              <h3 class="mt-6 font-display text-xl font-700">{t}</h3>
+              <p class="mt-3 text-sm leading-relaxed text-steel-400">{d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 · TECHNICAL ADVANTAGES -->
+    <section class="mx-auto max-w-7xl px-6 py-20 lg:py-24">
+      <div class="max-w-2xl" data-reveal-group>
+        <p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.techEy}</p>
+        <h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.techH}</h2>
+      </div>
+      <div class="mt-12 grid border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group>
+        {features.map(f => (
+          <div data-reveal class="group bg-white p-7 transition hover:bg-steel-50">
+            <Icon name={f.icon} class="h-7 w-7 text-brand-red"/>
+            <h3 class="mt-5 font-display text-lg font-700 text-navy-900">{f[lang]}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-navy-500">{f.d[lang]}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- 7 · MATERIAL SELECTOR -->
+    <section class="border-y border-steel-200 bg-steel-50">
+      <div class="mx-auto max-w-7xl px-6 py-20 lg:py-24">
+        <div class="max-w-2xl" data-reveal-group>
+          <p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.matEy}</p>
+          <h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.matH}</h2>
+          <p data-reveal class="mt-4 text-navy-500">{H.matP}</p>
+        </div>
+        <!-- masaüstü: tablo -->
+        <div class="mt-10 hidden overflow-hidden border border-steel-200 bg-white md:block" data-reveal>
+          <table class="w-full text-left text-sm">
+            <tbody>
+              {H.compare.map((row, i) => (
+                <tr class={i===0 ? 'bg-navy-900 text-white' : 'border-t border-steel-200'}>
+                  <td class={`px-6 py-4 font-700 ${i===0 ? '' : 'text-navy-500'}`}>{row[0]}</td>
+                  <td class={`px-6 py-4 ${i===0 ? 'font-800' : 'font-600 text-navy-900'}`}>{row[1]}</td>
+                  <td class={`px-6 py-4 ${i===0 ? 'font-800' : 'font-600 text-navy-900'}`}>{row[2]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <!-- mobil: akordiyon -->
+        <div id="cmp" class="mt-8 border-t border-steel-200 md:hidden" data-accordion="collapse">
+          {H.compare.slice(1).map((row, i) => (
+            <Fragment>
+              <h3 id={`ch-${i}`}><button type="button" class="flex w-full items-center justify-between gap-3 border-b border-steel-200 bg-white px-4 py-4 text-left font-display font-700 text-navy-900" data-active-classes="bg-steel-50 text-brand-red" data-inactive-classes="text-navy-900" data-accordion-target={`#cb-${i}`} aria-expanded={i===0} aria-controls={`cb-${i}`}><span>{row[0]}</span><svg class="h-5 w-5 shrink-0 text-brand-red" data-accordion-icon viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button></h3>
+              <div id={`cb-${i}`} class="hidden" aria-labelledby={`ch-${i}`}>
+                <div class="border-b border-steel-200 bg-steel-50 px-4 py-4 text-sm">
+                  <div class="flex justify-between gap-4 border-b border-steel-200 py-2"><span class="font-700 text-brand-red">{H.compare[0][1]}</span><span class="text-right font-600 text-navy-900">{row[1]}</span></div>
+                  <div class="flex justify-between gap-4 py-2"><span class="font-700 text-navy-900">{H.compare[0][2]}</span><span class="text-right font-600 text-navy-900">{row[2]}</span></div>
+                </div>
+              </div>
+            </Fragment>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 · PRODUCT LINES -->
+    <section class="mx-auto max-w-7xl px-6 py-20 lg:py-24">
+      <div class="max-w-2xl" data-reveal-group>
+        <p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.plEy}</p>
+        <h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.plH}</h2>
+      </div>
+      <div class="mt-14 space-y-16">
+        <article class="grid items-center gap-10 lg:grid-cols-2" data-reveal-group>
+          <div data-reveal class="overflow-hidden border border-steel-200"><img src="/gallery/grafit-kaucuk-merdaneler.webp" srcset="/gallery/grafit-kaucuk-merdaneler-480.webp 480w, /gallery/grafit-kaucuk-merdaneler-960.webp 960w, /gallery/grafit-kaucuk-merdaneler.webp 1500w" sizes="(max-width: 768px) 100vw, 50vw" alt={H.pl1} width="1063" height="750" class="aspect-[4/3] w-full object-cover"/></div>
+          <div data-reveal>
+            <div class="flex items-center gap-3"><span class="h-2.5 w-2.5 bg-brand-red"></span><span class="font-display text-sm font-800 uppercase tracking-widest text-brand-red">Merteks</span></div>
+            <h3 class="mt-4 font-display text-2xl font-800 text-navy-900">{H.pl1}</h3>
+            <p class="mt-4 leading-relaxed text-navy-500">{productLines[0].body[lang]}</p>
+            <ul class="mt-6 grid gap-x-6 gap-y-2 sm:grid-cols-2">{H.pl1b.map(x => (<li class="flex items-center gap-2 text-sm text-navy-700"><Icon name="check" class="h-4 w-4 shrink-0 text-brand-red"/>{x}</li>))}</ul>
+          </div>
+        </article>
+        <article class="grid items-center gap-10 lg:grid-cols-2" data-reveal-group>
+          <div data-reveal class="lg:order-2 overflow-hidden border border-steel-200"><img src="/gallery/poliuretan-kapli-besleme-merdaneleri.webp" srcset="/gallery/poliuretan-kapli-besleme-merdaneleri-480.webp 480w, /gallery/poliuretan-kapli-besleme-merdaneleri-960.webp 960w, /gallery/poliuretan-kapli-besleme-merdaneleri.webp 1500w" sizes="(max-width: 768px) 100vw, 50vw" alt={H.pl2} width="764" height="485" class="aspect-[4/3] w-full object-cover"/></div>
+          <div data-reveal class="lg:order-1">
+            <div class="flex items-center gap-3"><span class="h-2.5 w-2.5 bg-navy-900"></span><span class="font-display text-sm font-800 uppercase tracking-widest text-navy-900">Merpolon</span></div>
+            <h3 class="mt-4 font-display text-2xl font-800 text-navy-900">{H.pl2}</h3>
+            <p class="mt-4 leading-relaxed text-navy-500">{productLines[1].body[lang]}</p>
+            <ul class="mt-6 grid gap-x-6 gap-y-2 sm:grid-cols-2">{H.pl2b.map(x => (<li class="flex items-center gap-2 text-sm text-navy-700"><Icon name="check" class="h-4 w-4 shrink-0 text-brand-red"/>{x}</li>))}</ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 9 · METRICS BAND -->
+    <section class="relative overflow-hidden bg-navy-900 text-white">
+      <img src="/gallery/kaucuk-kapli-merdane-seti.webp" srcset="/gallery/kaucuk-kapli-merdane-seti-480.webp 480w, /gallery/kaucuk-kapli-merdane-seti-960.webp 960w, /gallery/kaucuk-kapli-merdane-seti.webp 1280w" sizes="100vw" alt="" width="1500" height="1000" class="absolute inset-0 h-full w-full object-cover opacity-20"/>
+      <div class="relative mx-auto grid max-w-7xl grid-cols-2 divide-x divide-white/10 px-6 py-16 lg:grid-cols-4" data-reveal-group>
+        <div data-reveal class="px-4 text-center"><div class="font-display text-4xl font-800 sm:text-5xl"><span data-count="25" data-suffix="+">0</span></div><div class="mt-2 text-xs uppercase tracking-wider text-steel-400">{H.metrics[0]}</div></div>
+        <div data-reveal class="px-4 text-center"><div class="font-display text-4xl font-800 sm:text-5xl"><span data-count={n}>0</span></div><div class="mt-2 text-xs uppercase tracking-wider text-steel-400">{H.metrics[1]}</div></div>
+        <div data-reveal class="px-4 text-center"><div class="font-display text-4xl font-800 sm:text-5xl"><span data-count="1200" data-prefix="Ø">0</span></div><div class="mt-2 text-xs uppercase tracking-wider text-steel-400">{H.metrics[2]}</div></div>
+        <div data-reveal class="px-4 text-center"><div class="font-display text-4xl font-800 sm:text-5xl"><span data-count="7000">0</span></div><div class="mt-2 text-xs uppercase tracking-wider text-steel-400">{H.metrics[3]}</div></div>
+      </div>
+    </section>
+
+    <!-- 10 · PROCESS -->
+    <section class="mx-auto max-w-7xl px-6 py-20 lg:py-24">
+      <div class="max-w-2xl" data-reveal-group>
+        <p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.prEy}</p>
+        <h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.prH}</h2>
+      </div>
+      <div class="mt-12 grid border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 md:grid-cols-5" data-reveal-group>
+        {process.map(s => (
+          <div data-reveal class="bg-white p-6">
+            <div class="flex items-center justify-between"><span class="font-display text-3xl font-800 text-steel-300">{s.no}</span><Icon name={s.icon} class="h-5 w-5 text-brand-red"/></div>
+            <h3 class="mt-5 font-display font-700 text-navy-900">{s[lang]}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-navy-500">{s.d[lang]}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- 11 · CAPABILITIES -->
+    <section class="border-y border-steel-200 bg-steel-50">
+      <div class="mx-auto max-w-7xl px-6 py-20 lg:py-24">
+        <div class="grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:gap-20">
+          <div data-reveal-group>
+            <p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.capEy}</p>
+            <h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.capH}</h2>
+            <p data-reveal class="mt-5 leading-relaxed text-navy-500">{H.capP}</p>
+            <div data-reveal class="mt-6 flex flex-wrap gap-2">{H.chips.map(x => (<span class="border border-steel-300 px-3 py-1.5 text-xs font-600 text-navy-600">{x}</span>))}</div>
+          </div>
+          <div class="divide-y divide-steel-200 border-t border-steel-200" data-reveal-group>
+            {services.map((s, i) => (
+              <div data-reveal class="group flex items-start gap-6 py-6">
+                <span class="font-display text-sm font-800 text-steel-300">0{i+1}</span>
+                <div class="flex-1"><h3 class="font-display text-lg font-700 text-navy-900 transition group-hover:text-brand-red">{s[lang]}</h3><p class="mt-1 text-sm text-navy-500">{s.d[lang]}</p></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12 · APPLICATION SPOTLIGHT -->
+    <section class="mx-auto max-w-7xl px-6 py-20 lg:py-24">
+      <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+        <div data-reveal class="overflow-hidden border border-steel-200"><img src="/gallery/poliuretan-merdane-uretimi.webp" srcset="/gallery/poliuretan-merdane-uretimi-480.webp 480w, /gallery/poliuretan-merdane-uretimi-960.webp 960w, /gallery/poliuretan-merdane-uretimi.webp 1500w" sizes="(max-width: 768px) 100vw, 50vw" alt={H.appH} width="832" height="666" class="aspect-[5/4] w-full object-cover"/></div>
+        <div data-reveal-group>
+          <p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.appEy}</p>
+          <h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.appH}</h2>
+          <p data-reveal class="mt-5 leading-relaxed text-navy-500">{H.appP}</p>
+          <a data-reveal href={`${base}/sektorler/`} class="mt-7 inline-flex items-center gap-2 text-sm font-700 uppercase tracking-wider text-navy-900 hover:text-brand-red">{H.sectors} <Icon name="arrow" class="h-4 w-4"/></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13 · QUALITY PROMISE -->
+    <section class="border-y border-steel-200 bg-steel-50">
+      <div class="mx-auto max-w-7xl px-6 py-20 lg:py-24">
+        <div class="max-w-2xl" data-reveal-group>
+          <p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.qEy}</p>
+          <h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.qH}</h2>
+        </div>
+        <div class="mt-12 grid gap-6 sm:grid-cols-3" data-reveal-group>
+          {qualityPoints.slice(0,3).map(q => (
+            <div data-reveal class="border-t-2 border-brand-red bg-white p-7">
+              <Icon name={q.icon} class="h-7 w-7 text-navy-900"/>
+              <h3 class="mt-5 font-display text-lg font-700 text-navy-900">{q[lang]}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-navy-500">{q.d[lang]}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 14 · INDUSTRIES -->
+    <section class="mx-auto max-w-7xl px-6 py-20 lg:py-24">
+      <div class="flex flex-wrap items-end justify-between gap-4" data-reveal-group>
+        <div><p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.sectors}</p><h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.indH}</h2></div>
+        <a data-reveal href={`${base}/sektorler/`} class="inline-flex items-center gap-2 text-sm font-700 uppercase tracking-wider text-navy-900 hover:text-brand-red">{H.all} <Icon name="arrow" class="h-4 w-4"/></a>
+      </div>
+      <div class="mt-12 grid grid-cols-2 border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 sm:grid-cols-4" data-reveal-group>
+        {sectors.map(s => (<a href={`${base}/sektorler/${s.slug}/`} data-reveal class="group flex items-center gap-3 bg-white px-5 py-6 transition hover:bg-navy-900"><Icon name={s.icon} class="h-5 w-5 shrink-0 text-brand-red"/><span class="text-sm font-600 text-navy-800 transition group-hover:text-white">{s[lang]}</span></a>))}
+      </div>
+    </section>
+
+    <!-- 15 · QUOTE -->
+    <section class="border-y border-steel-200 bg-navy-900 text-white">
+      <div class="mx-auto max-w-4xl px-6 py-20 text-center" data-reveal>
+        <div class="mx-auto mb-6 h-px w-12 bg-brand-red"></div>
+        <p class="font-display text-2xl font-600 leading-snug tracking-tight sm:text-3xl">{H.quote}</p>
+        <p class="mt-6 text-sm uppercase tracking-widest text-steel-400">Merteks Elastomer</p>
+      </div>
+    </section>
+
+    <!-- 16 · REFERENCES -->
+    <section class="mx-auto max-w-7xl px-6 py-20">
+      <div class="grid gap-10 lg:grid-cols-[1fr_2fr] lg:items-center">
+        <div data-reveal><p class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.refEy}</p><h2 class="mt-3 font-display text-2xl font-800 tracking-tight text-navy-900 sm:text-3xl">{H.refH}</h2></div>
+        <div class="grid grid-cols-2 border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 sm:grid-cols-3" data-reveal-group>
+          {references.map(r => { const [name, city] = r.split('—').map(x=>x.trim()); return (<div data-reveal class="bg-white px-5 py-6"><div class="font-display font-700 text-navy-900">{name}</div><div class="text-xs uppercase tracking-wider text-navy-500">{city}</div></div>); })}
+        </div>
+      </div>
+    </section>
+
+    <!-- 17 · FAQ -->
+    <section class="border-t border-steel-200 bg-steel-50">
+      <div class="mx-auto max-w-4xl px-6 py-20">
+        <p class="text-sm font-700 uppercase tracking-widest text-brand-red" data-reveal>{H.faqEy}</p>
+        <div id="faq" class="mt-8 border-t border-steel-200" data-accordion="collapse" data-reveal>
+          {faqs.slice(0,6).map((f, i) => (
+            <Fragment>
+              <h3 id={`fh-${i}`}><button type="button" class="flex w-full items-center justify-between gap-4 border-b border-steel-200 px-4 py-5 text-left font-display text-lg font-700 text-navy-900 hover:text-brand-red sm:px-5" data-active-classes="bg-steel-50 text-brand-red" data-inactive-classes="text-navy-900" data-accordion-target={`#fb-${i}`} aria-expanded={i===0} aria-controls={`fb-${i}`}><span>{f.q[lang]}</span><svg class="h-5 w-5 shrink-0 text-brand-red" data-accordion-icon viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button></h3>
+              <div id={`fb-${i}`} class="hidden" aria-labelledby={`fh-${i}`}><p class="border-b border-steel-200 px-4 py-5 text-navy-600 sm:px-5">{f.a[lang]}</p></div>
+            </Fragment>
+          ))}
+        </div>
+        <div class="mt-8" data-reveal><a href={`${base}/sss/`} class="group inline-flex items-center gap-2 border-2 border-navy-900 px-6 py-3.5 text-sm font-700 uppercase tracking-wider text-navy-900 transition hover:bg-navy-900 hover:text-white">{H.faqAll} <Icon name="arrow" class="h-4 w-4 transition group-hover:translate-x-1"/></a></div>
+      </div>
+    </section>
+
+    <!-- 17.5 · CROSS-LINKS (SEO) -->
+    <section class="border-t border-steel-200 bg-white">
+      <div class="mx-auto max-w-7xl px-6 py-16">
+        <p class="text-sm font-700 uppercase tracking-widest text-brand-red" data-reveal>{H.exp}</p>
+        <div class="mt-8 grid border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group>
+          {H.links.map(([t,d], i) => (
+            <a href={`${base}${crossHrefs[i]}`} data-reveal class="group flex flex-col bg-white p-7 transition hover:bg-steel-50">
+              <h3 class="font-display text-lg font-700 text-navy-900 group-hover:text-brand-red">{t}</h3>
+              <p class="mt-2 flex-1 text-sm leading-relaxed text-navy-500">{d}</p>
+              <span class="mt-4 inline-flex items-center gap-2 text-xs font-700 uppercase tracking-wider text-navy-900 group-hover:text-brand-red">{H.explore} <Icon name="arrow" class="h-4 w-4 transition group-hover:translate-x-1"/></span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 18 · CTA -->
+    <section class="bg-navy-900 text-white">
+      <div class="mx-auto flex max-w-7xl flex-col items-start gap-8 px-6 py-20 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <h2 class="font-display text-3xl font-800 tracking-tight sm:text-4xl">{H.ctaH}</h2>
+          <p class="mt-4 max-w-xl text-steel-300">{H.ctaP}</p>
+        </div>
+        <div class="flex shrink-0 flex-wrap gap-3">
+          <a href={'tel:'+company.order.replace(/\s/g,'')} class="inline-flex items-center gap-2 bg-brand-red px-6 py-4 text-sm font-700 uppercase tracking-wider transition hover:bg-white hover:text-navy-900"><Icon name="phone" class="h-4 w-4"/>{company.order}</a>
+          <a href={'mailto:'+company.email} class="inline-flex items-center gap-2 border border-white/30 px-6 py-4 text-sm font-700 uppercase tracking-wider transition hover:bg-white/10">{H.email}</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <Footer lang={lang} />
+</Base>

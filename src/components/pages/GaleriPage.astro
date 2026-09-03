@@ -1,0 +1,144 @@
+---
+// Galeri sayfası — TEK kaynak, 5 dil. Her dil rotası bu bileşeni `lang` ile çağırır,
+// böylece TR/EN/DE/RU/AR yapısal olarak birebir aynı içeriği alır (içerik paritesi).
+// NOT: gallery.json'daki `title` alanları yalnızca Türkçedir; bilinçli olarak çevrilmez.
+import Base from '../../layouts/Base.astro';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import Icon from '../Icon.astro';
+import { galleryCats, company } from '../../data/site';
+import gallery from '../../data/gallery.json';
+
+const { lang = 'tr' } = Astro.props;
+const base = lang === 'tr' ? '' : '/' + lang;
+const catLabel = Object.fromEntries(galleryCats.map(c => [c.key, c[lang]]));
+
+const H = {
+  tr: {
+    title:'Galeri — Ürün & Üretim Portfolyosu | Merpolon',
+    eyebrow:'Galeri',
+    h1:'Ürün & üretim portfolyosu',
+    lede:'Kauçuk ve poliüretan kaplı merdanelerimizden, baskı ve kanal profillerine kadar üretim örnekleri. Kategoriye göre filtreleyin.',
+    empty:'Bu kategoride görsel yok.',
+    ctaH:'Kendi merdanenizi ürettirin.',
+    ctaP:'Çalışma şartlarınıza uygun sertlik, çap ve kaplama için teklif alın.',
+    products:'Ürünler',
+  },
+  en: {
+    title:'Gallery — Product & Production Portfolio | Merpolon',
+    eyebrow:'Gallery',
+    h1:'Product & production portfolio',
+    lede:'Examples from our rubber and polyurethane coated rollers to printing and groove profiles. Filter by category.',
+    empty:'No images in this category.',
+    ctaH:'Order your own roller.',
+    ctaP:'Get a quote for the hardness, diameter and covering that match your operating conditions.',
+    products:'Products',
+  },
+  de: {
+    title:'Galerie — Produkt- & Fertigungsportfolio | Merpolon',
+    eyebrow:'Galerie',
+    h1:'Produkt- & Fertigungsportfolio',
+    lede:'Beispiele von unseren gummi- und polyurethanbeschichteten Walzen bis zu Druck- und Rillenprofilen. Nach Kategorie filtern.',
+    empty:'Keine Bilder in dieser Kategorie.',
+    ctaH:'Lassen Sie Ihre Walze fertigen.',
+    ctaP:'Fordern Sie ein Angebot für Härte, Durchmesser und Beschichtung passend zu Ihren Betriebsbedingungen an.',
+    products:'Produkte',
+  },
+  ru: {
+    title:'Галерея — портфолио продукции и производства | Merpolon',
+    eyebrow:'Галерея',
+    h1:'Портфолио продукции и производства',
+    lede:'Примеры производства: от валов с резиновым и полиуретановым покрытием до печатных и канавочных профилей. Фильтруйте по категории.',
+    empty:'В этой категории нет изображений.',
+    ctaH:'Закажите собственный вал.',
+    ctaP:'Запросите предложение по твёрдости, диаметру и покрытию под ваши условия работы.',
+    products:'Продукция',
+  },
+  ar: {
+    title:'المعرض — أعمال المنتجات والإنتاج | Merpolon',
+    eyebrow:'المعرض',
+    h1:'معرض أعمال المنتجات والإنتاج',
+    lede:'أمثلة من إنتاجنا: من أسطواناتنا المكسوّة بالمطاط والبولي يوريثان إلى بروفيلات الطباعة والأخاديد. رشّحوا حسب الفئة.',
+    empty:'لا توجد صور في هذه الفئة.',
+    ctaH:'اطلبوا تصنيع أسطوانتكم الخاصة.',
+    ctaP:'اطلبوا عرض سعر للصلادة والقطر والتكسية المناسبة لظروف تشغيلكم.',
+    products:'المنتجات',
+  },
+}[lang];
+---
+<Base title={H.title} lang={lang} path={`${base}/galeri/`}>
+  <Header lang={lang} seg="galeri/" />
+  <main id="main" class="bg-white">
+    <!-- HERO -->
+    <section class="border-b border-steel-200">
+      <div class="mx-auto max-w-7xl px-6 py-16 lg:py-20" data-reveal-group>
+        <p data-reveal class="flex items-center gap-3 text-xs font-700 uppercase tracking-[0.22em] text-brand-red"><span class="h-px w-10 bg-brand-red"></span>{H.eyebrow}</p>
+        <h1 data-reveal class="mt-6 font-display text-4xl font-800 leading-[1.04] tracking-tight text-navy-900 sm:text-5xl">{H.h1}</h1>
+        <p data-reveal class="mt-6 max-w-2xl text-lg leading-relaxed text-navy-500">{H.lede}</p>
+      </div>
+    </section>
+
+    <!-- FILTERS -->
+    <section class="sticky top-[57px] z-20 border-b border-steel-200 bg-white/90 backdrop-blur lg:top-[65px]">
+      <div class="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-6 py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-wrap lg:overflow-visible" id="gfilters">
+        {galleryCats.map((c, i) => (
+          <button data-filter={c.key} class={`gf shrink-0 whitespace-nowrap border px-3.5 py-2 min-h-11 text-xs font-700 uppercase tracking-wider transition ${i===0 ? 'border-navy-900 bg-navy-900 text-white' : 'border-steel-300 text-navy-600 hover:border-navy-900'}`}>{c[lang]}</button>
+        ))}
+      </div>
+    </section>
+
+    <!-- MASONRY -->
+    <section class="mx-auto max-w-7xl px-6 py-12">
+      <div id="gmasonry" class="columns-2 gap-4 lg:columns-3 [&>*]:mb-4">
+        {gallery.map(g => (
+          <figure class="gitem group relative block break-inside-avoid overflow-hidden border border-steel-200" data-cat={g.cat}>
+            <img src={g.src} srcset={g.srcset} sizes="(max-width: 768px) 50vw, 33vw" width={g.w} height={g.h} alt={g.title} loading="lazy" class="w-full object-cover transition duration-500 group-hover:scale-[1.04]" />
+            <figcaption class="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 bg-gradient-to-t from-navy-900/85 to-transparent p-4 opacity-0 transition group-hover:opacity-100">
+              <span class="text-sm font-700 text-white">{g.title}</span>
+              <span class="shrink-0 bg-brand-red px-2 py-0.5 text-[10px] font-700 uppercase tracking-wider text-white">{catLabel[g.cat]}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      <p id="gempty" class="hidden py-12 text-center text-navy-400">{H.empty}</p>
+    </section>
+
+    <!-- CTA -->
+    <section class="bg-navy-900 text-white">
+      <div class="mx-auto flex max-w-7xl flex-col items-start gap-8 px-6 py-20 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <h2 class="font-display text-3xl font-800 tracking-tight sm:text-4xl">{H.ctaH}</h2>
+          <p class="mt-4 max-w-xl text-steel-300">{H.ctaP}</p>
+        </div>
+        <div class="flex shrink-0 flex-wrap gap-3">
+          <a href={'tel:'+company.order.replace(/\s/g,'')} class="inline-flex items-center gap-2 bg-brand-red px-6 py-4 text-sm font-700 uppercase tracking-wider transition hover:bg-white hover:text-navy-900"><Icon name="phone" class="h-4 w-4"/>{company.order}</a>
+          <a href={`${base}/urunler/`} class="inline-flex items-center gap-2 border border-white/30 px-6 py-4 text-sm font-700 uppercase tracking-wider transition hover:bg-white/10">{H.products}</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer lang={lang} />
+
+  <script is:inline>
+    (function(){
+      var btns=[].slice.call(document.querySelectorAll('#gfilters .gf'));
+      var items=[].slice.call(document.querySelectorAll('#gmasonry .gitem'));
+      var empty=document.getElementById('gempty');
+      function apply(cat){
+        var shown=0;
+        items.forEach(function(it){
+          var ok = cat==='all' || it.dataset.cat===cat;
+          it.style.display = ok ? '' : 'none';
+          if(ok) shown++;
+        });
+        btns.forEach(function(b){
+          var on=b.dataset.filter===cat;
+          b.className='gf shrink-0 whitespace-nowrap border px-3.5 py-2 min-h-11 text-xs font-700 uppercase tracking-wider transition '+(on?'border-navy-900 bg-navy-900 text-white':'border-steel-300 text-navy-600 hover:border-navy-900');
+        });
+        if(empty) empty.classList.toggle('hidden', shown>0);
+      }
+      btns.forEach(function(b){ b.addEventListener('click', function(){ apply(b.dataset.filter); }); });
+      var q=new URLSearchParams(location.search).get('cat'); if(q && document.querySelector('[data-filter="'+q+'"]')) apply(q);
+    })();
+  </script>
+</Base>

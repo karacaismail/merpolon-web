@@ -1,0 +1,119 @@
+---
+// Tek sektör sayfası şablonu (Category / Topical SEO) — TR/EN/DE ortak.
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import Icon from './Icon.astro';
+import Breadcrumb from './Breadcrumb.astro';
+import RelatedLinks from './RelatedLinks.astro';
+import { company, sectors, sectorDetail, sectorGroups, features } from '../data/site';
+import { productTypes } from '../data/products';
+
+const { s, lang = 'tr' } = Astro.props;
+const base = lang === 'tr' ? '' : '/' + lang;
+const path = `${base}/sektorler/${s.slug}/`;
+const detail = sectorDetail[s.tr][lang];
+const t = {
+  tr: { sectors:'Sektörler', h:'için merdane çözümleri', why:'Bu sektörde neden Merpolon?', prods:'Bu sektörde kullanılan ürünler', more:'Diğer sektörler',
+        ctaH:'Hattınıza uygun merdaneyi belirleyelim', ctaP:'Çalışma şartlarınızı iletin; sertlik, çap ve kaplamayı birlikte seçelim.', quote:'Teklif Formu', all:'Tüm sektörler' },
+  en: { sectors:'Industries', h:'— roller solutions', why:'Why Merpolon in this industry?', prods:'Products used in this industry', more:'Other industries',
+        ctaH:'Let’s define the right roller for your line', ctaP:'Share your operating conditions; we choose hardness, diameter and covering together.', quote:'Quote form', all:'All industries' },
+  de: { sectors:'Branchen', h:'— Walzenlösungen', why:'Warum Merpolon in dieser Branche?', prods:'In dieser Branche eingesetzte Produkte', more:'Weitere Branchen',
+        ctaH:'Die passende Walze für Ihre Linie', ctaP:'Teilen Sie Ihre Betriebsbedingungen mit; wir wählen Härte, Durchmesser und Beschichtung gemeinsam.', quote:'Angebotsformular', all:'Alle Branchen' },
+  ru: { sectors:'Отрасли', h:'— решения по валам', why:'Почему Merpolon в этой отрасли?', prods:'Продукция, применяемая в этой отрасли', more:'Другие отрасли',
+        ctaH:'Подберём вал для вашей линии', ctaP:'Сообщите условия работы; твёрдость, диаметр и покрытие выберем вместе.', quote:'Форма запроса', all:'Все отрасли' },
+  ar: { sectors:'القطاعات', h:'— حلول الأسطوانات', why:'لماذا Merpolon في هذا القطاع؟', prods:'المنتجات المستخدَمة في هذا القطاع', more:'قطاعات أخرى',
+        ctaH:'لنحدّد الأسطوانة المناسبة لخطكم', ctaP:'أرسلوا ظروف تشغيلكم؛ ولنختر معًا الصلادة والقطر والتكسية.', quote:'نموذج طلب عرض سعر', all:'كل القطاعات' },
+}[lang];
+
+const title = lang === 'tr' ? `${s.tr} ${t.h}` : `${s[lang]} ${t.h}`;
+
+// Meta description kuyruğu dile duyarlı olmalı — daha önce her dilde Türkçe cümle yapışıyordu.
+const descTail = {
+  tr: `${s[lang]} sektörü için kauçuk ve poliüretan kaplı merdane üretimi, yeniden kaplama ve hassas taşlama.`,
+  en: `Rubber and polyurethane coated roller manufacturing, re-covering and precision grinding for the ${s[lang]} industry.`,
+  de: `Fertigung gummi- und polyurethanbeschichteter Walzen, Neubeschichtung und Präzisionsschleifen für die Branche ${s[lang]}.`,
+  ru: `Производство валов с резиновым и полиуретановым покрытием, перепокрытие и прецизионное шлифование для отрасли «${s[lang]}».`,
+  ar: `إنتاج أسطوانات مكسوّة بالمطاط والبولي يوريثان، وإعادة تكسية وجلخ دقيق لقطاع ${s[lang]}.`,
+}[lang];
+const metaDesc = `${detail} ${descTail}`.slice(0, 300);
+const rel = productTypes.filter(p => p.sectors.includes(s.tr)).slice(0, 3);
+const prods = rel.length ? rel : productTypes.slice(0, 3);
+const others = sectors.filter(x => x.slug !== s.slug && x.group === s.group).slice(0, 3);
+const group = sectorGroups.find(g => g.key === s.group);
+const SITE = (Astro.site ? Astro.site.href : '').replace(/\/$/, '');
+
+const schema = [{
+  '@type':'Service', '@id': `${SITE}${path}#service`,
+  name: title, description: detail,
+  serviceType: { tr:'Endüstriyel merdane kaplama', en:'Industrial roller covering', de:'Industriewalzen-Beschichtung', ru:'Покрытие промышленных валов', ar:'تكسية الأسطوانات الصناعية' }[lang],
+  provider: { '@id': `${SITE}/#organization` },
+  areaServed: { '@type':'Country', name:'Türkiye' },
+  audience: { '@type':'BusinessAudience', name: s[lang] },
+}];
+---
+<Base title={`${title} | Merpolon`} lang={lang} path={path} description={metaDesc} schema={schema}>
+  <Header lang={lang} seg="sektorler/" />
+  <Breadcrumb lang={lang} items={[{ href:`${base}/sektorler/`, label:t.sectors }, { href:path, label:s[lang] }]} />
+  <main id="main" class="bg-white">
+
+    <section class="border-b border-steel-200">
+      <div class="mx-auto max-w-7xl px-6 py-14 lg:py-20">
+        <p class="flex items-center gap-3 text-xs font-700 uppercase tracking-[0.22em] text-brand-red"><span class="h-px w-10 bg-brand-red"></span>{group ? group[lang] : t.sectors}</p>
+        <h1 class="mt-5 max-w-3xl font-display text-3xl font-800 leading-[1.06] tracking-tight text-navy-900 sm:text-5xl">{title}</h1>
+        <p class="mt-5 max-w-2xl text-lg leading-relaxed text-navy-500">{detail}</p>
+        <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
+          <a href={`${base}/teklif/`} class="group inline-flex items-center gap-2.5 bg-brand-red px-7 py-4 text-sm font-700 uppercase tracking-wider text-white transition hover:bg-navy-900">{t.quote} <Icon name="arrow" class="h-4 w-4 transition group-hover:translate-x-1"/></a>
+          <a href={'tel:'+company.order.replace(/\s/g,'')} class="inline-flex items-center gap-2 border-b-2 border-navy-900 pb-1 text-sm font-700 uppercase tracking-wider text-navy-900 transition hover:border-brand-red hover:text-brand-red">{company.order}</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-b border-steel-200 bg-steel-50">
+      <div class="mx-auto max-w-7xl px-6 py-14">
+        <h2 class="font-display text-2xl font-800 tracking-tight text-navy-900">{t.why}</h2>
+        <div class="mt-8 grid border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 sm:grid-cols-2 lg:grid-cols-3">
+          {features.slice(0,6).map(f => (
+            <div class="bg-white p-6">
+              <Icon name={f.icon} class="h-6 w-6 text-brand-red"/>
+              <h3 class="mt-4 font-display font-700 text-navy-900">{f[lang]}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-navy-500">{f.d[lang]}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-6 py-14">
+      <h2 class="font-display text-2xl font-800 tracking-tight text-navy-900">{t.prods}</h2>
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {prods.map(p => (
+          <a href={`${base}/urunler/${p.slug}/`} class="group border border-steel-200 bg-white transition hover:border-brand-red/40">
+            <img src={p.img} alt={p.name[lang]} loading="lazy" width="1500" height="1000" class="aspect-[4/3] w-full object-cover" />
+            <div class="p-5">
+              <h3 class="font-display text-lg font-700 text-navy-900 group-hover:text-brand-red">{p.name[lang]}</h3>
+              <p class="mt-1.5 text-sm leading-relaxed text-navy-500">{p.short[lang]}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-navy-900 text-white">
+      <div class="mx-auto flex max-w-7xl flex-col items-start gap-8 px-6 py-16 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <h2 class="font-display text-2xl font-800 tracking-tight sm:text-3xl">{t.ctaH}</h2>
+          <p class="mt-3 max-w-xl text-steel-300">{t.ctaP}</p>
+        </div>
+        <div class="flex shrink-0 flex-wrap gap-3">
+          <a href={`${base}/teklif/`} class="inline-flex items-center gap-2 bg-brand-red px-6 py-4 text-sm font-700 uppercase tracking-wider transition hover:bg-white hover:text-navy-900">{t.quote}</a>
+          <a href={`${base}/sektorler/`} class="inline-flex items-center gap-2 border border-white/30 px-6 py-4 text-sm font-700 uppercase tracking-wider transition hover:bg-white/10">{t.all}</a>
+        </div>
+      </div>
+    </section>
+
+    <RelatedLinks lang={lang} title={t.more}
+      items={others.map(o => ({ href:`${base}/sektorler/${o.slug}/`, label:o[lang], desc:sectorDetail[o.tr][lang] }))} />
+  </main>
+  <Footer lang={lang} />
+</Base>

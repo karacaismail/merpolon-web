@@ -1,0 +1,30 @@
+<svg width="560" height="170" viewBox="0 0 560 170" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Merpolon — Merteks Elastomer">
+  <defs>
+    <linearGradient id="hb" x1="0" y1="0" x2="150" y2="150" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#16233F"/><stop offset="1" stop-color="#0B1424"/>
+    </linearGradient>
+    <linearGradient id="hs" x1="40" y1="45" x2="120" y2="130" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#EDF1F7"/><stop offset="1" stop-color="#AEB9CC"/>
+    </linearGradient>
+    <linearGradient id="hr" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FF5A4D"/><stop offset="1" stop-color="#D62B23"/>
+    </linearGradient>
+  </defs>
+  <!-- mark -->
+  <g transform="translate(10,20)">
+    <rect x="0" y="0" width="130" height="130" rx="30" fill="url(#hb)"/>
+    <path d="M65 12 l6 10 12 -6 -3.6 13 h-28.8 l-3.6 -13 12 6 z" fill="url(#hr)"/>
+    <rect x="33" y="44" width="20" height="60" rx="10" fill="url(#hs)"/>
+    <ellipse cx="43" cy="44" rx="10" ry="4" fill="#fff" fill-opacity="0.9"/>
+    <rect x="77" y="44" width="20" height="60" rx="10" fill="url(#hs)"/>
+    <ellipse cx="87" cy="44" rx="10" ry="4" fill="#fff" fill-opacity="0.9"/>
+    <path d="M53 47 L65 82 L77 47 L68 47 L65 63 L62 47 Z" fill="url(#hr)"/>
+  </g>
+  <!-- wordmark -->
+  <g transform="translate(162,0)">
+    <text x="0" y="82" font-family="Georgia, 'Times New Roman', serif" font-size="52" font-weight="700" letter-spacing="1.5" fill="#16233F">MER<tspan fill="#D62B23">POLON</tspan></text>
+    <rect x="2" y="98" width="382" height="2.5" fill="#D62B23" fill-opacity="0.85"/>
+    <text x="2" y="122" font-family="Arial, Helvetica, sans-serif" font-size="17.5" font-weight="600" letter-spacing="5.5" fill="#5A6478">SEYDEL SİLİNDİRLERİ</text>
+    <text x="2" y="144" font-family="Arial, Helvetica, sans-serif" font-size="12.5" letter-spacing="1.2" fill="#8A93A5">MERTEKS ELASTOMER · 2001</text>
+  </g>
+</svg>

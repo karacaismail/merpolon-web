@@ -1,0 +1,77 @@
+---
+// Statik galeri kategori sayfası (Category / Faceted Navigation SEO)
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import Icon from './Icon.astro';
+import Breadcrumb from './Breadcrumb.astro';
+import RelatedLinks from './RelatedLinks.astro';
+import { galleryCats, company } from '../data/site';
+import gallery from '../data/gallery.json';
+
+const { c, lang = 'tr' } = Astro.props;
+const base = lang === 'tr' ? '' : '/' + lang;
+const path = `${base}/galeri/kategori/${c.key}/`;
+const items = gallery.filter(g => g.cat === c.key);
+const others = galleryCats.filter(x => x.key !== 'all' && x.key !== c.key).slice(0, 3);
+const SITE = (Astro.site ? Astro.site.href : '').replace(/\/$/, '');
+const t = {
+  tr: { crumb:'Portföy', h:'görselleri', lede:'kategorisindeki üretim ve ürün görsellerimiz.', all:'Tüm portföy', more:'Diğer kategoriler', quote:'Teklif Formu', ctaH:'Bu ürünlerden birine mi ihtiyacınız var?' },
+  en: { crumb:'Portfolio', h:'images', lede:'production and product images in this category.', all:'All portfolio', more:'Other categories', quote:'Quote form', ctaH:'Need one of these products?' },
+  de: { crumb:'Portfolio', h:'Bilder', lede:'Fertigungs- und Produktbilder dieser Kategorie.', all:'Gesamtes Portfolio', more:'Weitere Kategorien', quote:'Angebotsformular', ctaH:'Brauchen Sie eines dieser Produkte?' },
+  ru: { crumb:'Портфолио', h:'— изображения', lede:'производственные и продуктовые изображения этой категории.', all:'Всё портфолио', more:'Другие категории', quote:'Форма запроса', ctaH:'Нужен один из этих продуктов?' },
+  ar: { crumb:'معرض الأعمال', h:'— صور', lede:'صور الإنتاج والمنتجات في هذه الفئة.', all:'كل معرض الأعمال', more:'فئات أخرى', quote:'نموذج طلب عرض سعر', ctaH:'هل تحتاجون أحد هذه المنتجات؟' },
+}[lang];
+const title = `${c[lang]} ${t.h}`;
+
+const schema = [{
+  '@type':'ImageGallery', '@id': `${SITE}${path}#gallery`, name: title,
+  image: items.map(i => ({ '@type':'ImageObject', contentUrl: `${SITE}${i.src}`, name: i.title, width: i.w, height: i.h })),
+}];
+---
+<Base title={`${title} | Merpolon`} lang={lang} path={path}
+      description={`${c[lang]} ${t.lede} Merpolon — kauçuk ve poliüretan kaplı endüstriyel merdane üretimi.`}
+      image={items[0]?.src} schema={schema}>
+  <Header lang={lang} seg="galeri/" />
+  <Breadcrumb lang={lang} items={[{ href:`${base}/galeri/`, label:t.crumb }, { href:path, label:c[lang] }]} />
+  <main id="main" class="bg-white">
+    <section class="border-b border-steel-200">
+      <div class="mx-auto max-w-7xl px-6 py-12 lg:py-16">
+        <p class="flex items-center gap-3 text-xs font-700 uppercase tracking-[0.22em] text-brand-red"><span class="h-px w-10 bg-brand-red"></span>{t.crumb}</p>
+        <h1 class="mt-5 font-display text-3xl font-800 leading-[1.06] tracking-tight text-navy-900 sm:text-4xl">{title}</h1>
+        <p class="mt-4 max-w-2xl text-lg leading-relaxed text-navy-500">{c[lang]} {t.lede}</p>
+      </div>
+    </section>
+
+    <section class="border-b border-steel-200 bg-steel-50">
+      <div class="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-6 py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-wrap">
+        <a href={`${base}/galeri/`} class="shrink-0 whitespace-nowrap border border-steel-300 px-3.5 py-2 min-h-11 text-xs font-700 uppercase tracking-wider text-navy-600 transition hover:border-navy-900">{t.all}</a>
+        {galleryCats.filter(x => x.key !== 'all').map(x => (
+          <a href={`${base}/galeri/kategori/${x.key}/`} class={`shrink-0 whitespace-nowrap border px-3.5 py-2 min-h-11 text-xs font-700 uppercase tracking-wider transition ${x.key===c.key ? 'border-navy-900 bg-navy-900 text-white' : 'border-steel-300 text-navy-600 hover:border-navy-900'}`}>{x[lang]}</a>
+        ))}
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-6 py-12">
+      <div class="columns-2 gap-4 lg:columns-3 [&>*]:mb-4">
+        {items.map(g => (
+          <figure class="group relative block break-inside-avoid overflow-hidden border border-steel-200">
+            <img src={g.src} srcset={g.srcset} sizes="(max-width: 768px) 50vw, 33vw" alt={g.title} loading="lazy" width={g.w} height={g.h} class="w-full object-cover transition duration-500 group-hover:scale-[1.04]" />
+            <figcaption class="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy-900/85 to-transparent p-4 text-sm font-700 text-white opacity-0 transition group-hover:opacity-100">{g.title}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-navy-900 text-white">
+      <div class="mx-auto flex max-w-7xl flex-col items-start gap-8 px-6 py-14 lg:flex-row lg:items-center lg:justify-between">
+        <h2 class="font-display text-2xl font-800 tracking-tight sm:text-3xl">{t.ctaH}</h2>
+        <a href={`${base}/teklif/`} class="inline-flex shrink-0 items-center gap-2 bg-brand-red px-6 py-4 text-sm font-700 uppercase tracking-wider transition hover:bg-white hover:text-navy-900">{t.quote} <Icon name="arrow" class="h-4 w-4"/></a>
+      </div>
+    </section>
+
+    <RelatedLinks lang={lang} title={t.more}
+      items={others.map(o => ({ href:`${base}/galeri/kategori/${o.key}/`, label:o[lang] }))} />
+  </main>
+  <Footer lang={lang} />
+</Base>

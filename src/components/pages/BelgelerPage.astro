@@ -1,0 +1,56 @@
+---
+// Sertifikalar & Belgeler — TEK kaynak, 5 dil.
+import Base from '../../layouts/Base.astro';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import Icon from '../Icon.astro';
+import { qualityPoints, company } from '../../data/site';
+
+const { lang = 'tr' } = Astro.props;
+const base = lang === 'tr' ? '' : '/' + lang;
+
+const H = {
+  tr: { title:'Sertifikalar & Belgeler — Merpolon | Merteks Elastomer', ey:'Sertifikalar & Belgeler', h1:'Standartlara bağlı üretim',
+        lede:'Üretim ve kalite standartlarımıza dair belgelerimizi talep üzerine paylaşıyoruz. Aşağıda uyduğumuz temel üretim ve kontrol ilkelerini bulabilirsiniz.',
+        ctaH:'Belge veya ürün kataloğu mu lazım?', ctaP:'Kalite belgelerimizi ve ürün kataloğumuzu talebiniz üzerine e-posta ile iletelim.',
+        req:'Belge Talep Et', contact:'İletişim' },
+  en: { title:'Certificates & Documents — Merpolon | Merteks Elastomer', ey:'Certificates & Documents', h1:'Manufacturing bound to standards',
+        lede:'We share the documents covering our production and quality standards on request. Below are the core manufacturing and inspection principles we follow.',
+        ctaH:'Need a document or the product catalogue?', ctaP:'We will send our quality documents and product catalogue by email on request.',
+        req:'Request documents', contact:'Contact' },
+  de: { title:'Zertifikate & Dokumente — Merpolon | Merteks Elastomer', ey:'Zertifikate & Dokumente', h1:'Fertigung nach Standards',
+        lede:'Die Dokumente zu unseren Fertigungs- und Qualitätsstandards stellen wir auf Anfrage bereit. Nachfolgend die grundlegenden Fertigungs- und Prüfprinzipien, denen wir folgen.',
+        ctaH:'Dokument oder Produktkatalog gewünscht?', ctaP:'Wir senden Ihnen unsere Qualitätsdokumente und den Produktkatalog auf Anfrage per E-Mail.',
+        req:'Dokumente anfordern', contact:'Kontakt' },
+  ru: { title:'Сертификаты и документы — Merpolon | Merteks Elastomer', ey:'Сертификаты и документы', h1:'Производство в соответствии со стандартами',
+        lede:'Документы о наших производственных и качественных стандартах мы предоставляем по запросу. Ниже — основные принципы производства и контроля, которых мы придерживаемся.',
+        ctaH:'Нужен документ или каталог продукции?', ctaP:'По вашему запросу вышлем документы о качестве и каталог продукции по электронной почте.',
+        req:'Запросить документы', contact:'Контакты' },
+  ar: { title:'الشهادات والوثائق — Merpolon | Merteks Elastomer', ey:'الشهادات والوثائق', h1:'إنتاج ملتزم بالمعايير',
+        lede:'نشارك عند الطلب الوثائق المتعلقة بمعايير الإنتاج والجودة لدينا. وفيما يلي المبادئ الأساسية للإنتاج والفحص التي نلتزم بها.',
+        ctaH:'هل تحتاجون وثيقة أو كتالوج المنتجات؟', ctaP:'سنرسل لكم وثائق الجودة وكتالوج المنتجات عبر البريد الإلكتروني عند طلبكم.',
+        req:'اطلبوا الوثائق', contact:'اتصل بنا' },
+}[lang];
+---
+<Base title={H.title} lang={lang} path={`${base}/belgeler/`}>
+  <Header lang={lang} />
+  <main id="main" class="bg-white">
+    <section class="border-b border-steel-200"><div class="mx-auto max-w-4xl px-6 py-16 lg:py-20" data-reveal-group>
+      <p data-reveal class="flex items-center gap-3 text-xs font-700 uppercase tracking-[0.22em] text-brand-red"><span class="h-px w-10 bg-brand-red"></span>{H.ey}</p>
+      <h1 data-reveal class="mt-6 font-display text-4xl font-800 leading-[1.04] tracking-tight text-navy-900 sm:text-5xl">{H.h1}</h1>
+      <p data-reveal class="mt-6 text-lg leading-relaxed text-navy-500">{H.lede}</p>
+    </div></section>
+    <section class="mx-auto max-w-7xl px-6 py-20"><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4" data-reveal-group>
+      {qualityPoints.map(q => (<div data-reveal class="border-t-2 border-brand-red bg-steel-50 p-7"><Icon name={q.icon} class="h-7 w-7 text-navy-900"/><h3 class="mt-5 font-display text-lg font-700 text-navy-900">{q[lang]}</h3><p class="mt-2 text-sm leading-relaxed text-navy-500">{q.d[lang]}</p></div>))}
+    </div></section>
+    <section class="border-y border-steel-200 bg-steel-50"><div class="mx-auto max-w-4xl px-6 py-16 text-center" data-reveal>
+      <h2 class="font-display text-2xl font-800 tracking-tight text-navy-900 sm:text-3xl">{H.ctaH}</h2>
+      <p class="mx-auto mt-3 max-w-xl text-navy-500">{H.ctaP}</p>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <a href={'mailto:'+company.email} class="inline-flex items-center gap-2 bg-brand-red px-6 py-3.5 text-sm font-700 uppercase tracking-wider text-white transition hover:bg-navy-900"><Icon name="mail" class="h-4 w-4"/>{H.req}</a>
+        <a href={`${base}/iletisim/`} class="inline-flex items-center gap-2 border-2 border-navy-900 px-6 py-3.5 text-sm font-700 uppercase tracking-wider text-navy-900 transition hover:bg-navy-900 hover:text-white">{H.contact}</a>
+      </div>
+    </div></section>
+  </main>
+  <Footer lang={lang} />
+</Base>

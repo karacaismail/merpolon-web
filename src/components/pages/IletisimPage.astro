@@ -1,0 +1,106 @@
+---
+// İletişim — TEK kaynak, 5 dil. En zengin TR sürümünden türetildi.
+// Telefon / e-posta / adres `company` nesnesinden gelir ve ÇEVRİLMEZ; yalnızca etiketler çevrilir.
+// Mobil düzen (grid/spacing) TR sürümüyle birebir korunmuştur.
+import Base from '../../layouts/Base.astro';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import Icon from '../Icon.astro';
+import { company } from '../../data/site';
+
+const { lang = 'tr' } = Astro.props;
+const base = lang === 'tr' ? '' : '/' + lang;
+
+const H = {
+  tr: {
+    title:'İletişim — Merpolon | Merteks Elastomer',
+    ey:'İletişim', h1:'Bize ulaşın',
+    lede:`Teklif, teknik danışmanlık ve sipariş için buradayız. Türkiye'nin her yerinden ${company.phone}.`,
+    order:'Sipariş & Teklif Hattı', callCenter:'Çağrı Merkezi', waSub:'Hızlı yanıt',
+    email:'E-posta', center:'Merkez', factory:'İmalat', fax:'Faks', map:'Harita',
+  },
+  en: {
+    title:'Contact — Merpolon | Merteks Elastomer',
+    ey:'Contact', h1:'Get in touch',
+    lede:`Here for quotes, technical advice and orders. Reach us anywhere in Türkiye at ${company.phone}.`,
+    order:'Order & Quote Line', callCenter:'Call centre', waSub:'Fast reply',
+    email:'Email', center:'Head office', factory:'Factory', fax:'Fax', map:'Map',
+  },
+  de: {
+    title:'Kontakt — Merpolon | Merteks Elastomer',
+    ey:'Kontakt', h1:'Sprechen Sie uns an',
+    lede:`Für Angebote, technische Beratung und Bestellungen. Türkeiweit erreichbar unter ${company.phone}.`,
+    order:'Bestell- & Angebotshotline', callCenter:'Callcenter', waSub:'Schnelle Antwort',
+    email:'E-Mail', center:'Zentrale', factory:'Fertigung', fax:'Fax', map:'Karte',
+  },
+  ru: {
+    title:'Контакты — Merpolon | Merteks Elastomer',
+    ey:'Контакты', h1:'Свяжитесь с нами',
+    lede:`Мы на связи для запроса цены, технической консультации и заказа. Из любой точки Турции — ${company.phone}.`,
+    order:'Линия заказов и запросов цены', callCenter:'Колл-центр', waSub:'Быстрый ответ',
+    email:'E-mail', center:'Головной офис', factory:'Производство', fax:'Факс', map:'Карта',
+  },
+  ar: {
+    title:'اتصل بنا — Merpolon | Merteks Elastomer',
+    ey:'اتصل بنا', h1:'تواصلوا معنا',
+    lede:`نحن هنا لعرض السعر والاستشارة الفنية والطلب. من أي مكان في تركيا: ${company.phone}.`,
+    order:'خط الطلبات وعروض الأسعار', callCenter:'مركز الاتصال', waSub:'ردّ سريع',
+    email:'البريد الإلكتروني', center:'المركز الرئيسي', factory:'المصنع', fax:'الفاكس', map:'الخريطة',
+  },
+}[lang];
+
+const cards = [
+  { icon:'phone', label:H.order, value:company.order, sub:`${H.callCenter}: ${company.phone}`, href:'tel:'+company.order.replace(/\s/g,'') },
+  { icon:'whatsapp', label:'WhatsApp', value:company.order, sub:H.waSub, href:'https://wa.me/'+company.order.replace(/[^0-9]/g,'') },
+  { icon:'mail', label:H.email, value:company.email, href:'mailto:'+company.email },
+  { icon:'instagram', label:'Instagram', value:'@merteksmerdane1', href:company.instagram },
+];
+---
+<Base title={H.title} lang={lang} path={`${base}/iletisim/`}>
+  <Header lang={lang} seg="iletisim/" />
+  <main id="main" class="bg-white">
+    <!-- HERO -->
+    <section class="border-b border-steel-200">
+      <div class="mx-auto max-w-7xl px-6 py-14 sm:py-16 lg:py-20" data-reveal-group>
+        <p data-reveal class="flex items-center gap-3 text-xs font-700 uppercase tracking-[0.22em] text-brand-red"><span class="h-px w-10 bg-brand-red"></span>{H.ey}</p>
+        <h1 data-reveal class="mt-5 font-display text-3xl font-800 leading-[1.05] tracking-tight text-navy-900 sm:text-5xl">{H.h1}</h1>
+        <p data-reveal class="mt-5 max-w-2xl text-base leading-relaxed text-navy-500 sm:text-lg">{H.lede}</p>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-6 py-12 sm:py-16">
+      <div class="grid gap-6 lg:grid-cols-2 lg:gap-8">
+        <!-- contact cards -->
+        <div class="grid gap-3 sm:grid-cols-2">
+          {cards.map(c => (
+            <a href={c.href} target={c.href.startsWith('http') ? '_blank' : undefined} rel="noopener" class="flex items-start gap-3.5 rounded-2xl border border-steel-200 bg-white p-4 transition hover:border-brand-red/40 sm:p-5">
+              <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-navy-900 text-brand-redlite"><Icon name={c.icon} class="h-5 w-5"/></div>
+              <div class="min-w-0">
+                <p class="text-xs uppercase tracking-wider text-navy-500">{c.label}</p>
+                <p class="mt-0.5 break-words font-display text-base font-700 leading-snug text-navy-800">{c.value}</p>
+                {c.sub && <p class="mt-0.5 text-xs text-navy-500">{c.sub}</p>}
+              </div>
+            </a>
+          ))}
+          <!-- address (full width) -->
+          <div class="rounded-2xl border border-steel-200 bg-white p-4 sm:col-span-2 sm:p-5">
+            <div class="flex items-start gap-3.5">
+              <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-navy-900 text-brand-redlite"><Icon name="map-pin" class="h-5 w-5"/></div>
+              <div class="min-w-0 space-y-2.5">
+                <div><p class="text-xs uppercase tracking-wider text-navy-500">{H.center}</p><p class="font-600 leading-snug text-navy-800">{company.addressCenter}</p></div>
+                <div><p class="text-xs uppercase tracking-wider text-navy-500">{H.factory}</p><p class="font-600 leading-snug text-navy-800">{company.addressFactory}</p></div>
+                <p class="text-sm text-navy-500">{H.fax}: {company.fax}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- map -->
+        <div class="overflow-hidden rounded-2xl border border-steel-200 bg-white">
+          <iframe title={H.map} class="h-[300px] w-full lg:h-full lg:min-h-[460px]" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=İOSB%20Esenler%20Sanayi%20Sitesi%20Başakşehir%20İstanbul&output=embed"></iframe>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer lang={lang} />
+</Base>

@@ -1,0 +1,233 @@
+---
+import { company, nav, footerExtra, faqs, productLines, services, sectors } from '../data/site';
+import { meta as pageMeta } from '../data/meta';
+import { analytics } from '../data/site';
+import Icon from '../components/Icon.astro';
+// `schema`: sayfaya özel ek JSON-LD düğümleri (ürün, sözlük, rehber…)
+// `alts`: bu sayfanın gerçekten var olduğu diller (hreflang yalnızca bunlara verilir)
+const { title, description, lang = 'tr', path = '/', image, schema = [], alts } = Astro.props;
+
+// ---------- Diller ----------
+const LANGS = ['tr','en','de','ru','ar'];
+const RTL = ['ar'];
+const dir = RTL.includes(lang) ? 'rtl' : 'ltr';
+
+// ---------- URLs (tek kaynak: astro.config `site`) ----------
+const SITE = (Astro.site ? Astro.site.href : 'https://karacaismail.github.io/merpolon/').replace(/\/$/, '');
+const seg = path.replace(/^\/(en|de|ru|ar)\//, '/').replace(/^\//, '');         // '' | 'kurumsal/' | ...
+const langHref = (l) => (l === 'tr' ? `${SITE}/${seg}` : `${SITE}/${l}/${seg}`);
+const urls = Object.fromEntries(LANGS.map(l => [l, langHref(l)]));
+// Sayfa hangi dillerde gerçekten yayınlandıysa yalnızca onlara hreflang ver (ör. il sayfaları TR-only)
+const availLangs = (alts && alts.length ? alts : LANGS).filter(l => LANGS.includes(l));
+const canonical = urls[lang];
+const homeUrl = lang === 'tr' ? `${SITE}/` : `${SITE}/${lang}/`;
+const productsUrl = lang === 'tr' ? `${SITE}/urunler/` : `${SITE}/${lang}/urunler/`;
+const localeMap = { tr:'tr_TR', en:'en_US', de:'de_DE', ru:'ru_RU', ar:'ar_AR' };
+const ogLocale = localeMap[lang];
+const ogAlt = availLangs.map(l => localeMap[l]).filter(l => l !== ogLocale);
+const ogImage = `${SITE}${image || '/gallery/poliuretan-kapli-besleme-merdaneleri.webp'}`;
+const isHome = seg === '';
+
+// ---------- copy ----------
+const n = sectors.length;
+const defaultDesc = {
+  tr: `Merpolon — Merteks Elastomer. 25+ yıllık tecrübeyle kauçuk ve poliüretan kaplı Seydel merdaneleri; ${n} sektöre Ø1200×7000 mm kaplama, hassas taşlama ve kanal açma. İstanbul İkitelli OSB.`,
+  en: `Merpolon — Merteks Elastomer. Rubber & polyurethane coated Seydel rollers with 25+ years of expertise; coating, precision grinding and grooving up to Ø1200×7000 mm for ${n} industries. Istanbul, Türkiye.`,
+  de: `Merpolon — Merteks Elastomer. Gummi- und polyurethanbeschichtete Seydel-Walzen mit über 25 Jahren Erfahrung; Beschichtung, Präzisionsschleifen und Rillen bis Ø1200×7000 mm für ${n} Branchen. Istanbul, Türkei.`,
+  ru: `Merpolon — Merteks Elastomer. Валы Seydel с резиновым и полиуретановым покрытием, опыт более 25 лет; покрытие, прецизионное шлифование и нарезка канавок до Ø1200×7000 мм для ${n} отраслей. Стамбул, Турция.`,
+  ar: `Merpolon — Merteks Elastomer. أسطوانات سيدل المكسوّة بالمطاط والبولي يوريثان بخبرة تتجاوز 25 عامًا؛ تكسية وجلخ دقيق وفتح أخاديد حتى Ø1200×7000 مم لـ ${n} قطاعًا. إسطنبول، تركيا.`,
+}[lang];
+const desc = description || pageMeta[seg]?.[lang] || defaultDesc;
+const waText   = { tr:'WhatsApp’tan yazın', en:'Chat on WhatsApp', de:'Auf WhatsApp schreiben', ru:'Написать в WhatsApp', ar:'راسلونا على واتساب' }[lang];
+const topText  = { tr:'Yukarı çık', en:'Back to top', de:'Nach oben', ru:'Наверх', ar:'العودة إلى الأعلى' }[lang];
+const skipText = { tr:'İçeriğe geç', en:'Skip to content', de:'Zum Inhalt springen', ru:'Перейти к содержимому', ar:'تخطَّ إلى المحتوى' }[lang];
+const homeLabel = { tr:'Ana Sayfa', en:'Home', de:'Start', ru:'Главная', ar:'الرئيسية' }[lang];
+const langTag = { tr:'tr-TR', en:'en-US', de:'de-DE', ru:'ru-RU', ar:'ar' }[lang];
+
+// ---------- Structured data (schema.org @graph) ----------
+const orgId = `${SITE}/#organization`;
+const siteId = `${SITE}/#website`;
+const pageId = `${canonical}#webpage`;
+const crumbId = `${canonical}#breadcrumb`;
+const allLinks = [...nav[lang], ...footerExtra[lang]];
+const cleanTitle = String(title).replace(/\s*[—|]\s*Merpolon.*$/, '').trim();
+const currentLabel = (allLinks.find(([h]) => h === path) || [null, cleanTitle])[1];
+
+const terms = {
+  tr: ['Kauçuk kaplı merdane','Poliüretan kaplı merdane','Seydel silindiri','Ofset merdanesi','Mürekkep merdanesi','Su (nemlendirme) merdanesi','Merdane kaplama','Rektifiye taşlama','Kanal açma','Yeniden kaplama'],
+  en: ['Rubber coated roller','Polyurethane coated roller','Seydel cylinder','Offset roller','Ink roller','Dampening roller','Roller coating','Precision grinding','Channel grooving','Roller re-coating'],
+  de: ['Gummibeschichtete Walze','Polyurethanbeschichtete Walze','Seydel-Walze','Offsetwalze','Farbwalze','Feuchtwalze','Walzenbeschichtung','Präzisionsschleifen','Rillen','Neubeschichtung'],
+  ru: ['Вал с резиновым покрытием','Вал с полиуретановым покрытием','Цилиндр Seydel','Офсетный вал','Красочный вал','Увлажняющий вал','Покрытие валов','Прецизионное шлифование','Нарезка канавок','Перепокрытие вала'],
+  ar: ['أسطوانة مكسوّة بالمطاط','أسطوانة مكسوّة بالبولي يوريثان','أسطوانة سيدل','أسطوانة أوفست','أسطوانة الحبر','أسطوانة الترطيب','تكسية الأسطوانات','الجلخ الدقيق','فتح الأخاديد','إعادة تكسية الأسطوانة'],
+}[lang];
+
+const organization = {
+  '@type': ['Organization', 'LocalBusiness'],
+  '@id': orgId,
+  name: company.legal,
+  alternateName: ['Merpolon', 'Merteks Merdane', 'Merteks Elastomer'],
+  brand: [{ '@type':'Brand', name:'Merpolon' }, { '@type':'Brand', name:'Merteks' }],
+  url: `${SITE}/`,
+  logo: { '@type':'ImageObject', url: `${SITE}/brand/logo-mark.svg` },
+  image: ogImage,
+  description: defaultDesc,
+  foundingDate: '1989',
+  telephone: '+905559869754',
+  faxNumber: '+902126715717',
+  email: company.email,
+  address: { '@type':'PostalAddress', streetAddress:'İOSB Esenler Sanayi Sitesi 8. Blok No:11', addressLocality:'Başakşehir', addressRegion:'İstanbul', addressCountry:'TR' },
+  hasMap: 'https://www.google.com/maps?q=%C4%B0OSB+Esenler+Sanayi+Sitesi+Ba%C5%9Fak%C5%9Fehir+%C4%B0stanbul',
+  openingHoursSpecification: [{ '@type':'OpeningHoursSpecification', dayOfWeek:['Monday','Tuesday','Wednesday','Thursday','Friday'], opens:'08:30', closes:'18:30' }],
+  areaServed: { '@type':'Country', name:'Türkiye' },
+  sameAs: [company.instagram, company.tiktok, company.facebook],
+  contactPoint: [{ '@type':'ContactPoint', telephone:'+905559869754', contactType:'sales', availableLanguage:['Turkish','English','German','Russian','Arabic'] }],
+  knowsAbout: [...terms, ...sectors.map(s => s[lang])],
+  makesOffer: productLines.map(p => ({ '@type':'Offer', itemOffered: { '@type':'Product', name: p.name[lang] } })),
+};
+const website = { '@type':'WebSite', '@id': siteId, url: `${SITE}/`, name:'Merpolon', inLanguage:['tr-TR','en-US','de-DE','ru-RU','ar'], publisher: { '@id': orgId } };
+const pageTypes = { '':'WebPage', 'kurumsal/':'AboutPage', 'iletisim/':'ContactPage', 'galeri/':'CollectionPage', 'sss/':'FAQPage' };
+const webpage = {
+  '@type': pageTypes[seg] || 'WebPage', '@id': pageId, url: canonical, name: title, description: desc, inLanguage: langTag,
+  isPartOf: { '@id': siteId }, about: { '@id': orgId },
+  primaryImageOfPage: { '@type':'ImageObject', url: ogImage }, breadcrumb: { '@id': crumbId },
+};
+// Çok seviyeli breadcrumb: /urunler/kaucuk-seydel-merdanesi/ → Ana Sayfa › Ürünler › <sayfa>
+const parts = seg.split('/').filter(Boolean);
+const crumbs = [{ name: homeLabel, item: homeUrl }];
+parts.forEach((p, i) => {
+  const sub = parts.slice(0, i + 1).join('/') + '/';
+  const href = lang === 'tr' ? `/${sub}` : `/${lang}/${sub}`;
+  const label = (allLinks.find(([h]) => h === href) || [])[1];
+  const last = i === parts.length - 1;
+  crumbs.push({ name: last ? (label || currentLabel || cleanTitle) : (label || p), item: `${SITE}${href}` });
+});
+const breadcrumb = { '@type':'BreadcrumbList', '@id': crumbId, itemListElement: crumbs.map((c, i) => ({ '@type':'ListItem', position: i + 1, name: c.name, item: c.item })) };
+const faqEntity = (list) => list.map(f => ({ '@type':'Question', name: f.q[lang], acceptedAnswer: { '@type':'Answer', text: f.a[lang] } }));
+
+const graph = [organization, website, webpage, breadcrumb];
+if (seg === 'sss/') webpage.mainEntity = faqEntity(faqs);
+if (isHome) graph.push({ '@type':'FAQPage', '@id': `${canonical}#faq`, isPartOf: { '@id': pageId }, mainEntity: faqEntity(faqs.slice(0, 6)) });
+if (isHome || seg === 'urunler/') graph.push({
+  '@type':'ItemList', '@id': `${canonical}#products`, name: { tr:'Ürün hatları', en:'Product lines', de:'Produktlinien', ru:'Линейки продукции', ar:'خطوط المنتجات' }[lang],
+  itemListElement: productLines.map((p, i) => ({ '@type':'ListItem', position: i + 1, item: {
+    '@type':'Product', '@id': `${productsUrl}#${p.slug}`, name: p.name[lang], description: p.body[lang], image: `${SITE}${p.img}`,
+    brand: { '@type':'Brand', name: p.name[lang].split('—')[0].trim() }, manufacturer: { '@id': orgId },
+    category: { tr:'Endüstriyel merdane', en:'Industrial roller', de:'Industriewalze', ru:'Промышленный вал', ar:'أسطوانة صناعية' }[lang],
+    material: p.slug.includes('kaucuk') ? 'Rubber' : 'Polyurethane',
+  } })),
+});
+if (seg === 'hizmetler/') graph.push({
+  '@type':'ItemList', '@id': `${canonical}#services`,
+  itemListElement: services.map((s, i) => ({ '@type':'ListItem', position: i + 1, item: {
+    '@type':'Service', name: s[lang], description: s.d[lang], serviceType: s[lang], provider: { '@id': orgId }, areaServed: { '@type':'Country', name:'Türkiye' },
+  } })),
+});
+if (schema.length) graph.push(...schema);
+const jsonld = JSON.stringify({ '@context':'https://schema.org', '@graph': graph });
+---
+<!doctype html>
+<html lang={lang} dir={dir} class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={desc} />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <link rel="canonical" href={canonical} />
+  <!-- Multilingual / International SEO -->
+  {availLangs.map(l => <link rel="alternate" hreflang={l} href={urls[l]} />)}
+  <link rel="alternate" hreflang="x-default" href={urls.tr} />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta name="theme-color" content="#0B1424" />
+  <meta name="author" content={company.legal} />
+  <!-- Local SEO -->
+  <meta name="geo.region" content="TR-34" />
+  <meta name="geo.placename" content="İstanbul" />
+  <!-- Open Graph / Twitter (SMO) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Merpolon" />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={desc} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:locale" content={ogLocale} />
+  {ogAlt.map(l => <meta property="og:locale:alternate" content={l} />)}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={desc} />
+  <meta name="twitter:image" content={ogImage} />
+  {isHome && <link rel="preload" as="image" href="/gallery/poliuretan-kapli-besleme-merdaneleri.webp" />}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  {lang === 'ar' && <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />}
+  {lang === 'ru' && <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap&subset=cyrillic" rel="stylesheet" />}
+  <style is:inline>
+    /* Arapça: harf bağlarını kıran letter-spacing'i iptal et, Arapça fontu zorla,
+       yön-bağımlı kenarlık/hizalamaları çevir. */
+    [dir="rtl"] { --ar-font: 'IBM Plex Sans Arabic', 'Noto Sans Arabic', system-ui, sans-serif; }
+    [dir="rtl"] body, [dir="rtl"] .font-display { font-family: var(--ar-font); }
+    [dir="rtl"] * { letter-spacing: normal !important; }
+    [dir="rtl"] .border-l-2, [dir="rtl"] .border-l-4 { border-left-width: 0; }
+    [dir="rtl"] .border-l-2 { border-right-width: 2px; border-right-style: solid; border-right-color: inherit; }
+    [dir="rtl"] .border-l-4 { border-right-width: 4px; border-right-style: solid; border-right-color: inherit; }
+    [dir="rtl"] .text-left { text-align: right; }
+    [dir="rtl"] .group:hover .group-hover\:translate-x-1 { --tw-translate-x: -0.25rem; }
+    /* Arapçada büyük harf dönüşümü anlamsız, sahte küçültme yaratır */
+    [dir="rtl"] .uppercase { text-transform: none; }
+  </style>
+  {analytics.googleSiteVerification && <meta name="google-site-verification" content={analytics.googleSiteVerification} />}
+  {analytics.bingSiteVerification && <meta name="msvalidate.01" content={analytics.bingSiteVerification} />}
+  <!-- Entity / Semantic SEO · AEO · GEO -->
+  <script type="application/ld+json" is:inline set:html={jsonld}></script>
+</head>
+<body class="bg-steel-50 text-navy-800 font-sans antialiased selection:bg-brand-red/20">
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:m-3 focus:rounded focus:bg-navy-800 focus:px-4 focus:py-2 focus:text-white">{skipText}</a>
+  <slot />
+
+  <!-- Sticky WhatsApp (left) -->
+  <a href={'https://wa.me/'+company.order.replace(/[^0-9]/g,'')} target="_blank" rel="noopener"
+     aria-label={waText}
+     class="group fixed bottom-24 left-5 z-50 flex items-center gap-0 overflow-hidden rounded-full bg-[#25D366] pl-3.5 pr-3.5 py-3.5 text-white shadow-[0_10px_30px_-8px_rgba(37,211,102,.7)] transition-all hover:pr-5 sm:bottom-5">
+    <Icon name="whatsapp" class="h-6 w-6 shrink-0" />
+    <span class="max-w-0 overflow-hidden whitespace-nowrap text-sm font-700 transition-all duration-300 group-hover:ml-2 group-hover:max-w-[220px]">{waText}</span>
+  </a>
+
+  <!-- Scroll to top (right) -->
+  <button id="toTop" aria-label={topText}
+    class="fixed bottom-24 right-5 z-50 flex h-12 w-12 translate-y-4 items-center justify-center rounded-full bg-navy-900 text-white opacity-0 shadow-soft transition-all hover:bg-brand-red data-[show=true]:translate-y-0 data-[show=true]:opacity-100 sm:bottom-5">
+    <Icon name="arrow-up" class="h-5 w-5" />
+  </button>
+  <script is:inline>
+    (function(){
+      var b=document.getElementById('toTop'); if(!b) return;
+      var on=function(){ b.dataset.show = (window.scrollY>400)?'true':'false'; };
+      on(); window.addEventListener('scroll', on, {passive:true});
+      b.addEventListener('click', function(){ window.scrollTo({top:0, behavior:'smooth'}); });
+    })();
+  </script>
+
+  {analytics.ga4 && (
+    <>
+      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${analytics.ga4}`}></script>
+      <script is:inline define:vars={{ id: analytics.ga4 }}>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        gtag('js', new Date()); gtag('config', id);
+      </script>
+    </>
+  )}
+  {analytics.yandexMetrica && (
+    <script is:inline define:vars={{ id: analytics.yandexMetrica }}>
+      (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+      k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+      (window,document,'script','https://mc.yandex.ru/metrika/tag.js','ym');
+      ym(id,'init',{clickmap:true,trackLinks:true,accurateTrackBounce:true});
+    </script>
+  )}
+
+  <script>
+    import '../scripts/enhance.ts';
+  </script>
+</body>
+</html>

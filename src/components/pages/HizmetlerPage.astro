@@ -1,0 +1,154 @@
+---
+// Hizmetler sayfası — TEK kaynak, 5 dil. Her dil rotası bu bileşeni `lang` ile çağırır,
+// böylece TR/EN/DE/RU/AR yapısal olarak birebir aynı içeriği alır (içerik paritesi).
+import Base from '../../layouts/Base.astro';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import Icon from '../Icon.astro';
+import { services, process, company, coverage } from '../../data/site';
+
+const { lang = 'tr' } = Astro.props;
+const base = lang === 'tr' ? '' : '/' + lang;
+
+// İl sayfalarının slug'ı — CityPage.astro / merdane-kaplama/[slug].astro ile birebir aynı olmalı.
+const trSlug = (s) => s.toLocaleLowerCase('tr').replace(/ı/g,'i').replace(/ç/g,'c').replace(/ğ/g,'g').replace(/ö/g,'o').replace(/ş/g,'s').replace(/ü/g,'u').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+
+const H = {
+  tr: {
+    title:'Hizmetler — Kaplama, Taşlama, Kanal Açma | Merpolon',
+    eyebrow:'Hizmetler',
+    h1:'Uçtan uca<br/>merdane imalatı',
+    lede:"Çelik çekirdekten kaplamaya, hassas taşlamadan kanal açmaya kadar tüm süreç mühendis kontrolünde tek çatı altında — Ø1200 × 7000 mm'e kadar.",
+    imgAlt:'Merdane kaplama',
+    chips:['Düz Taşlama','Konik Taşlama','Bombeli Taşlama','Baklava Kanal','Helis Kanal','Yeniden Kaplama'],
+    prEy:'Üretim Süreci', prH:'Çelikten sahaya, beş adımda',
+    ctaH:'Merdanenizi yeniden kaplayalım.',
+    // Yalnızca TR'de gösterilen bölüm (il sayfaları TR-only)
+    areasEy:'Hizmet Bölgeleri',
+    areasH:`${coverage.length} ilde merdane kaplama`,
+    areasP:"İstanbul İOSB'deki tesisimizden Türkiye geneline sevkiyat yapıyoruz; illerde şubemiz bulunmaz. Bulunduğunuz ile ait sayfadan süreci ve gönderim akışını inceleyin.",
+    areaSuffix:'merdane kaplama',
+  },
+  en: {
+    title:'Services — Covering, Grinding & Grooving | Merpolon',
+    eyebrow:'Services',
+    h1:'End-to-end<br/>roller manufacturing',
+    lede:'From the steel core to covering, from precision grinding to grooving — the whole process under one roof and engineer-supervised, up to Ø1200 × 7000 mm.',
+    imgAlt:'Roller covering',
+    chips:['Straight grinding','Conical grinding','Crowned grinding','Diamond groove','Helical groove','Re-covering'],
+    prEy:'Production process', prH:'From steel to the shop floor, in five steps',
+    ctaH:'Let us re-cover your roller.',
+  },
+  de: {
+    title:'Leistungen — Beschichtung, Schleifen & Rillen | Merpolon',
+    eyebrow:'Leistungen',
+    h1:'Walzenfertigung<br/>aus einer Hand',
+    lede:'Vom Stahlkern über die Beschichtung bis zum Präzisionsschleifen und Rillen — der gesamte Prozess unter einem Dach und ingenieurüberwacht, bis Ø1200 × 7000 mm.',
+    imgAlt:'Walzenbeschichtung',
+    chips:['Geradschliff','Konischer Schliff','Balliger Schliff','Rautenrille','Wendelrille','Neubeschichtung'],
+    prEy:'Fertigungsprozess', prH:'Vom Stahl in die Produktion, in fünf Schritten',
+    ctaH:'Wir beschichten Ihre Walze neu.',
+  },
+  ru: {
+    title:'Услуги — покрытие, шлифование, нарезка канавок | Merpolon',
+    eyebrow:'Услуги',
+    h1:'Полный цикл<br/>производства валов',
+    lede:'От стального сердечника до покрытия, от прецизионного шлифования до нарезки канавок — весь процесс под одной крышей и под контролем инженера, до Ø1200 × 7000 мм.',
+    imgAlt:'Покрытие валов',
+    chips:['Цилиндрическое шлифование','Коническое шлифование','Бомбированное шлифование','Ромбическая канавка','Винтовая канавка','Перепокрытие'],
+    prEy:'Производственный процесс', prH:'От стали до цеха, в пять шагов',
+    ctaH:'Перепокроем ваш вал.',
+  },
+  ar: {
+    title:'الخدمات — التكسية والجلخ وفتح الأخاديد | Merpolon',
+    eyebrow:'الخدمات',
+    h1:'تصنيع متكامل<br/>للأسطوانات',
+    lede:'من القلب الفولاذي إلى التكسية، ومن الجلخ الدقيق إلى فتح الأخاديد — العملية كاملة تحت سقف واحد وبإشراف هندسي، حتى Ø1200 × 7000 مم.',
+    imgAlt:'تكسية الأسطوانات',
+    chips:['جلخ مستقيم','جلخ مخروطي','جلخ محدّب','أخدود معيّني','أخدود لولبي','إعادة التكسية'],
+    prEy:'عملية الإنتاج', prH:'من الفولاذ إلى الميدان في خمس خطوات',
+    ctaH:'لنعِد تكسية أسطوانتكم.',
+  },
+}[lang];
+---
+<Base title={H.title} lang={lang} path={`${base}/hizmetler/`}>
+  <Header lang={lang} seg="hizmetler/" />
+  <main id="main" class="bg-white">
+
+    <!-- 1 · HERO -->
+    <section class="border-b border-steel-200">
+      <div class="mx-auto grid max-w-7xl items-stretch lg:grid-cols-[1.2fr_1fr]">
+        <div class="flex flex-col justify-center px-6 py-16 lg:py-20 lg:pr-14" data-reveal-group>
+          <p data-reveal class="flex items-center gap-3 text-xs font-700 uppercase tracking-[0.22em] text-brand-red"><span class="h-px w-10 bg-brand-red"></span>{H.eyebrow}</p>
+          <h1 data-reveal class="mt-6 font-display text-4xl font-800 leading-[1.04] tracking-tight text-navy-900 sm:text-5xl" set:html={H.h1}></h1>
+          <p data-reveal class="mt-6 max-w-lg text-lg leading-relaxed text-navy-500">{H.lede}</p>
+        </div>
+        <div class="relative min-h-[280px] bg-navy-900 lg:min-h-full"><img src="/gallery/kaucuk-kapli-finisor-merdanesi.webp" srcset="/gallery/kaucuk-kapli-finisor-merdanesi-480.webp 480w, /gallery/kaucuk-kapli-finisor-merdanesi-960.webp 960w, /gallery/kaucuk-kapli-finisor-merdanesi.webp 1010w" sizes="(max-width: 768px) 100vw, 50vw" alt={H.imgAlt} width="1010" height="758" class="h-full w-full object-cover"/></div>
+      </div>
+    </section>
+
+    <!-- 2 · SERVICES -->
+    <section class="mx-auto max-w-7xl px-6 py-20">
+      <div class="grid border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 sm:grid-cols-2">
+        {services.map((s, i) => (
+          <div data-reveal class="group bg-white p-8 transition hover:bg-steel-50">
+            <div class="flex items-center gap-4"><span class="font-display text-2xl font-800 text-steel-300">0{i+1}</span><div class="h-px flex-1 bg-steel-200"></div></div>
+            <h2 class="mt-5 font-display text-xl font-700 text-navy-900 group-hover:text-brand-red">{s[lang]}</h2>
+            <p class="mt-2 leading-relaxed text-navy-500">{s.d[lang]}</p>
+          </div>
+        ))}
+      </div>
+      <div class="mt-8 flex flex-wrap gap-2">{H.chips.map(x => (<span class="border border-steel-300 px-3 py-1.5 text-xs font-600 text-navy-600">{x}</span>))}</div>
+    </section>
+
+    <!-- 3 · PROCESS -->
+    <section class="border-y border-steel-200 bg-steel-50">
+      <div class="mx-auto max-w-7xl px-6 py-20">
+        <div class="max-w-2xl" data-reveal-group>
+          <p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.prEy}</p>
+          <h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.prH}</h2>
+        </div>
+        <div class="mt-12 grid border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 md:grid-cols-5" data-reveal-group>
+          {process.map(s => (
+            <div data-reveal class="bg-white p-6">
+              <div class="flex items-center justify-between"><span class="font-display text-3xl font-800 text-steel-300">{s.no}</span><Icon name={s.icon} class="h-5 w-5 text-brand-red"/></div>
+              <h3 class="mt-5 font-display font-700 text-navy-900">{s[lang]}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-navy-500">{s.d[lang]}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 · SERVICE AREAS (il sayfaları yalnızca TR'de var) -->
+    {lang === 'tr' && (
+      <section class="border-b border-steel-200 bg-white">
+        <div class="mx-auto max-w-7xl px-6 py-20">
+          <div class="max-w-2xl" data-reveal-group>
+            <p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.areasEy}</p>
+            <h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.areasH}</h2>
+            <p data-reveal class="mt-4 leading-relaxed text-navy-500">{H.areasP}</p>
+          </div>
+          <div class="mt-10 grid grid-cols-2 border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 sm:grid-cols-3 lg:grid-cols-5" data-reveal-group>
+            {coverage.map(c => (
+              <a href={`${base}/merdane-kaplama/${trSlug(c)}/`} data-reveal class="group flex items-center gap-3 bg-white px-5 py-5 transition hover:bg-navy-900">
+                <Icon name="map-pin" class="h-4 w-4 shrink-0 text-brand-red"/>
+                <span class="text-sm font-600 text-navy-800 transition group-hover:text-white">{c} {H.areaSuffix}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- 5 · CTA -->
+    <section class="bg-navy-900 text-white">
+      <div class="mx-auto flex max-w-7xl flex-col items-start gap-8 px-6 py-20 lg:flex-row lg:items-center lg:justify-between">
+        <h2 class="font-display text-3xl font-800 tracking-tight sm:text-4xl">{H.ctaH}</h2>
+        <a href={'tel:'+company.order.replace(/\s/g,'')} class="inline-flex shrink-0 items-center gap-2 bg-brand-red px-6 py-4 text-sm font-700 uppercase tracking-wider transition hover:bg-white hover:text-navy-900"><Icon name="phone" class="h-4 w-4"/>{company.order}</a>
+      </div>
+    </section>
+
+  </main>
+  <Footer lang={lang} />
+</Base>

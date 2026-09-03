@@ -1,0 +1,23 @@
+---
+// Bağlam duyarlı iç linkleme (cross-link örgüsü) — her sayfanın altına.
+import Icon from './Icon.astro';
+const { lang = 'tr', items = [], title } = Astro.props; // items: [{href,label,desc}]
+const heading = title || { tr:'İlgili sayfalar', en:'Related pages', de:'Verwandte Seiten', ru:'Похожие страницы', ar:'صفحات ذات صلة' }[lang];
+const cta = { tr:'İncele', en:'Explore', de:'Ansehen', ru:'Смотреть', ar:'استعرض' }[lang];
+---
+{items.length > 0 && (
+  <section class="border-t border-steel-200 bg-white">
+    <div class="mx-auto max-w-7xl px-6 py-14">
+      <p class="text-sm font-700 uppercase tracking-widest text-brand-red">{heading}</p>
+      <div class="mt-6 grid border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 sm:grid-cols-2 lg:grid-cols-3">
+        {items.map(i => (
+          <a href={i.href} class="group flex flex-col bg-white p-6 transition hover:bg-steel-50">
+            <h3 class="font-display text-base font-700 text-navy-900 group-hover:text-brand-red">{i.label}</h3>
+            {i.desc && <p class="mt-2 flex-1 text-sm leading-relaxed text-navy-500">{i.desc}</p>}
+            <span class="mt-4 inline-flex items-center gap-2 text-xs font-700 uppercase tracking-wider text-navy-900 group-hover:text-brand-red">{cta} <Icon name="arrow" class="h-4 w-4 transition group-hover:translate-x-1"/></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

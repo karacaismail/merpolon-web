@@ -1,0 +1,20 @@
+---
+// Görünür breadcrumb (Featured Snippet + SXO). JSON-LD karşılığı Base.astro'da.
+import Icon from './Icon.astro';
+const { lang = 'tr', items = [] } = Astro.props; // items: [{href,label}] — son öğe aktif sayfa
+const base = lang === 'tr' ? '' : '/' + lang;
+const homeLabel = { tr:'Ana Sayfa', en:'Home', de:'Start', ru:'Главная', ar:'الرئيسية' }[lang];
+const trail = [{ href: base + '/', label: homeLabel }, ...items];
+---
+<nav aria-label="Breadcrumb" class="border-b border-steel-200 bg-steel-50">
+  <ol class="mx-auto flex max-w-7xl flex-wrap items-center gap-x-2 gap-y-1 px-6 py-3 text-xs text-navy-500">
+    {trail.map((c, i) => (
+      <li class="flex items-center gap-2">
+        {i > 0 && <Icon name="arrow" class="h-3 w-3 text-steel-300" />}
+        {i === trail.length - 1
+          ? <span class="font-600 text-navy-800" aria-current="page">{c.label}</span>
+          : <a href={c.href} class="transition hover:text-brand-red">{c.label}</a>}
+      </li>
+    ))}
+  </ol>
+</nav>

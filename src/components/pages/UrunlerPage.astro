@@ -1,0 +1,412 @@
+---
+// Ürünler — sitenin ürün merkezi. TEK kaynak, 5 dil.
+// Not: 8 ürün türü eskiden sayfanın EN ALTINDAydı; artık hero'dan hemen sonra ve filtrelenebilir.
+import Base from '../../layouts/Base.astro';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import PageHero from '../PageHero.astro';
+import Icon from '../Icon.astro';
+import RelatedLinks from '../RelatedLinks.astro';
+import { productTypes, glossary } from '../../data/products';
+import { productLines, seydelTypes, features, services, sectors, galleryCats, faqs, company } from '../../data/site';
+
+const { lang = 'tr' } = Astro.props;
+const base = lang === 'tr' ? '' : '/' + lang;
+const SITE = (Astro.site ? Astro.site.href : '').replace(/\/$/, '');
+const path = `${base}/urunler/`;
+
+// Ürün türlerini uygulama grubuna göre ayır (malzeme tek başına kullanıcı için anlamlı bir eksen değil)
+const GROUP = {
+  'kaucuk-seydel-merdanesi':'seydel', 'poliuretan-seydel-merdanesi':'seydel', 'koparma-converter-merdanesi':'seydel',
+  'ofset-merdanesi':'baski', 'murekkep-merdanesi':'baski', 'su-nemlendirme-merdanesi':'baski', 'anilox-rasterli-merdane':'baski',
+  'merdane-yeniden-kaplama':'servis',
+};
+
+const H = {
+  tr: {
+    title:'Ürünler — Kauçuk & Poliüretan Seydel Merdaneleri | Merpolon',
+    eyebrow:'Ürünler', h1:'Kauçuk & Poliüretan Merdaneler',
+    lede:'İki markamız, tek kalite anlayışıyla; çalışma şartlarınıza özel sertlik, çap ve boyda üretilir. Aşağıda tüm merdane tiplerimiz, teknik tablolar ve hangi ürünün hangi hatta uygun olduğu yer alıyor.',
+    typesEy:'Ürün Türleri', typesH:'Tüm merdane tiplerimiz', typesP:'Sekiz ürün türünün her biri için ayrı teknik sayfa var. Uygulamaya göre filtreleyin.',
+    filters:[['all','Tümü'],['seydel','Seydel & Elyaf-İplik'],['baski','Baskı Merdaneleri'],['servis','Servis']],
+    mat:{ 'Rubber':'Kauçuk', 'Polyurethane':'Poliüretan', 'Ceramic/Chrome':'Seramik / Krom', 'Service':'Servis' },
+    review:'İncele',
+    linesEy:'Ürün Hatları', linesH:'İki marka, tek kalite anlayışı',
+    tableH:'Seydel Silindirleri — Tip Tablosu', tableU:'(mm)',
+    th:['Tip','Dış Çap','İç Çap','Boy'],
+    tableNote:'Bu tablo standart Seydel tiplerinin referans ölçüleridir. Üretim, çalışma şartlarınıza göre bu ölçülerin dışında da yapılabilir.',
+    specEy:'Her Üründe Ortak', specH:'Standart olarak sunduklarımız',
+    common:[['ruler','Ø1200 × 7000 mm','Maksimum kaplama çapı ve boyu.'],['cpu','ST52 çelik çekirdek','Özel alaşımlı çelikten CNC tezgahlarda işlenir.'],['gauge','Çalışma şartına özel Shore A','Sertlik uygulamaya göre belirlenir, çalışma boyunca sabit kalır.'],['shield','3 ay garanti','İmalat hatalarına karşı.']],
+    matrixEy:'Uygulama Rehberi', matrixH:'Hangi ürün, hangi sektör için?', matrixP:'Ürün türlerimizin en sık kullanıldığı sektörler. Sektör adına tıklayarak o sektöre özel sayfaya gidebilirsiniz.',
+    thProduct:'Ürün', thSectors:'Kullanıldığı sektörler',
+    featEy:'Teknik Üstünlükler', featH:'Ar-Ge ile geliştirilmiş kaplama formülü',
+    servEy:'Hizmetler', servH:'Ürüne eşlik eden işlemler', servAll:'Tüm hizmetler',
+    galEy:'Portföy', galH:'Ürün ve üretim görselleri', galAll:'Tüm portföy',
+    glosEy:'Terimler', glosH:'Teklif konuşmasında geçen terimler', glosAll:'Tüm sözlük',
+    faqEy:'Sıkça Sorulanlar', faqH:'Ürünler hakkında', faqAll:'Tüm sorular',
+    ctaH:'Özel ölçü mü gerekiyor?', ctaP:'Çalışma şartlarınıza uygun sertlik (Shore A), çap ve kaplama için teklif alın.', quote:'Teklif Formu',
+    rel:'İlgili sayfalar',
+    relItems:[['/rehber/kaucuk-mu-poliuretan-mi/','Kauçuk mu, poliüretan mı?','Malzeme seçimini dört soruda adım adım karşılaştırın.'],['/sektorler/','Sektörler','21 sektör için merdane çözümleri ve uygulama notları.'],['/hizmetler/','Hizmetler','Kaplama, rektifiye taşlama, kanal açma ve yeniden kaplama.']],
+  },
+  en: {
+    title:'Products — Rubber & Polyurethane Seydel Rollers | Merpolon',
+    eyebrow:'Products', h1:'Rubber & Polyurethane Rollers',
+    lede:'Two brands, one standard of quality; produced in the hardness, diameter and length your operating conditions require. Below you will find every roller type we make, technical tables and which product suits which line.',
+    typesEy:'Product types', typesH:'All our roller types', typesP:'Each of the eight product types has its own technical page. Filter by application.',
+    filters:[['all','All'],['seydel','Seydel & fiber-yarn'],['baski','Printing rollers'],['servis','Service']],
+    mat:{ 'Rubber':'Rubber', 'Polyurethane':'Polyurethane', 'Ceramic/Chrome':'Ceramic / chrome', 'Service':'Service' },
+    review:'View',
+    linesEy:'Product lines', linesH:'Two brands, one standard of quality',
+    tableH:'Seydel cylinders — type table', tableU:'(mm)',
+    th:['Type','Outer Ø','Inner Ø','Length'],
+    tableNote:'This table gives reference dimensions for standard Seydel types. We also produce outside these dimensions to suit your operating conditions.',
+    specEy:'Common to every product', specH:'What we provide as standard',
+    common:[['ruler','Ø1200 × 7000 mm','Maximum covering diameter and length.'],['cpu','ST52 steel core','Machined on CNC from special alloy steel.'],['gauge','Shore A to your conditions','Hardness is set by the application and stays constant in service.'],['shield','3-month warranty','Against manufacturing defects.']],
+    matrixEy:'Application guide', matrixH:'Which product for which industry?', matrixP:'The industries where each of our product types is most often used. Click an industry to open its dedicated page.',
+    thProduct:'Product', thSectors:'Industries served',
+    featEy:'Technical advantages', featH:'A covering formula developed through R&D',
+    servEy:'Services', servH:'Operations that accompany the product', servAll:'All services',
+    galEy:'Portfolio', galH:'Product and production images', galAll:'Full portfolio',
+    glosEy:'Terms', glosH:'Terms that come up in a quote conversation', glosAll:'Full glossary',
+    faqEy:'Frequently asked', faqH:'About the products', faqAll:'All questions',
+    ctaH:'Need a custom size?', ctaP:'Request a quote for the hardness (Shore A), diameter and covering that match your operating conditions.', quote:'Quote form',
+    rel:'Related pages',
+    relItems:[['/rehber/kaucuk-mu-poliuretan-mi/','Rubber or polyurethane?','Compare the material choice step by step in four questions.'],['/sektorler/','Industries','Roller solutions and application notes for 21 industries.'],['/hizmetler/','Services','Covering, precision grinding, grooving and re-covering.']],
+  },
+  de: {
+    title:'Produkte — Gummi- & Polyurethan-Seydel-Walzen | Merpolon',
+    eyebrow:'Produkte', h1:'Gummi- & Polyurethanwalzen',
+    lede:'Zwei Marken, ein Qualitätsanspruch; gefertigt in der Härte, dem Durchmesser und der Länge, die Ihre Betriebsbedingungen verlangen. Unten finden Sie alle Walzentypen, technische Tabellen und welches Produkt zu welcher Linie passt.',
+    typesEy:'Produkttypen', typesH:'Alle unsere Walzentypen', typesP:'Jeder der acht Produkttypen hat eine eigene technische Seite. Nach Anwendung filtern.',
+    filters:[['all','Alle'],['seydel','Seydel & Faser-Garn'],['baski','Druckwalzen'],['servis','Service']],
+    mat:{ 'Rubber':'Gummi', 'Polyurethane':'Polyurethan', 'Ceramic/Chrome':'Keramik / Chrom', 'Service':'Service' },
+    review:'Ansehen',
+    linesEy:'Produktlinien', linesH:'Zwei Marken, ein Qualitätsanspruch',
+    tableH:'Seydel-Walzen — Typentabelle', tableU:'(mm)',
+    th:['Typ','Außen-Ø','Innen-Ø','Länge'],
+    tableNote:'Diese Tabelle nennt Referenzmaße der Standard-Seydel-Typen. Wir fertigen auch außerhalb dieser Maße, passend zu Ihren Betriebsbedingungen.',
+    specEy:'Bei jedem Produkt', specH:'Was wir standardmäßig bieten',
+    common:[['ruler','Ø1200 × 7000 mm','Maximaler Beschichtungsdurchmesser und -länge.'],['cpu','ST52-Stahlkern','Aus Speziallegierung auf CNC-Maschinen bearbeitet.'],['gauge','Shore A nach Betriebsbedingungen','Die Härte richtet sich nach der Anwendung und bleibt im Betrieb konstant.'],['shield','3 Monate Garantie','Gegen Fertigungsfehler.']],
+    matrixEy:'Anwendungsleitfaden', matrixH:'Welches Produkt für welche Branche?', matrixP:'Die Branchen, in denen unsere Produkttypen am häufigsten eingesetzt werden. Klicken Sie eine Branche an, um ihre Seite zu öffnen.',
+    thProduct:'Produkt', thSectors:'Belieferte Branchen',
+    featEy:'Technische Vorteile', featH:'Eine in der F&E entwickelte Beschichtungsformel',
+    servEy:'Leistungen', servH:'Arbeitsschritte rund um das Produkt', servAll:'Alle Leistungen',
+    galEy:'Portfolio', galH:'Produkt- und Fertigungsbilder', galAll:'Gesamtes Portfolio',
+    glosEy:'Begriffe', glosH:'Begriffe aus dem Angebotsgespräch', glosAll:'Gesamtes Glossar',
+    faqEy:'Häufige Fragen', faqH:'Zu den Produkten', faqAll:'Alle Fragen',
+    ctaH:'Sondermaß erforderlich?', ctaP:'Fordern Sie ein Angebot für Härte (Shore A), Durchmesser und Beschichtung passend zu Ihren Betriebsbedingungen an.', quote:'Angebotsformular',
+    rel:'Verwandte Seiten',
+    relItems:[['/rehber/kaucuk-mu-poliuretan-mi/','Gummi oder Polyurethan?','Die Materialwahl in vier Fragen Schritt für Schritt vergleichen.'],['/sektorler/','Branchen','Walzenlösungen und Anwendungshinweise für 21 Branchen.'],['/hizmetler/','Leistungen','Beschichten, Präzisionsschleifen, Rillen und Neubeschichtung.']],
+  },
+  ru: {
+    title:'Продукция — валы Seydel с резиновым и полиуретановым покрытием | Merpolon',
+    eyebrow:'Продукция', h1:'Резиновые и полиуретановые валы',
+    lede:'Две марки, единый стандарт качества; изготавливаются в той твёрдости, диаметре и длине, которых требуют ваши условия работы. Ниже — все типы валов, технические таблицы и то, какой продукт подходит какой линии.',
+    typesEy:'Типы продукции', typesH:'Все наши типы валов', typesP:'У каждого из восьми типов продукции есть отдельная техническая страница. Фильтруйте по применению.',
+    filters:[['all','Все'],['seydel','Seydel и волокно-пряжа'],['baski','Печатные валы'],['servis','Сервис']],
+    mat:{ 'Rubber':'Резина', 'Polyurethane':'Полиуретан', 'Ceramic/Chrome':'Керамика / хром', 'Service':'Сервис' },
+    review:'Смотреть',
+    linesEy:'Линейки продукции', linesH:'Две марки, единый стандарт качества',
+    tableH:'Цилиндры Seydel — таблица типов', tableU:'(мм)',
+    th:['Тип','Наружный Ø','Внутренний Ø','Длина'],
+    tableNote:'В таблице приведены справочные размеры стандартных типов Seydel. Мы изготавливаем и вне этих размеров — под ваши условия работы.',
+    specEy:'Общее для всей продукции', specH:'Что мы даём стандартно',
+    common:[['ruler','Ø1200 × 7000 мм','Максимальный диаметр и длина покрытия.'],['cpu','Стальной сердечник ST52','Обрабатывается на станках с ЧПУ из легированной стали.'],['gauge','Shore A под ваши условия','Твёрдость задаётся применением и остаётся постоянной в работе.'],['shield','Гарантия 3 месяца','От производственных дефектов.']],
+    matrixEy:'Руководство по применению', matrixH:'Какой продукт для какой отрасли?', matrixP:'Отрасли, где чаще всего применяется каждый наш тип продукции. Нажмите на отрасль, чтобы открыть её страницу.',
+    thProduct:'Продукт', thSectors:'Обслуживаемые отрасли',
+    featEy:'Технические преимущества', featH:'Рецептура покрытия, разработанная в НИОКР',
+    servEy:'Услуги', servH:'Операции, сопровождающие продукт', servAll:'Все услуги',
+    galEy:'Портфолио', galH:'Изображения продукции и производства', galAll:'Всё портфолио',
+    glosEy:'Термины', glosH:'Термины, звучащие при обсуждении заказа', glosAll:'Весь словарь',
+    faqEy:'Частые вопросы', faqH:'О продукции', faqAll:'Все вопросы',
+    ctaH:'Нужен нестандартный размер?', ctaP:'Запросите предложение по твёрдости (Shore A), диаметру и покрытию под ваши условия работы.', quote:'Форма запроса',
+    rel:'Похожие страницы',
+    relItems:[['/rehber/kaucuk-mu-poliuretan-mi/','Резина или полиуретан?','Сравните выбор материала шаг за шагом в четырёх вопросах.'],['/sektorler/','Отрасли','Решения по валам и заметки по применению для 21 отрасли.'],['/hizmetler/','Услуги','Покрытие, прецизионное шлифование, нарезка канавок и перепокрытие.']],
+  },
+  ar: {
+    title:'المنتجات — أسطوانات سيدل بالمطاط والبولي يوريثان | Merpolon',
+    eyebrow:'المنتجات', h1:'أسطوانات المطاط والبولي يوريثان',
+    lede:'علامتان ومعيار جودة واحد؛ تُنتَج بالصلادة والقطر والطول التي تتطلبها ظروف تشغيلكم. وفيما يلي جميع أنواع الأسطوانات لدينا والجداول الفنية وأي منتج يناسب أي خط.',
+    typesEy:'أنواع المنتجات', typesH:'جميع أنواع الأسطوانات لدينا', typesP:'لكل نوع من الأنواع الثمانية صفحة فنية مستقلة. صفِّ النتائج حسب التطبيق.',
+    filters:[['all','الكل'],['seydel','سيدل والألياف والغزل'],['baski','أسطوانات الطباعة'],['servis','الخدمة']],
+    mat:{ 'Rubber':'مطاط', 'Polyurethane':'بولي يوريثان', 'Ceramic/Chrome':'سيراميك / كروم', 'Service':'خدمة' },
+    review:'استعرض',
+    linesEy:'خطوط المنتجات', linesH:'علامتان ومعيار جودة واحد',
+    tableH:'أسطوانات سيدل — جدول الأنواع', tableU:'(مم)',
+    th:['النوع','القطر الخارجي','القطر الداخلي','الطول'],
+    tableNote:'يعرض هذا الجدول المقاسات المرجعية لأنواع سيدل القياسية. وننتج كذلك خارج هذه المقاسات بما يناسب ظروف تشغيلكم.',
+    specEy:'مشترك في كل منتج', specH:'ما نقدّمه بشكل قياسي',
+    common:[['ruler','Ø1200 × 7000 مم','أقصى قطر وطول للتكسية.'],['cpu','قلب فولاذي ST52','يُشغَّل على ماكينات CNC من فولاذ مسبوك خاص.'],['gauge','شور A حسب ظروف تشغيلكم','تُحدَّد الصلادة بحسب التطبيق وتبقى ثابتة أثناء العمل.'],['shield','ضمان 3 أشهر','ضد عيوب التصنيع.']],
+    matrixEy:'دليل التطبيق', matrixH:'أي منتج لأي قطاع؟', matrixP:'القطاعات التي يُستخدَم فيها كل نوع من منتجاتنا غالبًا. اضغطوا على اسم القطاع لفتح صفحته المخصصة.',
+    thProduct:'المنتج', thSectors:'القطاعات المخدومة',
+    featEy:'المزايا الفنية', featH:'تركيبة تكسية مطوَّرة بالبحث والتطوير',
+    servEy:'الخدمات', servH:'العمليات المصاحبة للمنتج', servAll:'كل الخدمات',
+    galEy:'معرض الأعمال', galH:'صور المنتجات والإنتاج', galAll:'كل معرض الأعمال',
+    glosEy:'المصطلحات', glosH:'مصطلحات ترد في حديث عرض السعر', glosAll:'كل المعجم',
+    faqEy:'الأسئلة الشائعة', faqH:'حول المنتجات', faqAll:'كل الأسئلة',
+    ctaH:'هل تحتاجون مقاسًا خاصًا؟', ctaP:'اطلبوا عرض سعر للصلادة (شور A) والقطر والتكسية المناسبة لظروف تشغيلكم.', quote:'نموذج طلب عرض سعر',
+    rel:'صفحات ذات صلة',
+    relItems:[['/rehber/kaucuk-mu-poliuretan-mi/','مطاط أم بولي يوريثان؟','قارنوا اختيار المادة خطوة بخطوة عبر أربعة أسئلة.'],['/sektorler/','القطاعات','حلول الأسطوانات وملاحظات التطبيق لـ 21 قطاعًا.'],['/hizmetler/','الخدمات','التكسية والجلخ الدقيق وفتح الأخاديد وإعادة التكسية.']],
+  },
+}[lang];
+
+// TR sektör adı → sektör nesnesi (ürün×sektör matrisi için)
+const sectorOf = (trName) => sectors.find(s => s.tr === trName);
+
+const schema = [{
+  '@type':'ItemList', '@id': `${SITE}${path}#producttypes`, name: H.typesH,
+  itemListElement: productTypes.map((p, i) => ({ '@type':'ListItem', position: i + 1, item: {
+    '@type':'Product', '@id': `${SITE}${base}/urunler/${p.slug}/#product`,
+    name: p.name[lang], description: p.short[lang], image: `${SITE}${p.img}`,
+    url: `${SITE}${base}/urunler/${p.slug}/`,
+    brand: { '@type':'Brand', name: p.brand }, manufacturer: { '@id': `${SITE}/#organization` },
+  } })),
+}];
+---
+<Base title={H.title} lang={lang} path={path} schema={schema} image="/gallery/grafit-kaucuk-merdaneler.webp">
+  <Header lang={lang} seg="urunler/" />
+  <main id="main" class="bg-white">
+    <PageHero eyebrow={H.eyebrow} title={H.h1} subtitle={H.lede} image="/gallery/grafit-kaucuk-merdaneler.webp" />
+
+    <!-- 1 · ÜRÜN TÜRLERİ (filtrelenebilir) — sayfanın en üstünde -->
+    <section class="border-b border-steel-200 bg-white">
+      <div class="mx-auto max-w-7xl px-6 py-16">
+        <p class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.typesEy}</p>
+        <h2 class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.typesH}</h2>
+        <p class="mt-4 max-w-2xl text-navy-500">{H.typesP}</p>
+
+        <div id="pfilters" class="mt-8 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-wrap">
+          {H.filters.map(([k, l], i) => (
+            <button type="button" data-pf={k} aria-pressed={i === 0 ? 'true' : 'false'}
+              class="shrink-0 whitespace-nowrap border border-steel-300 px-4 py-2 min-h-11 text-xs font-700 uppercase tracking-wider text-navy-600 transition aria-pressed:border-navy-900 aria-pressed:bg-navy-900 aria-pressed:text-white hover:border-navy-900">{l}</button>
+          ))}
+        </div>
+
+        <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {productTypes.map(p => (
+            <a href={`${base}/urunler/${p.slug}/`} data-pgroup={GROUP[p.slug]}
+               class="group flex flex-col border border-steel-200 bg-white transition hover:border-brand-red/40">
+              <div class="relative">
+                <img src={p.img} alt={p.name[lang]} loading="lazy" width="1500" height="1000" class="aspect-[4/3] w-full object-cover" />
+                <span class="absolute left-0 top-0 bg-navy-900/90 px-2.5 py-1 text-[11px] font-700 uppercase tracking-wider text-white">{H.mat[p.material]}</span>
+              </div>
+              <div class="flex flex-1 flex-col p-5">
+                <h3 class="font-display text-base font-700 text-navy-900 group-hover:text-brand-red">{p.name[lang]}</h3>
+                <p class="mt-1.5 flex-1 text-sm leading-relaxed text-navy-500">{p.short[lang]}</p>
+                <span class="mt-3 inline-flex items-center gap-2 text-xs font-700 uppercase tracking-wider text-navy-900 group-hover:text-brand-red">{H.review} <Icon name="arrow" class="h-4 w-4 transition group-hover:translate-x-1"/></span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 · MARKA HATLARI -->
+    <section class="border-b border-steel-200 bg-steel-50">
+      <div class="mx-auto max-w-7xl px-6 py-16">
+        <p class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.linesEy}</p>
+        <h2 class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.linesH}</h2>
+        <div class="mt-12 space-y-12" data-reveal-group>
+          {productLines.map((p, i) => (
+            <article data-reveal class="grid items-center gap-10 lg:grid-cols-2" id={p.slug}>
+              <div class={i % 2 ? 'lg:order-2' : ''}>
+                <div class="overflow-hidden border border-steel-200"><img src={p.img} alt={p.name[lang]} loading="lazy" width="1500" height="1000" class="aspect-[4/3] w-full object-cover"/></div>
+              </div>
+              <div>
+                <span class="inline-block px-3 py-1 text-xs font-700 uppercase tracking-wider text-white" style={`background:${p.accent}`}>{p.name[lang].split('—')[0].trim()}</span>
+                <h3 class="mt-4 font-display text-2xl font-800 text-navy-900">{p.name[lang]}</h3>
+                <p class="mt-1 text-sm font-600" style={`color:${p.accent}`}>{p.tagline[lang]}</p>
+                <p class="mt-4 leading-relaxed text-navy-500">{p.body[lang]}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 · SEYDEL TİP TABLOSU -->
+    <section class="border-b border-steel-200 bg-white">
+      <div class="mx-auto max-w-7xl px-6 py-16">
+        <div class="border border-steel-200">
+          <div class="bg-navy-900 px-6 py-4"><h2 class="font-display font-700 text-white">{H.tableH} <span class="text-steel-400">{H.tableU}</span></h2></div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-steel-100 text-navy-600"><tr>{H.th.map(h => (<th scope="col" class="px-6 py-3 font-700">{h}</th>))}</tr></thead>
+              <tbody class="divide-y divide-steel-200 bg-white">
+                {seydelTypes.map(r => (
+                  <tr class="hover:bg-steel-50"><td class="px-6 py-3.5 font-700 text-navy-900">{r.type}</td><td class="px-6 py-3.5 text-navy-600">Ø{r.od}</td><td class="px-6 py-3.5 text-navy-600">Ø{r.id}</td><td class="px-6 py-3.5 text-navy-600">{r.length}</td></tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <p class="mt-4 max-w-3xl text-sm leading-relaxed text-navy-500">{H.tableNote}</p>
+      </div>
+    </section>
+
+    <!-- 4 · ORTAK TEKNİK ÖZELLİKLER -->
+    <section class="border-b border-steel-200 bg-navy-900 text-white">
+      <div class="mx-auto max-w-7xl px-6 py-16">
+        <p class="text-sm font-700 uppercase tracking-widest text-brand-redlite">{H.specEy}</p>
+        <h2 class="mt-3 font-display text-2xl font-800 tracking-tight sm:text-3xl">{H.specH}</h2>
+        <div class="mt-10 grid border-l border-t border-white/10 [&>*]:border-b [&>*]:border-r [&>*]:border-white/10 sm:grid-cols-2 lg:grid-cols-4">
+          {H.common.map(([icon, t, d]) => (
+            <div class="bg-navy-900 p-7">
+              <Icon name={icon} class="h-6 w-6 text-brand-redlite"/>
+              <h3 class="mt-5 font-display text-lg font-700">{t}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-steel-400">{d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 · ÜRÜN × SEKTÖR MATRİSİ -->
+    <section class="border-b border-steel-200 bg-steel-50">
+      <div class="mx-auto max-w-7xl px-6 py-16">
+        <p class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.matrixEy}</p>
+        <h2 class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.matrixH}</h2>
+        <p class="mt-4 max-w-2xl text-navy-500">{H.matrixP}</p>
+        <div class="mt-10 border-t border-steel-200">
+          {productTypes.map(p => (
+            <div class="grid gap-3 border-b border-steel-200 py-5 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] md:gap-8">
+              <a href={`${base}/urunler/${p.slug}/`} class="font-display font-700 text-navy-900 hover:text-brand-red">{p.name[lang]}</a>
+              <div class="flex flex-wrap gap-2">
+                {p.sectors.map(sn => { const s = sectorOf(sn); return s ? (
+                  <a href={`${base}/sektorler/${s.slug}/`} class="border border-steel-300 bg-white px-3 py-1.5 text-xs font-600 text-navy-600 transition hover:border-navy-900 hover:text-navy-900">{s[lang]}</a>
+                ) : null; })}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 · TEKNİK ÜSTÜNLÜKLER -->
+    <section class="border-b border-steel-200 bg-white">
+      <div class="mx-auto max-w-7xl px-6 py-16">
+        <p class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.featEy}</p>
+        <h2 class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.featH}</h2>
+        <div class="mt-10 grid border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group>
+          {features.map(f => (
+            <div data-reveal class="bg-white p-7 transition hover:bg-steel-50">
+              <Icon name={f.icon} class="h-7 w-7 text-brand-red"/>
+              <h3 class="mt-5 font-display text-lg font-700 text-navy-900">{f[lang]}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-navy-500">{f.d[lang]}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 · HİZMETLER -->
+    <section class="border-b border-steel-200 bg-steel-50">
+      <div class="mx-auto max-w-7xl px-6 py-16">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.servEy}</p>
+            <h2 class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.servH}</h2>
+          </div>
+          <a href={`${base}/hizmetler/`} class="inline-flex items-center gap-2 text-sm font-700 uppercase tracking-wider text-navy-900 hover:text-brand-red">{H.servAll} <Icon name="arrow" class="h-4 w-4"/></a>
+        </div>
+        <div class="mt-10 grid border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 sm:grid-cols-2 lg:grid-cols-4">
+          {services.map(s => (
+            <div class="bg-white p-6"><div class="mb-3 h-1 w-10 bg-brand-red"></div><h3 class="font-display font-700 text-navy-900">{s[lang]}</h3><p class="mt-1.5 text-sm leading-relaxed text-navy-500">{s.d[lang]}</p></div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 · PORTFÖY KATEGORİLERİ -->
+    <section class="border-b border-steel-200 bg-white">
+      <div class="mx-auto max-w-7xl px-6 py-16">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.galEy}</p>
+            <h2 class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.galH}</h2>
+          </div>
+          <a href={`${base}/galeri/`} class="inline-flex items-center gap-2 text-sm font-700 uppercase tracking-wider text-navy-900 hover:text-brand-red">{H.galAll} <Icon name="arrow" class="h-4 w-4"/></a>
+        </div>
+        <div class="mt-8 flex flex-wrap gap-2">
+          {galleryCats.filter(c => c.key !== 'all').map(c => (
+            <a href={`${base}/galeri/kategori/${c.key}/`} class="border border-steel-300 px-4 py-2.5 text-xs font-700 uppercase tracking-wider text-navy-600 transition hover:border-navy-900 hover:text-navy-900">{c[lang]}</a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 9 · SÖZLÜK -->
+    <section class="border-b border-steel-200 bg-steel-50">
+      <div class="mx-auto max-w-7xl px-6 py-16">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.glosEy}</p>
+            <h2 class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.glosH}</h2>
+          </div>
+          <a href={`${base}/sozluk/`} class="inline-flex items-center gap-2 text-sm font-700 uppercase tracking-wider text-navy-900 hover:text-brand-red">{H.glosAll} <Icon name="arrow" class="h-4 w-4"/></a>
+        </div>
+        <dl class="mt-10 grid border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 sm:grid-cols-2 lg:grid-cols-3">
+          {glossary.slice(0, 6).map(g => (
+            <div class="bg-white p-6">
+              <dt class="font-display font-700 text-navy-900">{g.term[lang]}</dt>
+              <dd class="mt-2 text-sm leading-relaxed text-navy-500">{g.def[lang]}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+
+    <!-- 10 · ÜRÜN SSS -->
+    <section class="border-b border-steel-200 bg-white">
+      <div class="mx-auto max-w-4xl px-6 py-16">
+        <p class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.faqEy}</p>
+        <h2 class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.faqH}</h2>
+        <div id="pfaq" class="mt-8 border-t border-steel-200" data-accordion="collapse">
+          {faqs.slice(0, 5).map((f, i) => (
+            <Fragment>
+              <h3 id={`ph-${i}`}><button type="button" class="flex w-full items-center justify-between gap-4 border-b border-steel-200 px-4 py-5 text-left font-display text-lg font-700 text-navy-900 hover:text-brand-red sm:px-5" data-active-classes="bg-steel-50 text-brand-red" data-inactive-classes="text-navy-900" data-accordion-target={`#pb-${i}`} aria-expanded={i===0} aria-controls={`pb-${i}`}><span>{f.q[lang]}</span><svg class="h-5 w-5 shrink-0 text-brand-red" data-accordion-icon viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button></h3>
+              <div id={`pb-${i}`} class="hidden" aria-labelledby={`ph-${i}`}><p class="border-b border-steel-200 px-4 py-5 text-navy-600 sm:px-5">{f.a[lang]}</p></div>
+            </Fragment>
+          ))}
+        </div>
+        <div class="mt-8"><a href={`${base}/sss/`} class="group inline-flex items-center gap-2 border-2 border-navy-900 px-6 py-3.5 text-sm font-700 uppercase tracking-wider text-navy-900 transition hover:bg-navy-900 hover:text-white">{H.faqAll} <Icon name="arrow" class="h-4 w-4 transition group-hover:translate-x-1"/></a></div>
+      </div>
+    </section>
+
+    <!-- 11 · CTA -->
+    <section class="bg-navy-900 text-white">
+      <div class="mx-auto flex max-w-7xl flex-col items-start gap-8 px-6 py-16 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <h2 class="font-display text-2xl font-800 tracking-tight sm:text-3xl">{H.ctaH}</h2>
+          <p class="mt-3 max-w-xl text-steel-300">{H.ctaP}</p>
+        </div>
+        <div class="flex shrink-0 flex-wrap gap-3">
+          <a href={`${base}/teklif/`} class="inline-flex items-center gap-2 bg-brand-red px-6 py-4 text-sm font-700 uppercase tracking-wider transition hover:bg-white hover:text-navy-900">{H.quote} <Icon name="arrow" class="h-4 w-4"/></a>
+          <a href={'tel:'+company.order.replace(/\s/g,'')} class="inline-flex items-center gap-2 border border-white/30 px-6 py-4 text-sm font-700 uppercase tracking-wider transition hover:bg-white/10"><Icon name="phone" class="h-4 w-4"/>{company.order}</a>
+        </div>
+      </div>
+    </section>
+
+    <RelatedLinks lang={lang} title={H.rel}
+      items={H.relItems.map(([href, label, desc]) => ({ href: `${base}${href}`, label, desc }))} />
+  </main>
+  <Footer lang={lang} />
+</Base>
+
+<script is:inline>
+  (function () {
+    var bar = document.getElementById('pfilters');
+    if (!bar) return;
+    var btns = bar.querySelectorAll('[data-pf]');
+    var cards = document.querySelectorAll('[data-pgroup]');
+    bar.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-pf]');
+      if (!b) return;
+      var key = b.getAttribute('data-pf');
+      btns.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      cards.forEach(function (c) {
+        c.hidden = !(key === 'all' || c.getAttribute('data-pgroup') === key);
+      });
+    });
+  })();
+</script>

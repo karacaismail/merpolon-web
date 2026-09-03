@@ -1,0 +1,80 @@
+---
+// Skeuomorphic industrial roller — matte rubber covering on a steel shaft.
+// accent = rubber/PU covering colour.
+const { accent = '#C63A2E', class: cls = '' } = Astro.props;
+const id = 'r' + Math.random().toString(36).slice(2, 7);
+---
+<div class={'roller ' + cls} aria-hidden="true">
+  <svg viewBox="0 0 540 300" xmlns="http://www.w3.org/2000/svg" class="h-auto w-full">
+    <defs>
+      <!-- matte cylindrical shading -->
+      <linearGradient id={id+'body'} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0"    stop-color="#000" stop-opacity="0.40"/>
+        <stop offset="0.10" stop-color="#000" stop-opacity="0.14"/>
+        <stop offset="0.30" stop-color="#fff" stop-opacity="0.30"/>
+        <stop offset="0.46" stop-color="#fff" stop-opacity="0.06"/>
+        <stop offset="0.62" stop-color="#000" stop-opacity="0.06"/>
+        <stop offset="0.86" stop-color="#000" stop-opacity="0.30"/>
+        <stop offset="1"    stop-color="#000" stop-opacity="0.48"/>
+      </linearGradient>
+      <!-- brushed steel -->
+      <linearGradient id={id+'steel'} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#8b98ad"/><stop offset="0.26" stop-color="#f2f5fa"/>
+        <stop offset="0.5" stop-color="#c6d0df"/><stop offset="0.78" stop-color="#8493a9"/>
+        <stop offset="1" stop-color="#5a6880"/>
+      </linearGradient>
+      <radialGradient id={id+'journal'} cx="0.4" cy="0.38" r="0.75">
+        <stop offset="0" stop-color="#f6f9fc"/><stop offset="0.5" stop-color="#cdd6e3"/>
+        <stop offset="0.85" stop-color="#93a0b5"/><stop offset="1" stop-color="#69768c"/>
+      </radialGradient>
+      <radialGradient id={id+'ring'} cx="0.5" cy="0.5" r="0.5">
+        <stop offset="0" stop-color={accent} stop-opacity="0.55"/>
+        <stop offset="1" stop-color="#000" stop-opacity="0.30"/>
+      </radialGradient>
+      <filter id={id+'sh'} x="-20%" y="-40%" width="140%" height="200%"><feGaussianBlur stdDeviation="7"/></filter>
+      <pattern id={id+'tex'} width="540" height="6" patternUnits="userSpaceOnUse">
+        <rect width="540" height="6" fill="none"/><rect width="540" height="1" y="0" fill="#000" opacity="0.05"/>
+      </pattern>
+    </defs>
+
+    <!-- contact shadow -->
+    <ellipse cx="270" cy="258" rx="188" ry="15" fill="#0b1424" opacity="0.18" filter={`url(#${id}sh)`}/>
+
+    <!-- shaft -->
+    <rect x="24" y="132" width="492" height="20" rx="10" fill={'url(#'+id+'steel)'}/>
+    <rect x="24" y="135" width="492" height="3.5" rx="2" fill="#fff" opacity="0.55"/>
+
+    <!-- left steel journal -->
+    <ellipse cx="128" cy="142" rx="17" ry="66" fill={'url(#'+id+'journal)'}/>
+    <ellipse cx="128" cy="142" rx="17" ry="66" fill="none" stroke="#fff" stroke-opacity="0.35" stroke-width="1.2"/>
+
+    <!-- rubber body -->
+    <rect x="128" y="72" width="288" height="140" rx="7" fill={accent}/>
+    <rect x="128" y="72" width="288" height="140" rx="7" fill={'url(#'+id+'body)'}/>
+    <rect x="128" y="72" width="288" height="140" rx="7" fill={`url(#${id}tex)`}/>
+    <!-- soft broad highlight -->
+    <rect x="128" y="86" width="288" height="20" rx="10" fill="#fff" opacity="0.16" style="filter:blur(1px)"/>
+    <!-- crisp thin top rim light -->
+    <rect x="128" y="83" width="288" height="2.5" rx="1.2" fill="#fff" opacity="0.28"/>
+    <!-- edge darkening -->
+    <rect x="128" y="72" width="10" height="140" fill="#000" opacity="0.14"/>
+
+    <!-- right end face: rubber ring + steel bore -->
+    <ellipse cx="416" cy="142" rx="18" ry="70" fill={accent}/>
+    <ellipse cx="416" cy="142" rx="18" ry="70" fill={'url(#'+id+'ring)'}/>
+    <ellipse cx="419" cy="142" rx="11" ry="50" fill={'url(#'+id+'journal)'}/>
+    <ellipse cx="420" cy="142" rx="5" ry="26" fill="#5a6880"/>
+    <ellipse cx="420" cy="142" rx="5" ry="26" fill="#000" opacity="0.28"/>
+
+    <!-- moving sheen -->
+    <clipPath id={id+'clip'}><rect x="128" y="72" width="288" height="140" rx="7"/></clipPath>
+    <g clip-path={'url(#'+id+'clip)'}>
+      <rect class="sheen" x="0" y="72" width="60" height="140" fill="#fff" opacity="0.12" style="filter:blur(3px)"/>
+    </g>
+  </svg>
+</div>
+<style>
+  .roller .sheen { animation: sheen 4s cubic-bezier(.4,0,.2,1) infinite; }
+  @keyframes sheen { 0%{ transform: translateX(90px);} 60%,100%{ transform: translateX(430px);} }
+  @media (prefers-reduced-motion: reduce){ .roller .sheen{ animation: none; } }
+</style>

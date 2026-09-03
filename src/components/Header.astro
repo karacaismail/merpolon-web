@@ -1,0 +1,92 @@
+---
+import { company, nav, ui, galleryCats } from '../data/site';
+import Icon from './Icon.astro';
+const { lang = 'tr', seg = '' } = Astro.props;
+const items = nav[lang];
+const base = lang === 'tr' ? '' : '/' + lang;
+const portChildren = galleryCats.filter(c => c.key !== 'all').map(c => [base + '/galeri/kategori/' + c.key + '/', c[lang]]);
+const langs = [
+  { code:'tr', label:'TR', name:'Türkçe',   href:'/' + seg },
+  { code:'en', label:'EN', name:'English',  href:'/en/' + seg },
+  { code:'de', label:'DE', name:'Deutsch',  href:'/de/' + seg },
+  { code:'ru', label:'RU', name:'Русский',  href:'/ru/' + seg },
+  { code:'ar', label:'AR', name:'العربية',  href:'/ar/' + seg },
+];
+const isPort = (href) => href.endsWith('/galeri/');
+const path = Astro.url.pathname.replace(/\/$/, '') + '/';
+const act = (href) => href === path || (isPort(href) && path.startsWith(base + '/galeri'));
+---
+<header class="sticky top-0 z-40 border-b border-steel-200/70 bg-steel-50/80 backdrop-blur-md">
+  <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3">
+    <a href={base + '/'} class="flex shrink-0 items-center gap-3" aria-label="Merpolon">
+      <img src="/brand/logo-mark.svg" alt="Merpolon" width="40" height="40" class="h-10 w-10" />
+      <span class="font-display text-xl font-800 tracking-tight text-navy-800">MER<span class="text-brand-red">POLON</span></span>
+    </a>
+
+    <nav class="hidden items-center gap-0.5 lg:flex">
+      {items.map(([href, label]) => (
+        isPort(href) ? (
+          <div class="group relative">
+            <a href={href} class={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm transition ${act(href) ? 'bg-brand-red font-700 text-white' : 'font-600 text-navy-600 hover:bg-white hover:text-navy-800'}`}>
+              {label}
+              <svg class="h-3.5 w-3.5 transition group-hover:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
+            </a>
+            <div class="invisible absolute left-0 top-full z-50 w-60 translate-y-1 border border-steel-200 bg-white opacity-0 shadow-soft transition duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+              <a href={href} class="block border-b border-steel-100 px-4 py-2.5 text-sm font-700 text-navy-800 hover:bg-steel-50">{lang==='tr'?'Tüm Portföy':lang==='en'?'All Portfolio':'Gesamtes Portfolio'}</a>
+              {portChildren.map(([h, l]) => (
+                <a href={h} class="block px-4 py-2.5 text-sm font-600 text-navy-600 transition hover:bg-steel-50 hover:text-brand-red">{l}</a>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <a href={href} class={`rounded-lg px-3 py-2 text-sm transition ${act(href) ? 'bg-brand-red font-700 text-white' : 'font-600 text-navy-600 hover:bg-white hover:text-navy-800'}`}>{label}</a>
+        )
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <div class="mr-1 hidden items-center gap-2 border-r border-steel-300 pr-3 xl:flex">
+        <a href={company.instagram} target="_blank" rel="noopener" aria-label="Instagram" class="text-navy-500 transition hover:text-brand-red"><Icon name="instagram" class="h-5 w-5"/></a>
+        <a href={company.tiktok} target="_blank" rel="noopener" aria-label="TikTok" class="text-navy-500 transition hover:text-brand-red"><Icon name="tiktok" class="h-5 w-5"/></a>
+        <a href={company.facebook} target="_blank" rel="noopener" aria-label="Facebook" class="text-navy-500 transition hover:text-brand-red"><Icon name="facebook" class="h-5 w-5"/></a>
+      </div>
+      <div class="hidden overflow-hidden rounded-lg border border-steel-300 bg-white sm:flex">
+        {langs.map((l) => (
+          <a href={l.href} hreflang={l.code} lang={l.code} title={l.name} aria-current={l.code===lang ? 'true' : undefined} class={`px-2 py-1.5 text-xs font-700 transition ${l.code===lang ? 'bg-brand-red text-white' : 'text-navy-500 hover:bg-steel-50 hover:text-brand-red'}`}>{l.label}</a>
+        ))}
+      </div>
+      <a href={base + '/teklif/'} class="hidden rounded-lg bg-brand-red px-4 py-2.5 text-sm font-700 text-white transition hover:bg-navy-900 sm:inline-block">{ui.quote[lang]}</a>
+      <button id="mopen" class="rounded-lg border border-steel-300 p-2 text-navy-700 lg:hidden" aria-label="Menu">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="mmenu" class="hidden border-t border-steel-200 bg-white lg:hidden">
+    <nav class="mx-auto flex max-w-7xl flex-col px-5 py-2">
+      {items.map(([href, label]) => (
+        isPort(href) ? (
+          <div class="border-b border-steel-100 py-1">
+            <a href={href} class="block rounded-lg px-3 py-3 text-sm font-700 text-navy-800">{label}</a>
+            <div class="flex flex-wrap gap-1.5 px-3 pb-3">
+              {portChildren.map(([h, l]) => (<a href={h} class="border border-steel-200 px-2.5 py-1 text-xs font-600 text-navy-600">{l}</a>))}
+            </div>
+          </div>
+        ) : (
+          <a href={href} class={`rounded-lg px-3 py-3 text-sm transition ${act(href) ? 'bg-brand-red font-700 text-white' : 'font-600 text-navy-700 hover:bg-steel-50'}`}>{label}</a>
+        )
+      ))}
+      <div class="mt-2 flex gap-1.5 border-t border-steel-200 pt-3 pb-2 sm:hidden">
+        {langs.map((l) => (
+          <a href={l.href} hreflang={l.code} lang={l.code} aria-current={l.code===lang ? 'true' : undefined}
+             class={`flex-1 border px-2 py-2.5 text-center text-xs font-700 transition ${l.code===lang ? 'border-brand-red bg-brand-red text-white' : 'border-steel-300 text-navy-600'}`}>{l.label}</a>
+        ))}
+      </div>
+    </nav>
+  </div>
+</header>
+<script is:inline>
+  document.getElementById('mopen')?.addEventListener('click', () => {
+    document.getElementById('mmenu')?.classList.toggle('hidden');
+  });
+</script>

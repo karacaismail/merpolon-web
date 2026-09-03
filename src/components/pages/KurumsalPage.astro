@@ -1,0 +1,282 @@
+---
+// Kurumsal — TEK kaynak, 5 dil. Her dil rotası bu bileşeni `lang` ile çağırır,
+// böylece TR/EN/DE/RU/AR yapısal olarak birebir aynı içeriği alır (içerik paritesi).
+import Base from '../../layouts/Base.astro';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import Icon from '../Icon.astro';
+import LiquidBlob from '../LiquidBlob.astro';
+import { company, stats, timeline, visionMission } from '../../data/site';
+
+const { lang = 'tr' } = Astro.props;
+const base = lang === 'tr' ? '' : '/' + lang;
+
+const H = {
+  tr: {
+    title:'Kurumsal — Merteks Elastomer | Merpolon',
+    eyebrow:'Kurumsal', h1:'Merteks Elastomer',
+    lede:'Kauçuk ve poliüretan kaplı endüstriyel merdane üretiminde, kalite ve güvenin adresi. Merpolon ve Merteks markalarıyla Seydel silindirleri başta olmak üzere geniş bir ürün yelpazesi.',
+    imgAlt:'Merteks merdane',
+    p1:`<strong class="text-navy-900">${company.legal}</strong>, İkitelli Organize Sanayi Bölgesi'nde kauçuk ve poliüretan kaplı endüstriyel merdane (silindir) üretimi yapmaktadır. Karışıma ilave edilen özel kimyasallar ve Ar-Ge ile geliştirdiğimiz yapıştırma tekniği sayesinde; ısı barındırmayan, elektriklenmeyen ve çalışma boyunca sertliğini koruyan kaplamalar üretiyoruz.`,
+    p2:'Akrilik elyaf-iplik sektöründeki TWO / NSC / Seydel makineleri için koparma ve converter merdaneleri özel üretilir. Aşınma direnci maksimum seviyededir, kauçuk üzerinde çökme olmaz; rektifiye taşlaması yapılsa bile çalışma ömrü uzar.',
+    p3:'<strong>Kalite ve güven bizim işimiz.</strong> Ürettiğimiz kauçuk silindirler imalat hatalarına karşı 3 ay garanti altındadır.',
+    techEy:'Kaplama Teknolojimiz', techH:'Sıvı kauçuğun metalle buluştuğu yer',
+    techP:'Laboratuvarımızda hazırlanan kauçuk ve poliüretan karışımları, özel yapıştırma tekniğiyle ST52 çelik çekirdeğe kusursuzca bağlanır. Sıvı halden vulkanize yüzeye; ısı barındırmayan, sabit sertlikte ve uzun ömürlü bir kaplama elde ederiz.',
+    histEy:'Tarihçe', histH:'Temellerden bugüne',
+    tl:[
+      ['1989','Temeller atıldı','Seydel silindirleri ve kauçuk kaplama alanında ilk üretim ve uzmanlaşma.'],
+      ['2000’ler','Ar-Ge & özel yapıştırma','Metalden ayrılmalara son veren özel yapıştırma tekniği ve kaplama formülü geliştirildi.'],
+      ['Markalar','Merteks & Merpolon','Kauçuk (Merteks) ve poliüretan (Merpolon) Seydel silindirleri iki marka altında.'],
+      ['Tesis','İOSB üretim tesisi','ST52 çelik çekirdek, CNC ve vargel tezgahlarıyla uçtan uca imalat.'],
+      ['Kapasite','Ø1200 × 7000 mm','Büyük çap ve boyda kaplama, hassas taşlama ve kanal açma kapasitesi.'],
+      ['Bugün','21 sektör, Türkiye geneli','25 yılı aşkın tecrübe, geniş referans ağı ve 3 ay garanti.'],
+    ],
+    vmEy:'Vizyon & Misyon', vmH:'Nereye gidiyoruz, neden buradayız',
+    vision:'Vizyon', mission:'Misyon',
+    valEy:'Değerlerimiz', valH:'Bizi biz yapan ilkeler',
+    values:[
+      ['shield','Kalite','Her silindirde aynı yüksek standart; 25+ yıllık tecrübe ve sürekli Ar-Ge.'],
+      ['link','Güven','Verdiğimiz sözü sahada tutarız; imalat hatalarına karşı 3 ay garanti.'],
+      ['cpu','Mühendislik','Çekirdek metaller mühendis kontrolünde, ST52 çelikten CNC tezgahlarda.'],
+      ['gauge','Süreklilik','Makine parkuru ve laboratuvara kesintisiz yatırım.'],
+    ],
+    ctaH:'Ürünlerimizi ve üretimimizi keşfedin.',
+    cta1:'Ürünler', cta2:'Üretim & Tesis',
+  },
+  en: {
+    title:'Corporate — Merteks Elastomer | Merpolon',
+    eyebrow:'Corporate', h1:'Merteks Elastomer',
+    lede:'A trusted name for quality in rubber and polyurethane coated industrial rollers. A broad range led by Seydel cylinders, under the Merpolon and Merteks brands.',
+    imgAlt:'Merteks roller',
+    p1:`<strong class="text-navy-900">${company.legal}</strong> manufactures rubber and polyurethane coated industrial rollers (cylinders) in the İkitelli Organized Industrial Zone, Istanbul. Thanks to the special chemicals added to the compound and the bonding technique we developed through R&D, we produce coverings that hold no heat, build up no static and keep their hardness throughout service.`,
+    p2:'Breaking and converter rollers are custom-made for the TWO / NSC / Seydel machines of the acrylic fiber-yarn sector. Wear resistance is at its maximum and the rubber does not collapse; service life is extended even after precision grinding.',
+    p3:'<strong>Quality and trust is our business.</strong> The rubber cylinders we produce carry a 3-month warranty against manufacturing defects.',
+    techEy:'Our covering technology', techH:'Where liquid rubber meets metal',
+    techP:'The rubber and polyurethane compounds prepared in our laboratory bond flawlessly to the ST52 steel core with our special bonding technique. From liquid state to vulcanised surface, we obtain a covering that holds no heat, keeps a stable hardness and lasts long.',
+    histEy:'History', histH:'From the foundations to today',
+    tl:[
+      ['1989','Foundations laid','First production and specialisation in Seydel cylinders and rubber coating.'],
+      ['2000s','R&D & proprietary bonding','Developed the bonding technique and coating formula that ended separation from the metal.'],
+      ['Brands','Merteks & Merpolon','Rubber (Merteks) and polyurethane (Merpolon) Seydel cylinders under two brands.'],
+      ['Facility','İOSB production plant','End-to-end manufacturing with ST52 steel cores, CNC and planing machines.'],
+      ['Capacity','Ø1200 × 7000 mm','Large-diameter, long-length coating, precision grinding and grooving capacity.'],
+      ['Today','21 industries, nationwide','25+ years of experience, a wide reference network and a 3-month warranty.'],
+    ],
+    vmEy:'Vision & Mission', vmH:'Where we are heading, why we are here',
+    vision:'Vision', mission:'Mission',
+    valEy:'Our values', valH:'The principles that make us who we are',
+    values:[
+      ['shield','Quality','The same high standard in every cylinder; 25+ years of experience and continuous R&D.'],
+      ['link','Trust','We keep our word on the shop floor; three months warranty against manufacturing defects.'],
+      ['cpu','Engineering','Core metals machined from ST52 steel on CNC lathes under engineer supervision.'],
+      ['gauge','Continuity','Uninterrupted investment in our machinery park and laboratory.'],
+    ],
+    ctaH:'Explore our products and our production.',
+    cta1:'Products', cta2:'Production & Plant',
+  },
+  de: {
+    title:'Unternehmen — Merteks Elastomer | Merpolon',
+    eyebrow:'Unternehmen', h1:'Merteks Elastomer',
+    lede:'Die Adresse für Qualität und Vertrauen bei gummi- und polyurethanbeschichteten Industriewalzen. Unter den Marken Merpolon und Merteks ein breites Programm, allen voran Seydel-Walzen.',
+    imgAlt:'Merteks Walze',
+    p1:`<strong class="text-navy-900">${company.legal}</strong> fertigt im Organisierten Industriegebiet İkitelli (Istanbul) gummi- und polyurethanbeschichtete Industriewalzen (Zylinder). Dank der Spezialchemikalien in der Mischung und der in der F&amp;E entwickelten Haftungstechnik entstehen Beschichtungen, die keine Wärme speichern, sich nicht statisch aufladen und ihre Härte über die gesamte Laufzeit behalten.`,
+    p2:'Für die TWO- / NSC- / Seydel-Maschinen der Acryl-Faser-Garn-Branche fertigen wir Abreiß- und Converterwalzen nach Maß. Die Verschleißfestigkeit ist maximal, der Gummi setzt sich nicht; die Standzeit verlängert sich selbst nach dem Präzisionsschleifen.',
+    p3:'<strong>Qualität und Vertrauen sind unser Geschäft.</strong> Die von uns gefertigten Gummiwalzen haben 3 Monate Garantie gegen Fertigungsfehler.',
+    techEy:'Unsere Beschichtungstechnologie', techH:'Wo flüssiger Gummi auf Metall trifft',
+    techP:'Die in unserem Labor angesetzten Gummi- und Polyurethanmischungen verbinden sich durch unsere spezielle Haftungstechnik makellos mit dem ST52-Stahlkern. Vom flüssigen Zustand bis zur vulkanisierten Oberfläche entsteht eine Beschichtung ohne Wärmestau, mit konstanter Härte und langer Lebensdauer.',
+    histEy:'Historie', histH:'Von den Anfängen bis heute',
+    tl:[
+      ['1989','Grundstein gelegt','Erste Produktion und Spezialisierung auf Seydel-Walzen und Gummibeschichtung.'],
+      ['2000er','F&E & Spezialbindung','Bindetechnik und Beschichtungsformel entwickelt, die das Ablösen vom Metall beendet.'],
+      ['Marken','Merteks & Merpolon','Gummi- (Merteks) und Polyurethan-Seydel-Walzen (Merpolon) unter zwei Marken.'],
+      ['Werk','İOSB-Produktionswerk','Durchgängige Fertigung mit ST52-Stahlkernen, CNC- und Hobelmaschinen.'],
+      ['Kapazität','Ø1200 × 7000 mm','Beschichtung großer Durchmesser und Längen, Präzisionsschleifen und Rillen.'],
+      ['Heute','21 Branchen, landesweit','25+ Jahre Erfahrung, breites Referenznetz und 3 Monate Garantie.'],
+    ],
+    vmEy:'Vision & Mission', vmH:'Wohin wir gehen, warum wir hier sind',
+    vision:'Vision', mission:'Mission',
+    valEy:'Unsere Werte', valH:'Die Prinzipien, die uns ausmachen',
+    values:[
+      ['shield','Qualität','Derselbe hohe Standard in jeder Walze; 25+ Jahre Erfahrung und laufende F&E.'],
+      ['link','Vertrauen','Wir halten unser Wort in der Praxis; drei Monate Garantie gegen Fertigungsfehler.'],
+      ['cpu','Ingenieurwesen','Kernmetalle werden unter Ingenieuraufsicht aus ST52-Stahl auf CNC-Maschinen gefertigt.'],
+      ['gauge','Kontinuität','Ununterbrochene Investition in Maschinenpark und Labor.'],
+    ],
+    ctaH:'Entdecken Sie unsere Produkte und unsere Fertigung.',
+    cta1:'Produkte', cta2:'Fertigung & Werk',
+  },
+  ru: {
+    title:'О компании — Merteks Elastomer | Merpolon',
+    eyebrow:'О компании', h1:'Merteks Elastomer',
+    lede:'Адрес качества и доверия в производстве промышленных валов с резиновым и полиуретановым покрытием. Широкий ассортимент под марками Merpolon и Merteks, прежде всего цилиндры Seydel.',
+    imgAlt:'Вал Merteks',
+    p1:`<strong class="text-navy-900">${company.legal}</strong> производит промышленные валы (цилиндры) с резиновым и полиуретановым покрытием в организованной промышленной зоне Икителли. Благодаря специальным химическим добавкам в смеси и технике склейки, разработанной нами в НИОКР, мы выпускаем покрытия, которые не удерживают тепло, не электризуются и сохраняют твёрдость в течение всей работы.`,
+    p2:'Для машин TWO / NSC / Seydel в производстве акрилового волокна и пряжи отрывные и конверторные валы изготавливаются по индивидуальному заказу. Стойкость к износу максимальна, резина не проседает; срок службы увеличивается даже после прецизионного шлифования.',
+    p3:'<strong>Качество и доверие — наша работа.</strong> Производимые нами резиновые цилиндры обеспечены гарантией 3 месяца от производственных дефектов.',
+    techEy:'Наша технология покрытия', techH:'Там, где жидкая резина встречается с металлом',
+    techP:'Резиновые и полиуретановые смеси, приготовленные в нашей лаборатории, безупречно соединяются со стальным сердечником ST52 с помощью особой техники склейки. От жидкого состояния до вулканизованной поверхности мы получаем покрытие, которое не удерживает тепло, сохраняет стабильную твёрдость и служит долго.',
+    histEy:'История', histH:'От истоков до сегодняшнего дня',
+    tl:[
+      ['1989','Заложены основы','Первое производство и специализация на цилиндрах Seydel и резиновом покрытии.'],
+      ['2000-е','НИОКР и особая склейка','Разработаны техника склейки и рецептура покрытия, покончившие с отслоением от металла.'],
+      ['Марки','Merteks и Merpolon','Резиновые (Merteks) и полиуретановые (Merpolon) цилиндры Seydel под двумя марками.'],
+      ['Завод','Производственный завод в İOSB','Полный цикл производства: стальные сердечники ST52, станки с ЧПУ и строгальные станки.'],
+      ['Мощность','Ø1200 × 7000 мм','Покрытие большого диаметра и длины, прецизионное шлифование и нарезка канавок.'],
+      ['Сегодня','21 отрасль, по всей Турции','Опыт более 25 лет, широкая сеть референсов и гарантия 3 месяца.'],
+    ],
+    vmEy:'Видение и миссия', vmH:'Куда мы идём и зачем мы здесь',
+    vision:'Видение', mission:'Миссия',
+    valEy:'Наши ценности', valH:'Принципы, которые делают нас нами',
+    values:[
+      ['shield','Качество','Один и тот же высокий стандарт в каждом цилиндре; опыт более 25 лет и постоянные НИОКР.'],
+      ['link','Доверие','Мы держим слово на производстве; гарантия три месяца от производственных дефектов.'],
+      ['cpu','Инженерия','Сердечники изготавливаются из стали ST52 на станках с ЧПУ под контролем инженера.'],
+      ['gauge','Непрерывность','Непрерывные инвестиции в станочный парк и лабораторию.'],
+    ],
+    ctaH:'Познакомьтесь с нашей продукцией и производством.',
+    cta1:'Продукция', cta2:'Производство и завод',
+  },
+  ar: {
+    title:'عن الشركة — Merteks Elastomer | Merpolon',
+    eyebrow:'عن الشركة', h1:'Merteks Elastomer',
+    lede:'عنوان الجودة والثقة في إنتاج الأسطوانات الصناعية المكسوّة بالمطاط والبولي يوريثان. تشكيلة واسعة تحت علامتَي Merpolon وMerteks، تتصدّرها أسطوانات Seydel.',
+    imgAlt:'أسطوانة Merteks',
+    p1:`<strong class="text-navy-900">${company.legal}</strong> تنتج أسطوانات صناعية مكسوّة بالمطاط والبولي يوريثان في المنطقة الصناعية المنظّمة بإكيتيلي. وبفضل المواد الكيميائية الخاصة المضافة إلى الخلطة وتقنية اللصق التي طوّرناها بالبحث والتطوير، ننتج تكسيات لا تحتفظ بالحرارة ولا تتكهرب وتحافظ على صلادتها طوال فترة العمل.`,
+    p2:'وتُنتَج أسطوانات القطع والتحويل خصيصًا لآلات TWO / NSC / Seydel في قطاع الألياف والغزل الأكريليكي. ومقاومة التآكل عند أقصى مستوياتها ولا يحدث هبوط في المطاط؛ ويطول عمر التشغيل حتى بعد الجلخ الدقيق.',
+    p3:'<strong>الجودة والثقة هما عملنا.</strong> الأسطوانات المطاطية التي ننتجها مشمولة بضمان 3 أشهر ضد عيوب التصنيع.',
+    techEy:'تقنية التكسية لدينا', techH:'حيث يلتقي المطاط السائل بالمعدن',
+    techP:'ترتبط خلطات المطاط والبولي يوريثان المحضَّرة في مختبرنا بالقلب الفولاذي ST52 ارتباطًا محكمًا بتقنية لصق خاصة. ومن الحالة السائلة إلى السطح المفلكن نحصل على تكسية لا تحتفظ بالحرارة، وبصلادة ثابتة، وعمر تشغيلي طويل.',
+    histEy:'التاريخ', histH:'من الأسس إلى اليوم',
+    tl:[
+      ['1989','إرساء الأسس','أول إنتاج وتخصّص في أسطوانات Seydel والتكسية بالمطاط.'],
+      ['الألفينات','البحث والتطوير واللصق الخاص','تطوير تقنية اللصق وتركيبة التكسية اللتين أنهتا الانفصال عن المعدن.'],
+      ['العلامات','Merteks وMerpolon','أسطوانات Seydel المطاطية (Merteks) والبولي يوريثانية (Merpolon) تحت علامتين.'],
+      ['المنشأة','منشأة الإنتاج في İOSB','تصنيع متكامل بقلوب فولاذية ST52 وماكينات CNC ومقاشط.'],
+      ['الطاقة الإنتاجية','Ø1200 × 7000 مم','قدرة على التكسية بأقطار وأطوال كبيرة، والجلخ الدقيق وفتح الأخاديد.'],
+      ['اليوم','21 قطاعًا في عموم تركيا','خبرة تتجاوز 25 عامًا، وشبكة مراجع واسعة، وضمان 3 أشهر.'],
+    ],
+    vmEy:'الرؤية والرسالة', vmH:'إلى أين نمضي ولماذا نحن هنا',
+    vision:'الرؤية', mission:'الرسالة',
+    valEy:'قيمنا', valH:'المبادئ التي تصنعنا',
+    values:[
+      ['shield','الجودة','المعيار العالي نفسه في كل أسطوانة؛ خبرة تتجاوز 25 عامًا وبحث وتطوير مستمر.'],
+      ['link','الثقة','نفي بوعدنا في الميدان؛ وضمان ثلاثة أشهر ضد عيوب التصنيع.'],
+      ['cpu','الهندسة','تُصنَّع القلوب المعدنية من فولاذ ST52 على ماكينات CNC بإشراف هندسي.'],
+      ['gauge','الاستمرارية','استثمار متواصل في أسطول الماكينات والمختبر.'],
+    ],
+    ctaH:'اكتشفوا منتجاتنا وإنتاجنا.',
+    cta1:'المنتجات', cta2:'الإنتاج والمنشأة',
+  },
+}[lang];
+
+// Zaman çizelgesi: metin H sözlüğünden (5 dil), ikon site verisinden.
+const tlIcons = timeline.map(t => t.icon);
+const tlItems = H.tl.map(([year, t, d], i) => ({ year, t, d, icon: tlIcons[i] || 'check' }));
+---
+<Base title={H.title} lang={lang} path={lang === 'tr' ? '/kurumsal/' : `/${lang}/kurumsal/`}>
+  <Header lang={lang} seg="kurumsal/" />
+  <main id="main" class="bg-white">
+
+    <!-- HERO -->
+    <section class="border-b border-steel-200">
+      <div class="mx-auto grid max-w-7xl items-stretch lg:grid-cols-[1.2fr_1fr]">
+        <div class="flex flex-col justify-center px-6 py-16 lg:py-20 lg:pr-14" data-reveal-group>
+          <p data-reveal class="flex items-center gap-3 text-xs font-700 uppercase tracking-[0.22em] text-brand-red"><span class="h-px w-10 bg-brand-red"></span>{H.eyebrow}</p>
+          <h1 data-reveal class="mt-6 font-display text-4xl font-800 leading-[1.04] tracking-tight text-navy-900 sm:text-5xl">{H.h1}</h1>
+          <p data-reveal class="mt-6 max-w-lg text-lg leading-relaxed text-navy-500">{H.lede}</p>
+        </div>
+        <div class="relative min-h-[260px] bg-navy-900 lg:min-h-full"><img src="/gallery/kaucuk-kapli-finisor-merdanesi.webp" srcset="/gallery/kaucuk-kapli-finisor-merdanesi-480.webp 480w, /gallery/kaucuk-kapli-finisor-merdanesi-960.webp 960w, /gallery/kaucuk-kapli-finisor-merdanesi.webp 1010w" sizes="(max-width: 768px) 100vw, 50vw" alt={H.imgAlt} width="1010" height="758" class="h-full w-full object-cover"/></div>
+      </div>
+    </section>
+
+    <!-- STORY + STATS -->
+    <section class="mx-auto max-w-7xl px-6 py-20">
+      <div class="grid gap-12 lg:grid-cols-[1.5fr_1fr] lg:gap-16">
+        <div class="space-y-5 leading-relaxed text-navy-600" data-reveal-group>
+          <p data-reveal set:html={H.p1}></p>
+          <p data-reveal>{H.p2}</p>
+          <p data-reveal class="rounded-none border-l-2 border-brand-red bg-steel-50 p-5 text-navy-700" set:html={H.p3}></p>
+        </div>
+        <div class="grid grid-cols-2 border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200" data-reveal-group>
+          {stats.map(s => (<div data-reveal class="bg-white p-6"><div class="font-display text-3xl font-800 text-navy-900">{s.value}</div><div class="mt-1 text-xs uppercase tracking-wider text-navy-500">{s[lang]}</div></div>))}
+        </div>
+      </div>
+    </section>
+
+    <!-- LIQUID RUBBER MORPH BAND -->
+    <section class="relative overflow-hidden border-y border-steel-200 bg-navy-900 text-white">
+      <div class="pointer-events-none absolute -right-16 top-1/2 hidden -translate-y-1/2 sm:block">
+        <LiquidBlob accent="#D62B23" accent2="#7a1712" class="w-[26rem]" opacity="0.9" />
+      </div>
+      <div class="pointer-events-none absolute -left-24 -bottom-24">
+        <LiquidBlob accent="#233254" accent2="#0B1424" class="w-72" opacity="0.7" />
+      </div>
+      <div class="relative mx-auto max-w-3xl px-6 py-24" data-reveal-group>
+        <p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-redlite">{H.techEy}</p>
+        <h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight sm:text-4xl">{H.techH}</h2>
+        <p data-reveal class="mt-5 text-lg leading-relaxed text-steel-300">{H.techP}</p>
+      </div>
+    </section>
+
+    <!-- TIMELINE (mobile-first, animated) -->
+    <section class="mx-auto max-w-3xl px-6 py-20">
+      <div class="mb-12" data-reveal-group>
+        <p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.histEy}</p>
+        <h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.histH}</h2>
+      </div>
+      <ol class="relative ml-2 border-l-2 border-steel-200" data-reveal-group>
+        {tlItems.map(item => (
+          <li data-reveal class="relative pb-12 pl-8 last:pb-0">
+            <span class="absolute -left-[11px] top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-red ring-4 ring-white"></span>
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span class="font-display text-sm font-800 uppercase tracking-wider text-brand-red">{item.year}</span>
+              <span class="inline-flex items-center gap-1.5 text-xs font-600 uppercase tracking-wider text-navy-400"><Icon name={item.icon} class="h-4 w-4"/></span>
+            </div>
+            <h3 class="mt-1.5 font-display text-xl font-700 text-navy-900">{item.t}</h3>
+            <p class="mt-1.5 leading-relaxed text-navy-500">{item.d}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <!-- VİZYON & MİSYON -->
+    <section class="border-t border-steel-200">
+      <div class="mx-auto max-w-7xl px-6 py-20">
+        <div class="max-w-2xl" data-reveal-group>
+          <p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.vmEy}</p>
+          <h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.vmH}</h2>
+        </div>
+        <div class="mt-10 grid border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 lg:grid-cols-2" data-reveal-group>
+          <div data-reveal class="bg-white p-8 lg:p-10"><span class="font-display text-sm font-800 uppercase tracking-widest text-brand-red">{H.vision}</span><p class="mt-5 font-display text-xl font-600 leading-relaxed text-navy-900 sm:text-2xl">{visionMission.vision[lang]}</p></div>
+          <div data-reveal class="bg-navy-900 p-8 text-white lg:p-10"><span class="font-display text-sm font-800 uppercase tracking-widest text-brand-redlite">{H.mission}</span><p class="mt-5 font-display text-xl font-600 leading-relaxed sm:text-2xl">{visionMission.mission[lang]}</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEĞERLERİMİZ -->
+    <section class="border-t border-steel-200 bg-steel-50">
+      <div class="mx-auto max-w-7xl px-6 py-20">
+        <div class="max-w-2xl" data-reveal-group>
+          <p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.valEy}</p>
+          <h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.valH}</h2>
+        </div>
+        <div class="mt-10 grid border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 sm:grid-cols-2 lg:grid-cols-4" data-reveal-group>
+          {H.values.map(([icon,title,desc]) => (<div data-reveal class="bg-white p-7"><Icon name={icon} class="h-7 w-7 text-brand-red"/><h3 class="mt-5 font-display text-lg font-700 text-navy-900">{title}</h3><p class="mt-2 text-sm leading-relaxed text-navy-500">{desc}</p></div>))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="bg-navy-900 text-white">
+      <div class="mx-auto flex max-w-7xl flex-col items-start gap-8 px-6 py-20 lg:flex-row lg:items-center lg:justify-between">
+        <h2 class="font-display text-3xl font-800 tracking-tight sm:text-4xl">{H.ctaH}</h2>
+        <div class="flex shrink-0 flex-wrap gap-3">
+          <a href={`${base}/urunler/`} class="inline-flex items-center gap-2 bg-brand-red px-6 py-4 text-sm font-700 uppercase tracking-wider transition hover:bg-white hover:text-navy-900">{H.cta1} <Icon name="arrow" class="h-4 w-4"/></a>
+          <a href={`${base}/uretim/`} class="inline-flex items-center gap-2 border border-white/30 px-6 py-4 text-sm font-700 uppercase tracking-wider transition hover:bg-white/10">{H.cta2}</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <Footer lang={lang} />
+</Base>

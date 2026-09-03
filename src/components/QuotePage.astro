@@ -1,0 +1,161 @@
+---
+// Teklif (RFQ) formu — statik site, backend yok: form WhatsApp/e-posta mesajına dönüşür.
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import Icon from './Icon.astro';
+import Breadcrumb from './Breadcrumb.astro';
+import { company } from '../data/site';
+import { productTypes } from '../data/products';
+
+const { lang = 'tr' } = Astro.props;
+const base = lang === 'tr' ? '' : '/' + lang;
+const path = `${base}/teklif/`;
+const wa = 'https://wa.me/' + company.order.replace(/[^0-9]/g, '');
+const t = {
+  tr: { crumb:'Teklif', h1:'Merdane teklifi alın', lede:'Formu doldurun, tek tıkla WhatsApp veya e-posta ile gönderin. Ölçü ve çalışma şartlarını bilmemiz, size doğru sertlik ve kaplamayı önermemizi sağlar.',
+    company:'Firma', name:'Ad Soyad', phone:'Telefon', email:'E-posta', product:'Ürün tipi', material:'Kaplama malzemesi', od:'Dış çap (mm)', id:'İç çap (mm)', len:'Boy (mm)',
+    shore:'Sertlik (Shore A)', qty:'Adet', machine:'Makine / marka', notes:'Notlar', pick:'Seçiniz', rubber:'Kauçuk', pu:'Poliüretan', unsure:'Emin değilim',
+    sendWa:'WhatsApp ile gönder', sendMail:'E-posta ile gönder', req:'* zorunlu alan', fill:'Lütfen firma ve telefon bilgisini doldurun.',
+    subject:'Merdane teklif talebi', why:'Neden bu bilgiler?', whyP:'Sertlik (Shore A), çap ve boy çalışma şartlarına göre belirlenir. Makine markası orijinal ölçülere birebir üretim için gereklidir.',
+    alt:'Formu doldurmak istemiyorsanız', altP:'Doğrudan arayın ya da WhatsApp’tan ölçüleri yazın — teknik ekibimiz yönlendirsin.' },
+  en: { crumb:'Quote', h1:'Request a roller quote', lede:'Fill in the form and send it in one click via WhatsApp or email. Knowing your dimensions and operating conditions lets us recommend the right hardness and covering.',
+    company:'Company', name:'Full name', phone:'Phone', email:'Email', product:'Product type', material:'Covering material', od:'Outer Ø (mm)', id:'Inner Ø (mm)', len:'Length (mm)',
+    shore:'Hardness (Shore A)', qty:'Quantity', machine:'Machine / brand', notes:'Notes', pick:'Select', rubber:'Rubber', pu:'Polyurethane', unsure:'Not sure',
+    sendWa:'Send via WhatsApp', sendMail:'Send via email', req:'* required', fill:'Please fill in company and phone.',
+    subject:'Roller quote request', why:'Why these details?', whyP:'Hardness (Shore A), diameter and length are set by operating conditions. The machine brand is needed to produce exactly to original dimensions.',
+    alt:'Prefer not to use the form?', altP:'Call us directly or send the dimensions on WhatsApp — our technical team will guide you.' },
+  de: { crumb:'Angebot', h1:'Walzen-Angebot anfordern', lede:'Formular ausfüllen und mit einem Klick per WhatsApp oder E-Mail senden. Maße und Betriebsbedingungen helfen uns, die richtige Härte und Beschichtung zu empfehlen.',
+    company:'Firma', name:'Name', phone:'Telefon', email:'E-Mail', product:'Produkttyp', material:'Beschichtungsmaterial', od:'Außen-Ø (mm)', id:'Innen-Ø (mm)', len:'Länge (mm)',
+    shore:'Härte (Shore A)', qty:'Menge', machine:'Maschine / Marke', notes:'Anmerkungen', pick:'Auswählen', rubber:'Gummi', pu:'Polyurethan', unsure:'Unsicher',
+    sendWa:'Per WhatsApp senden', sendMail:'Per E-Mail senden', req:'* Pflichtfeld', fill:'Bitte Firma und Telefon ausfüllen.',
+    subject:'Anfrage Walzen-Angebot', why:'Warum diese Angaben?', whyP:'Härte (Shore A), Durchmesser und Länge richten sich nach den Betriebsbedingungen. Die Maschinenmarke ist für die Fertigung nach Originalmaßen nötig.',
+    alt:'Lieber ohne Formular?', altP:'Rufen Sie an oder senden Sie die Maße per WhatsApp — unser Technikteam berät Sie.' },
+  ru: { crumb:'Запрос', h1:'Запросить цену на вал', lede:'Заполните форму и отправьте одним нажатием через WhatsApp или e-mail. Зная ваши размеры и условия работы, мы порекомендуем правильную твёрдость и покрытие.',
+    company:'Компания', name:'Имя и фамилия', phone:'Телефон', email:'E-mail', product:'Тип продукта', material:'Материал покрытия', od:'Наружный Ø (мм)', id:'Внутренний Ø (мм)', len:'Длина (мм)',
+    shore:'Твёрдость (Shore A)', qty:'Количество', machine:'Машина / марка', notes:'Примечания', pick:'Выберите', rubber:'Резина', pu:'Полиуретан', unsure:'Не уверен(а)',
+    sendWa:'Отправить через WhatsApp', sendMail:'Отправить по e-mail', req:'* обязательное поле', fill:'Пожалуйста, укажите компанию и телефон.',
+    subject:'Запрос цены на вал', why:'Зачем эти данные?', whyP:'Твёрдость (Shore A), диаметр и длина определяются условиями работы. Марка машины нужна, чтобы изготовить вал точно по оригинальным размерам.',
+    alt:'Не хотите заполнять форму?', altP:'Позвоните напрямую или напишите размеры в WhatsApp — наша техническая команда подскажет.' },
+  ar: { crumb:'عرض سعر', h1:'اطلبوا عرض سعر لأسطوانة', lede:'املأوا النموذج وأرسلوه بنقرة واحدة عبر واتساب أو البريد الإلكتروني. فمعرفة مقاساتكم وظروف تشغيلكم تمكّننا من التوصية بالصلادة والتكسية المناسبة.',
+    company:'الشركة', name:'الاسم الكامل', phone:'الهاتف', email:'البريد الإلكتروني', product:'نوع المنتج', material:'مادة التكسية', od:'القطر الخارجي (مم)', id:'القطر الداخلي (مم)', len:'الطول (مم)',
+    shore:'الصلادة (شور A)', qty:'الكمية', machine:'الآلة / العلامة التجارية', notes:'ملاحظات', pick:'اختاروا', rubber:'مطاط', pu:'بولي يوريثان', unsure:'غير متأكد',
+    sendWa:'أرسل عبر واتساب', sendMail:'أرسل عبر البريد الإلكتروني', req:'* حقل إلزامي', fill:'يُرجى تعبئة اسم الشركة والهاتف.',
+    subject:'طلب عرض سعر لأسطوانة', why:'لماذا هذه المعلومات؟', whyP:'تُحدَّد الصلادة (شور A) والقطر والطول وفق ظروف التشغيل. أما علامة الآلة فلازمة للإنتاج مطابقًا للمقاسات الأصلية تمامًا.',
+    alt:'لا ترغبون في تعبئة النموذج؟', altP:'اتصلوا بنا مباشرة أو أرسلوا المقاسات عبر واتساب — وسيرشدكم فريقنا الفني.' },
+}[lang];
+
+const field = 'mt-1.5 w-full border border-steel-300 bg-white px-3 py-2.5 text-sm text-navy-900 outline-none transition focus:border-brand-red focus:ring-2 focus:ring-brand-red/20';
+const label = 'block text-xs font-700 uppercase tracking-wider text-navy-500';
+---
+<Base title={`${t.h1} | Merpolon`} lang={lang} path={path}>
+  <Header lang={lang} />
+  <Breadcrumb lang={lang} items={[{ href:path, label:t.crumb }]} />
+  <main id="main" class="bg-white">
+    <section class="border-b border-steel-200">
+      <div class="mx-auto max-w-4xl px-6 py-12 lg:py-16">
+        <p class="flex items-center gap-3 text-xs font-700 uppercase tracking-[0.22em] text-brand-red"><span class="h-px w-10 bg-brand-red"></span>{t.crumb}</p>
+        <h1 class="mt-5 font-display text-3xl font-800 leading-[1.06] tracking-tight text-navy-900 sm:text-4xl">{t.h1}</h1>
+        <p class="mt-4 max-w-2xl text-lg leading-relaxed text-navy-500">{t.lede}</p>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-4xl px-6 py-12">
+      <form id="rfq" class="grid gap-5 sm:grid-cols-2" novalidate>
+        <div><label class={label} for="f-company">{t.company} *</label><input class={field} id="f-company" name="company" required autocomplete="organization" /></div>
+        <div><label class={label} for="f-name">{t.name}</label><input class={field} id="f-name" name="name" autocomplete="name" /></div>
+        <div><label class={label} for="f-phone">{t.phone} *</label><input class={field} id="f-phone" name="phone" type="tel" required autocomplete="tel" /></div>
+        <div><label class={label} for="f-email">{t.email}</label><input class={field} id="f-email" name="email" type="email" autocomplete="email" /></div>
+
+        <div><label class={label} for="f-product">{t.product}</label>
+          <select class={field} id="f-product" name="product">
+            <option value="">{t.pick}</option>
+            {productTypes.map(p => (<option value={p.name[lang]}>{p.name[lang]}</option>))}
+          </select>
+        </div>
+        <div><label class={label} for="f-material">{t.material}</label>
+          <select class={field} id="f-material" name="material">
+            <option value="">{t.pick}</option>
+            <option value={t.rubber}>{t.rubber}</option>
+            <option value={t.pu}>{t.pu}</option>
+            <option value={t.unsure}>{t.unsure}</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 sm:col-span-2">
+          <div><label class={label} for="f-od">{t.od}</label><input class={field} id="f-od" name="od" inputmode="numeric" /></div>
+          <div><label class={label} for="f-id">{t.id}</label><input class={field} id="f-id" name="id" inputmode="numeric" /></div>
+          <div><label class={label} for="f-len">{t.len}</label><input class={field} id="f-len" name="len" inputmode="numeric" /></div>
+        </div>
+        <div><label class={label} for="f-shore">{t.shore}</label><input class={field} id="f-shore" name="shore" inputmode="numeric" placeholder="60–90" /></div>
+        <div><label class={label} for="f-qty">{t.qty}</label><input class={field} id="f-qty" name="qty" inputmode="numeric" /></div>
+        <div class="sm:col-span-2"><label class={label} for="f-machine">{t.machine}</label><input class={field} id="f-machine" name="machine" placeholder="TWO / NSC / Seydel / Heidelberg…" /></div>
+        <div class="sm:col-span-2"><label class={label} for="f-notes">{t.notes}</label><textarea class={field} id="f-notes" name="notes" rows="4"></textarea></div>
+
+        <p class="text-xs text-navy-400 sm:col-span-2">{t.req}</p>
+        <p id="rfq-err" class="hidden text-sm font-600 text-brand-red sm:col-span-2" role="alert">{t.fill}</p>
+
+        <div class="flex flex-wrap gap-3 sm:col-span-2">
+          <button type="button" id="rfq-wa" class="inline-flex items-center gap-2 bg-[#25D366] px-6 py-4 text-sm font-700 uppercase tracking-wider text-white transition hover:brightness-95">
+            <Icon name="whatsapp" class="h-4 w-4"/>{t.sendWa}
+          </button>
+          <button type="button" id="rfq-mail" class="inline-flex items-center gap-2 bg-brand-red px-6 py-4 text-sm font-700 uppercase tracking-wider text-white transition hover:bg-navy-900">
+            <Icon name="mail" class="h-4 w-4"/>{t.sendMail}
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-12 grid gap-4 sm:grid-cols-2">
+        <div class="border-l-2 border-brand-red bg-steel-50 p-5">
+          <h2 class="font-display font-700 text-navy-900">{t.why}</h2>
+          <p class="mt-2 text-sm leading-relaxed text-navy-600">{t.whyP}</p>
+        </div>
+        <div class="border border-steel-200 p-5">
+          <h2 class="font-display font-700 text-navy-900">{t.alt}</h2>
+          <p class="mt-2 text-sm leading-relaxed text-navy-600">{t.altP}</p>
+          <div class="mt-3 flex flex-wrap gap-3 text-sm font-700">
+            <a href={'tel:'+company.order.replace(/\s/g,'')} class="text-brand-red hover:underline">{company.order}</a>
+            <a href={'mailto:'+company.email} class="text-navy-900 hover:underline">{company.email}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer lang={lang} />
+
+  <script is:inline define:vars={{ wa, email: company.email, labels: t }}>
+    (function(){
+      var f = document.getElementById('rfq'); if(!f) return;
+      var err = document.getElementById('rfq-err');
+      var rows = [
+        ['company', labels.company], ['name', labels.name], ['phone', labels.phone], ['email', labels.email],
+        ['product', labels.product], ['material', labels.material],
+        ['od', labels.od], ['id', labels.id], ['len', labels.len],
+        ['shore', labels.shore], ['qty', labels.qty], ['machine', labels.machine], ['notes', labels.notes]
+      ];
+      function collect(){
+        var d = new FormData(f), out = [];
+        rows.forEach(function(r){
+          var v = (d.get(r[0]) || '').toString().trim();
+          if (v) out.push(r[1] + ': ' + v);
+        });
+        return out.join('\n');
+      }
+      function valid(){
+        var ok = f.company.value.trim() && f.phone.value.trim();
+        err.classList.toggle('hidden', !!ok);
+        if(!ok) (f.company.value.trim() ? f.phone : f.company).focus();
+        return ok;
+      }
+      document.getElementById('rfq-wa').addEventListener('click', function(){
+        if(!valid()) return;
+        window.open(wa + '?text=' + encodeURIComponent(labels.subject + '\n\n' + collect()), '_blank', 'noopener');
+      });
+      document.getElementById('rfq-mail').addEventListener('click', function(){
+        if(!valid()) return;
+        window.location.href = 'mailto:' + email + '?subject=' + encodeURIComponent(labels.subject)
+          + '&body=' + encodeURIComponent(collect());
+      });
+    })();
+  </script>
+</Base>

@@ -1,0 +1,49 @@
+---
+// S.S.S. — TEK kaynak, 5 dil. Tüm faqs (12) listelenir.
+import Base from '../../layouts/Base.astro';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import Icon from '../Icon.astro';
+import { faqs, company } from '../../data/site';
+
+const { lang = 'tr' } = Astro.props;
+const base = lang === 'tr' ? '' : '/' + lang;
+
+const H = {
+  tr: { title:'S.S.S. — Sıkça Sorulan Sorular | Merpolon', ey:'Sıkça Sorulan Sorular', h1:'Merak edilenler',
+        boxH:'Sorunuz listede yok mu?', boxP:'Teknik ekibimiz yardımcı olsun.' },
+  en: { title:'FAQ — Frequently Asked Questions | Merpolon', ey:'Frequently Asked Questions', h1:'What people ask',
+        boxH:'Your question is not on the list?', boxP:'Let our technical team help.' },
+  de: { title:'FAQ — Häufig gestellte Fragen | Merpolon', ey:'Häufig gestellte Fragen', h1:'Was oft gefragt wird',
+        boxH:'Ihre Frage steht nicht auf der Liste?', boxP:'Unser Technikteam hilft Ihnen weiter.' },
+  ru: { title:'Вопросы и ответы | Merpolon', ey:'Часто задаваемые вопросы', h1:'О чём спрашивают',
+        boxH:'Вашего вопроса нет в списке?', boxP:'Пусть поможет наша техническая команда.' },
+  ar: { title:'الأسئلة الشائعة | Merpolon', ey:'الأسئلة الشائعة', h1:'ما يسأل عنه عملاؤنا',
+        boxH:'ألا يوجد سؤالكم في القائمة؟', boxP:'دعوا فريقنا الفني يساعدكم.' },
+}[lang];
+---
+<Base title={H.title} lang={lang} path={`${base}/sss/`}>
+  <Header lang={lang} />
+  <main id="main" class="bg-white">
+    <section class="border-b border-steel-200"><div class="mx-auto max-w-4xl px-6 py-16 lg:py-20" data-reveal-group>
+      <p data-reveal class="flex items-center gap-3 text-xs font-700 uppercase tracking-[0.22em] text-brand-red"><span class="h-px w-10 bg-brand-red"></span>{H.ey}</p>
+      <h1 data-reveal class="mt-6 font-display text-4xl font-800 leading-[1.04] tracking-tight text-navy-900 sm:text-5xl">{H.h1}</h1>
+    </div></section>
+    <section class="mx-auto max-w-4xl px-6 py-16 sm:py-20 lg:py-28">
+      <div id="faq" class="border-t border-steel-200" data-accordion="collapse" data-reveal>
+        {faqs.map((f, i) => (
+          <Fragment>
+            <h3 id={`fh-${i}`}><button type="button" class="flex w-full items-center justify-between gap-4 border-b border-steel-200 px-4 py-5 text-left font-display text-lg font-700 text-navy-900 hover:text-brand-red sm:px-5" data-active-classes="bg-steel-50 text-brand-red" data-inactive-classes="text-navy-900" data-accordion-target={`#fb-${i}`} aria-expanded={i===0} aria-controls={`fb-${i}`}><span>{f.q[lang]}</span><svg class="h-5 w-5 shrink-0 text-brand-red" data-accordion-icon viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button></h3>
+            <div id={`fb-${i}`} class="hidden" aria-labelledby={`fh-${i}`}><p class="border-b border-steel-200 px-4 py-5 leading-relaxed text-navy-600 sm:px-5">{f.a[lang]}</p></div>
+          </Fragment>
+        ))}
+      </div>
+      <div class="mt-12 border border-steel-200 bg-steel-50 p-8 text-center" data-reveal>
+        <h2 class="font-display text-xl font-700 text-navy-900">{H.boxH}</h2>
+        <p class="mt-2 text-navy-500">{H.boxP}</p>
+        <a href={'tel:'+company.order.replace(/\s/g,'')} class="mt-5 inline-flex items-center gap-2 bg-brand-red px-6 py-3.5 text-sm font-700 uppercase tracking-wider text-white transition hover:bg-navy-900"><Icon name="phone" class="h-4 w-4"/>{company.order}</a>
+      </div>
+    </section>
+  </main>
+  <Footer lang={lang} />
+</Base>

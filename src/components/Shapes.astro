@@ -1,0 +1,9 @@
+---
+// Minimal Swiss backdrop: fine grid + one faint radial. No blobs, no floating icons.
+const { variant = 'dark' } = Astro.props;
+const line = variant === 'dark' ? 'rgba(255,255,255,.045)' : 'rgba(16,35,63,.05)';
+---
+<div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+  <div class="absolute inset-0" style={`background-image:linear-gradient(${line} 1px,transparent 1px),linear-gradient(90deg,${line} 1px,transparent 1px);background-size:64px 64px`}></div>
+  <div class="absolute -right-40 top-1/2 h-[28rem] w-[28rem] -translate-y-1/2 rounded-full bg-brand-red/10 blur-[120px]"></div>
+</div>

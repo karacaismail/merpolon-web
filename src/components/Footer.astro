@@ -1,0 +1,58 @@
+---
+import { company, nav, ui, positioning, footerExtra } from '../data/site';
+import Icon from './Icon.astro';
+const { lang = 'tr' } = Astro.props;
+const menu = [...nav[lang], ...footerExtra[lang]];
+const legalNote = { tr:'Tüm hakları saklıdır.', en:'All rights reserved.', de:'Alle Rechte vorbehalten.', ru:'Все права защищены.', ar:'جميع الحقوق محفوظة.' }[lang];
+const brandNote = { tr:'Merpolon, Merteks Elastomer markasıdır.', en:'Merpolon is a brand of Merteks Elastomer.', de:'Merpolon ist eine Marke von Merteks Elastomer.', ru:'Merpolon — марка Merteks Elastomer.', ar:'Merpolon علامة تجارية تابعة لشركة Merteks Elastomer.' }[lang];
+const headOffice = { tr:'Merkez', en:'Head Office', de:'Zentrale', ru:'Головной офис', ar:'المركز الرئيسي' }[lang];
+const factory = { tr:'İmalat', en:'Factory', de:'Fertigung', ru:'Производство', ar:'المصنع' }[lang];
+---
+<footer class="mt-24 bg-navy-900 text-steel-300">
+  <div class="mx-auto grid max-w-7xl gap-12 px-6 py-16 md:grid-cols-[1.2fr_1.4fr_1.3fr]">
+    <!-- brand + socials -->
+    <div>
+      <div class="flex items-center gap-3">
+        <img src="/brand/logo-mark.svg" alt="Merpolon" width="44" height="44" class="h-11 w-11" />
+        <span class="font-display text-2xl font-800 text-white">MER<span class="text-brand-redlite">POLON</span></span>
+      </div>
+      <p class="mt-4 max-w-xs text-sm leading-relaxed text-steel-400">{positioning[lang]}</p>
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <a href={company.instagram} target="_blank" rel="noopener" aria-label="Instagram" class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-steel-300 transition hover:border-brand-redlite hover:bg-white/5 hover:text-white"><Icon name="instagram" class="h-5 w-5"/></a>
+        <a href={company.tiktok} target="_blank" rel="noopener" aria-label="TikTok" class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-steel-300 transition hover:border-brand-redlite hover:bg-white/5 hover:text-white"><Icon name="tiktok" class="h-5 w-5"/></a>
+        <a href={company.facebook} target="_blank" rel="noopener" aria-label="Facebook" class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-steel-300 transition hover:border-brand-redlite hover:bg-white/5 hover:text-white"><Icon name="facebook" class="h-5 w-5"/></a>
+        <a href={'https://wa.me/'+company.order.replace(/[^0-9]/g,'')} target="_blank" rel="noopener" aria-label="WhatsApp" class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-steel-300 transition hover:border-brand-redlite hover:bg-white/5 hover:text-white"><Icon name="whatsapp" class="h-5 w-5"/></a>
+        <a href={'mailto:'+company.email} aria-label="E-posta" class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-steel-300 transition hover:border-brand-redlite hover:bg-white/5 hover:text-white"><Icon name="mail" class="h-5 w-5"/></a>
+      </div>
+      <p class="mt-6 text-xs text-steel-500">{company.legal}</p>
+    </div>
+
+    <!-- menu (2 columns) -->
+    <div>
+      <ul class="grid grid-cols-2 gap-x-6 gap-y-2.5 text-sm">
+        {menu.map(([href, label]) => (<li><a class="text-steel-400 transition hover:text-white" href={href}>{label}</a></li>))}
+      </ul>
+    </div>
+
+    <!-- contact + address stacked in one column -->
+    <div>
+      <h4 class="mb-4 font-display text-sm font-700 uppercase tracking-wider text-white">{ui.contact[lang]}</h4>
+      <ul class="space-y-3 text-sm">
+        <li class="flex gap-3"><Icon name="phone" class="mt-0.5 h-4 w-4 text-brand-redlite shrink-0"/><a class="hover:text-white" href={'tel:'+company.order.replace(/\s/g,'')}>{company.order}</a></li>
+        <li class="flex gap-3"><Icon name="mail" class="mt-0.5 h-4 w-4 text-brand-redlite shrink-0"/><a class="hover:text-white" href={'mailto:'+company.email}>{company.email}</a></li>
+        <li class="flex gap-3"><Icon name="instagram" class="mt-0.5 h-4 w-4 text-brand-redlite shrink-0"/><a class="hover:text-white" href={company.instagram}>@merteksmerdane1</a></li>
+      </ul>
+      <h4 class="mb-3 mt-8 font-display text-sm font-700 uppercase tracking-wider text-white">{ui.address[lang]}</h4>
+      <div class="space-y-3 text-sm leading-relaxed">
+        <p class="flex gap-3"><Icon name="map-pin" class="mt-0.5 h-4 w-4 text-brand-redlite shrink-0"/><span><span class="text-white">{headOffice}:</span> {company.addressCenter}</span></p>
+        <p class="flex gap-3"><Icon name="map-pin" class="mt-0.5 h-4 w-4 text-brand-redlite shrink-0"/><span><span class="text-white">{factory}:</span> {company.addressFactory}</span></p>
+      </div>
+    </div>
+  </div>
+  <div class="border-t border-white/10">
+    <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-6 py-5 text-xs text-steel-500 sm:flex-row">
+      <p>© {new Date().getFullYear()} {company.legal}. {legalNote}</p>
+      <p>{brandNote}</p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,6 @@
+---
+import icons from '../data/icons.json';
+const { name, class: cls = 'w-6 h-6' } = Astro.props;
+const inner = (icons as Record<string, string>)[name] || '';
+---
+<svg xmlns="http://www.w3.org/2000/svg" class={cls} viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" set:html={inner}></svg>

@@ -1,0 +1,80 @@
+---
+// Gizlilik & KVKK — TEK kaynak, 5 dil.
+// Not: KVKK (6698 sayılı kanun) Türk mevzuatıdır; diğer dillerde de aynı hukuki çerçeve anlatılır.
+import Base from '../../layouts/Base.astro';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import { company } from '../../data/site';
+
+const { lang = 'tr' } = Astro.props;
+const base = lang === 'tr' ? '' : '/' + lang;
+
+const H = {
+  tr: { title:'Gizlilik & KVKK — Merpolon | Merteks Elastomer', ey:'Gizlilik & KVKK', h1:'Kişisel verilerin korunması', ask:'Talepleriniz için:',
+    sections:[
+      ['Veri Sorumlusu', `Bu web sitesi ${company.legal} tarafından işletilmektedir. Kişisel verileriniz 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında veri sorumlusu sıfatıyla işlenir.`],
+      ['Toplanan Veriler', 'İletişim formu, e-posta veya telefon yoluyla bize ilettiğiniz ad-soyad, firma, telefon ve e-posta gibi iletişim bilgileri ile talebinizin içeriği işlenir. Site ziyaretlerinde teknik günlük ve çerez verileri toplanabilir.'],
+      ['İşleme Amaçları', 'Verileriniz; teklif ve taleplerinizi yanıtlamak, sipariş ve satış sonrası süreçleri yürütmek, yasal yükümlülükleri yerine getirmek ve hizmet kalitesini geliştirmek amacıyla işlenir.'],
+      ['Aktarım', 'Kişisel verileriniz, yasal zorunluluklar ve hizmetin gerektirdiği haller dışında üçüncü kişilerle paylaşılmaz; pazarlama amacıyla satılmaz.'],
+      ['Haklarınız (KVKK m.11)', 'Verilerinize erişme, düzeltilmesini veya silinmesini isteme, işlemeye itiraz etme ve kanunda sayılan diğer haklarınızı kullanmak için bizimle iletişime geçebilirsiniz.'],
+      ['Çerezler', 'Site, temel işlevsellik ve ziyaret istatistikleri için sınırlı çerez kullanabilir. Tarayıcı ayarlarınızdan çerezleri yönetebilirsiniz.'],
+    ] },
+  en: { title:'Privacy & Data Protection — Merpolon | Merteks Elastomer', ey:'Privacy & Data Protection', h1:'Protection of personal data', ask:'For your requests:',
+    sections:[
+      ['Data controller', `This website is operated by ${company.legal}. Your personal data is processed in our capacity as data controller under Turkish Personal Data Protection Law No. 6698 (KVKK).`],
+      ['Data collected', 'We process the contact details you send us through the contact form, email or telephone — such as name, company, phone and email — together with the content of your request. Technical logs and cookie data may be collected during site visits.'],
+      ['Purposes of processing', 'Your data is processed to answer your quotes and requests, to run order and after-sales processes, to meet legal obligations and to improve service quality.'],
+      ['Transfer', 'Your personal data is not shared with third parties except where legally required or necessary to deliver the service, and is never sold for marketing purposes.'],
+      ['Your rights (KVKK art. 11)', 'You may contact us to access your data, request its correction or deletion, object to processing, and exercise the other rights set out in the law.'],
+      ['Cookies', 'The site may use limited cookies for core functionality and visit statistics. You can manage cookies from your browser settings.'],
+    ] },
+  de: { title:'Datenschutz & KVKK — Merpolon | Merteks Elastomer', ey:'Datenschutz & KVKK', h1:'Schutz personenbezogener Daten', ask:'Für Ihre Anliegen:',
+    sections:[
+      ['Verantwortlicher', `Diese Website wird von ${company.legal} betrieben. Ihre personenbezogenen Daten werden in unserer Eigenschaft als Verantwortlicher nach dem türkischen Datenschutzgesetz Nr. 6698 (KVKK) verarbeitet.`],
+      ['Erhobene Daten', 'Verarbeitet werden die Kontaktdaten, die Sie uns über das Kontaktformular, per E-Mail oder Telefon übermitteln — etwa Name, Firma, Telefon und E-Mail — sowie der Inhalt Ihrer Anfrage. Bei Websitebesuchen können technische Protokoll- und Cookie-Daten erfasst werden.'],
+      ['Verarbeitungszwecke', 'Ihre Daten werden verarbeitet, um Angebote und Anfragen zu beantworten, Bestell- und After-Sales-Prozesse abzuwickeln, gesetzliche Pflichten zu erfüllen und die Servicequalität zu verbessern.'],
+      ['Weitergabe', 'Ihre personenbezogenen Daten werden außer bei gesetzlichen Pflichten oder wenn es die Leistungserbringung erfordert nicht an Dritte weitergegeben und niemals zu Marketingzwecken verkauft.'],
+      ['Ihre Rechte (KVKK Art. 11)', 'Sie können uns kontaktieren, um auf Ihre Daten zuzugreifen, deren Berichtigung oder Löschung zu verlangen, der Verarbeitung zu widersprechen und die weiteren gesetzlich vorgesehenen Rechte auszuüben.'],
+      ['Cookies', 'Die Website kann in begrenztem Umfang Cookies für Grundfunktionen und Besuchsstatistiken einsetzen. Cookies können Sie in Ihren Browsereinstellungen verwalten.'],
+    ] },
+  ru: { title:'Конфиденциальность и защита данных — Merpolon | Merteks Elastomer', ey:'Конфиденциальность и KVKK', h1:'Защита персональных данных', ask:'По вашим обращениям:',
+    sections:[
+      ['Оператор данных', `Этот сайт управляется компанией ${company.legal}. Ваши персональные данные обрабатываются нами в качестве оператора данных в рамках турецкого Закона о защите персональных данных № 6698 (KVKK).`],
+      ['Собираемые данные', 'Обрабатываются контактные данные, которые вы передаёте нам через форму обратной связи, по электронной почте или телефону, — имя и фамилия, компания, телефон и e-mail — а также содержание вашего обращения. При посещении сайта могут собираться технические журналы и данные cookie.'],
+      ['Цели обработки', 'Ваши данные обрабатываются, чтобы отвечать на запросы цен и обращения, вести процессы заказа и послепродажного обслуживания, исполнять правовые обязанности и повышать качество услуг.'],
+      ['Передача', 'Ваши персональные данные не передаются третьим лицам, кроме случаев, предусмотренных законом или необходимых для оказания услуги, и никогда не продаются в маркетинговых целях.'],
+      ['Ваши права (ст. 11 KVKK)', 'Вы можете обратиться к нам, чтобы получить доступ к своим данным, потребовать их исправления или удаления, возразить против обработки и воспользоваться другими правами, предусмотренными законом.'],
+      ['Файлы cookie', 'Сайт может использовать ограниченный набор cookie для базовой функциональности и статистики посещений. Управлять cookie можно в настройках браузера.'],
+    ] },
+  ar: { title:'الخصوصية وحماية البيانات — Merpolon | Merteks Elastomer', ey:'الخصوصية وقانون KVKK', h1:'حماية البيانات الشخصية', ask:'لطلباتكم:',
+    sections:[
+      ['المسؤول عن البيانات', `تُدار هذه الوثيقة الإلكترونية من قِبل ${company.legal}. وتُعالَج بياناتكم الشخصية بصفتنا مسؤولين عن البيانات في إطار قانون حماية البيانات الشخصية التركي رقم 6698 (KVKK).`],
+      ['البيانات المجمّعة', 'تُعالَج بيانات التواصل التي ترسلونها إلينا عبر نموذج الاتصال أو البريد الإلكتروني أو الهاتف — كالاسم واسم الشركة والهاتف والبريد الإلكتروني — إضافة إلى مضمون طلبكم. وقد تُجمَع سجلات تقنية وبيانات ملفات تعريف الارتباط أثناء زيارة الموقع.'],
+      ['أغراض المعالجة', 'تُعالَج بياناتكم للرد على عروض الأسعار والطلبات، ولإدارة عمليات الطلب وما بعد البيع، وللوفاء بالالتزامات القانونية، ولتحسين جودة الخدمة.'],
+      ['النقل', 'لا تُشارَك بياناتكم الشخصية مع أطراف ثالثة إلا عند وجود إلزام قانوني أو عند اقتضاء تقديم الخدمة ذلك، ولا تُباع لأغراض تسويقية إطلاقًا.'],
+      ['حقوقكم (المادة 11 من KVKK)', 'يمكنكم التواصل معنا للاطلاع على بياناتكم، أو طلب تصحيحها أو حذفها، أو الاعتراض على معالجتها، ولممارسة سائر الحقوق المنصوص عليها في القانون.'],
+      ['ملفات تعريف الارتباط', 'قد يستخدم الموقع ملفات تعريف ارتباط محدودة للوظائف الأساسية وإحصاءات الزيارة. ويمكنكم إدارتها من إعدادات المتصفح.'],
+    ] },
+}[lang];
+---
+<Base title={H.title} lang={lang} path={`${base}/gizlilik/`}>
+  <Header lang={lang} />
+  <main id="main" class="bg-white">
+    <section class="border-b border-steel-200"><div class="mx-auto max-w-4xl px-6 py-16 lg:py-20" data-reveal-group>
+      <p data-reveal class="flex items-center gap-3 text-xs font-700 uppercase tracking-[0.22em] text-brand-red"><span class="h-px w-10 bg-brand-red"></span>{H.ey}</p>
+      <h1 data-reveal class="mt-6 font-display text-4xl font-800 leading-[1.04] tracking-tight text-navy-900 sm:text-5xl">{H.h1}</h1>
+    </div></section>
+    <section class="mx-auto max-w-4xl px-6 py-16">
+      <div class="divide-y divide-steel-200 border-t border-steel-200">
+        {H.sections.map(([t,d]) => (
+          <div class="grid gap-2 py-8 md:grid-cols-[220px_1fr] md:gap-8">
+            <h2 class="font-display text-lg font-700 text-navy-900">{t}</h2>
+            <p class="leading-relaxed text-navy-600">{d}</p>
+          </div>
+        ))}
+      </div>
+      <p class="mt-8 text-sm text-navy-500">{H.ask} <a href={'mailto:'+company.email} class="font-600 text-brand-red hover:underline">{company.email}</a></p>
+    </section>
+  </main>
+  <Footer lang={lang} />
+</Base>

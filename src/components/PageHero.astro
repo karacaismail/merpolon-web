@@ -1,0 +1,23 @@
+---
+// Işıklı sayfa başlığı — sitenin geri kalanıyla aynı editoryal dil.
+// (Eski koyu/blob sürümün yerini aldı; kullanan tüm TR/EN/DE sayfalar otomatik eşitlenir.)
+const { eyebrow, title, subtitle, image } = Astro.props;
+---
+<section class="border-b border-steel-200">
+  <div class={`mx-auto max-w-7xl ${image ? 'grid items-stretch lg:grid-cols-[1.2fr_1fr]' : ''}`}>
+    <div class={`px-6 py-14 lg:py-20 ${image ? 'flex flex-col justify-center lg:pr-14' : ''}`}>
+      {eyebrow && (
+        <p class="flex items-center gap-3 text-xs font-700 uppercase tracking-[0.22em] text-brand-red">
+          <span class="h-px w-10 bg-brand-red"></span>{eyebrow}
+        </p>
+      )}
+      <h1 class="mt-5 max-w-3xl font-display text-3xl font-800 leading-[1.06] tracking-tight text-navy-900 sm:text-5xl">{title}</h1>
+      {subtitle && <p class="mt-5 max-w-2xl text-lg leading-relaxed text-navy-500">{subtitle}</p>}
+    </div>
+    {image && (
+      <div class="relative min-h-[260px] bg-navy-900 lg:min-h-full">
+        <img src={image} alt={title} width="1500" height="1000" class="h-full w-full object-cover" />
+      </div>
+    )}
+  </div>
+</section>

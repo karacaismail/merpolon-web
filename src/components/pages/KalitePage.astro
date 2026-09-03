@@ -1,0 +1,100 @@
+---
+// Kalite & Garanti — TEK kaynak, 5 dil. Her dil rotası bu bileşeni `lang` ile çağırır,
+// böylece TR/EN/DE/RU/AR yapısal olarak birebir aynı içeriği alır (içerik paritesi).
+import Base from '../../layouts/Base.astro';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import Icon from '../Icon.astro';
+import { qualityPoints, features, company } from '../../data/site';
+
+const { lang = 'tr' } = Astro.props;
+
+const H = {
+  tr: {
+    title:'Kalite & Garanti — Merpolon | Merteks Elastomer',
+    eyebrow:'Kalite & Garanti',
+    h1:'Kalite ve güven bizim işimiz',
+    lede:'Ar-Ge temelli formül, mühendis kontrolünde imalat ve her aşamada kontrol; ürettiğimiz kauçuk silindirleri imalat hatalarına karşı 3 ay garanti altına alıyoruz.',
+    whyEy:'Neden Fark Ederiz', whyH:'Sahada kanıtlanmış üstünlükler',
+    quote:'“Özel yapıştırma tekniğimiz sayesinde metalden ayrılmalara son verdik. 25 yılı aşkın tecrübeyle her merdanede aynı standardı sunuyoruz.”',
+    ctaH:'Kalite standartlarımızı birlikte konuşalım.',
+  },
+  en: {
+    title:'Quality & Warranty — Merpolon | Merteks Elastomer',
+    eyebrow:'Quality & Warranty',
+    h1:'Quality and trust is our business',
+    lede:'R&D-based formula, manufacturing under engineer supervision and checks at every stage; our rubber cylinders carry a 3-month warranty against manufacturing defects.',
+    whyEy:'Why We Stand Out', whyH:'Field-proven advantages',
+    quote:'“Our special bonding technique put an end to separation from the metal. With 25+ years of experience we deliver the same standard in every roller.”',
+    ctaH:'Let’s talk about our quality standards.',
+  },
+  de: {
+    title:'Qualität & Garantie — Merpolon | Merteks Elastomer',
+    eyebrow:'Qualität & Garantie',
+    h1:'Qualität und Vertrauen sind unser Geschäft',
+    lede:'F&E-basierte Formel, Fertigung unter Ingenieuraufsicht und Prüfungen in jeder Phase; unsere Gummiwalzen haben 3 Monate Garantie gegen Fertigungsfehler.',
+    whyEy:'Warum wir überzeugen', whyH:'Praxiserprobte Vorteile',
+    quote:'„Dank unserer speziellen Bindetechnik gehört das Ablösen vom Metall der Vergangenheit an. Mit über 25 Jahren Erfahrung liefern wir in jeder Walze denselben Standard.“',
+    ctaH:'Sprechen wir über unsere Qualitätsstandards.',
+  },
+  ru: {
+    title:'Качество и гарантия — Merpolon | Merteks Elastomer',
+    eyebrow:'Качество и гарантия',
+    h1:'Качество и доверие — наша работа',
+    lede:'Рецептура на базе НИОКР, производство под контролем инженера и проверка на каждом этапе; производимые нами резиновые цилиндры мы обеспечиваем гарантией 3 месяца от производственных дефектов.',
+    whyEy:'Почему мы выделяемся', whyH:'Преимущества, доказанные на производстве',
+    quote:'«Благодаря нашей особой технике склейки мы покончили с отслоением от металла. С опытом более 25 лет мы обеспечиваем один и тот же стандарт в каждом вале.»',
+    ctaH:'Обсудим наши стандарты качества вместе.',
+  },
+  ar: {
+    title:'الجودة والضمان — Merpolon | Merteks Elastomer',
+    eyebrow:'الجودة والضمان',
+    h1:'الجودة والثقة هما عملنا',
+    lede:'تركيبة قائمة على البحث والتطوير، وتصنيع بإشراف هندسي، وفحص في كل مرحلة؛ ونشمل الأسطوانات المطاطية التي ننتجها بضمان 3 أشهر ضد عيوب التصنيع.',
+    whyEy:'لماذا نتميّز', whyH:'مزايا مثبتة في الميدان',
+    quote:'«بفضل تقنية اللصق الخاصة لدينا أنهينا مشكلة الانفصال عن المعدن. وبخبرة تتجاوز 25 عامًا نقدّم المعيار نفسه في كل أسطوانة.»',
+    ctaH:'لنتحدّث معًا عن معايير الجودة لدينا.',
+  },
+}[lang];
+---
+<Base title={H.title} lang={lang} path={lang === 'tr' ? '/kalite/' : `/${lang}/kalite/`}>
+  <Header lang={lang} seg="kalite/" />
+  <main id="main" class="bg-white">
+    <section class="border-b border-steel-200">
+      <div class="mx-auto max-w-4xl px-6 py-16 lg:py-20" data-reveal-group>
+        <p data-reveal class="flex items-center gap-3 text-xs font-700 uppercase tracking-[0.22em] text-brand-red"><span class="h-px w-10 bg-brand-red"></span>{H.eyebrow}</p>
+        <h1 data-reveal class="mt-6 font-display text-4xl font-800 leading-[1.04] tracking-tight text-navy-900 sm:text-5xl">{H.h1}</h1>
+        <p data-reveal class="mt-6 text-lg leading-relaxed text-navy-500">{H.lede}</p>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-6 py-20">
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4" data-reveal-group>
+        {qualityPoints.map(q => (
+          <div data-reveal class="border-t-2 border-brand-red bg-steel-50 p-7">
+            <Icon name={q.icon} class="h-7 w-7 text-navy-900"/>
+            <h3 class="mt-5 font-display text-lg font-700 text-navy-900">{q[lang]}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-navy-500">{q.d[lang]}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="border-y border-steel-200 bg-steel-50">
+      <div class="mx-auto max-w-7xl px-6 py-20">
+        <div class="max-w-2xl" data-reveal-group><p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.whyEy}</p><h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.whyH}</h2></div>
+        <div class="mt-12 grid border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group>
+          {features.map(f => (<div data-reveal class="bg-white p-7"><Icon name={f.icon} class="h-7 w-7 text-brand-red"/><h3 class="mt-5 font-display text-lg font-700 text-navy-900">{f[lang]}</h3><p class="mt-2 text-sm leading-relaxed text-navy-500">{f.d[lang]}</p></div>))}
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-4xl px-6 py-20 text-center" data-reveal>
+      <div class="mx-auto mb-6 h-px w-12 bg-brand-red"></div>
+      <p class="font-display text-2xl font-600 leading-snug tracking-tight text-navy-900 sm:text-3xl">{H.quote}</p>
+    </section>
+
+    <section class="bg-navy-900 text-white"><div class="mx-auto flex max-w-7xl flex-col items-start gap-8 px-6 py-20 lg:flex-row lg:items-center lg:justify-between"><h2 class="font-display text-3xl font-800 tracking-tight sm:text-4xl">{H.ctaH}</h2><a href={'tel:'+company.order.replace(/\s/g,'')} class="inline-flex shrink-0 items-center gap-2 bg-brand-red px-6 py-4 text-sm font-700 uppercase tracking-wider transition hover:bg-white hover:text-navy-900"><Icon name="phone" class="h-4 w-4"/>{company.order}</a></div></section>
+  </main>
+  <Footer lang={lang} />
+</Base>

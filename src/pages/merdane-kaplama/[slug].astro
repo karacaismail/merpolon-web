@@ -1,0 +1,11 @@
+---
+import CityPage from '../../components/CityPage.astro';
+import { coverage } from '../../data/site';
+const slugify = (s) => s.toLocaleLowerCase('tr').replace(/ı/g,'i').replace(/ç/g,'c').replace(/ğ/g,'g').replace(/ö/g,'o').replace(/ş/g,'s').replace(/ü/g,'u').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+export function getStaticPaths(){
+  const slugify = (s) => s.toLocaleLowerCase('tr').replace(/ı/g,'i').replace(/ç/g,'c').replace(/ğ/g,'g').replace(/ö/g,'o').replace(/ş/g,'s').replace(/ü/g,'u').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  return coverage.map(name => ({ params:{ slug: slugify(name) }, props:{ city:{ name, slug: slugify(name) } } }));
+}
+const { city } = Astro.props;
+---
+<CityPage city={city} lang="tr" />

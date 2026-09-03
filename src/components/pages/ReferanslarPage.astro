@@ -1,0 +1,209 @@
+---
+// Referanslar — TEK kaynak, 5 dil. En zengin TR sürümünden türetildi.
+// Dürüstlük notu: `references` dizisinde yalnızca gerçek referanslar var, sayı şişirilmez.
+// `coverage` illerinde ŞUBE YOKTUR — üretim İstanbul İOSB'de, oradan sevkiyat yapılır.
+// İl sayfaları (/merdane-kaplama/<il>/) yalnızca TR'de yayınlandığı için link sadece TR'de verilir.
+import Base from '../../layouts/Base.astro';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import Icon from '../Icon.astro';
+import { references, coverage, sectors, company } from '../../data/site';
+
+const { lang = 'tr' } = Astro.props;
+const base = lang === 'tr' ? '' : '/' + lang;
+const n = sectors.length;
+
+// CityPage.astro ile birebir aynı slug dönüşümü
+const trSlug = (s) => s.toLocaleLowerCase('tr').replace(/ı/g,'i').replace(/ç/g,'c').replace(/ğ/g,'g').replace(/ö/g,'o').replace(/ş/g,'s').replace(/ü/g,'u').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+
+// Rusça sayı-isim uyumu (21 отрасль / 22 отрасли / 25 отраслей)
+const ruPl = (v, f) => { const a = Math.abs(v) % 100, b = a % 10; return (a > 10 && a < 20) ? f[2] : (b > 1 && b < 5) ? f[1] : (b === 1) ? f[0] : f[2]; };
+
+const H = {
+  tr: {
+    title:'Referanslar — Türkiye Geneli | Merpolon',
+    ey:'Referanslar',
+    h1:"Türkiye'nin dört bir yanında tercih ediliyoruz",
+    lede:"Tekstil ve elyaf-iplik sektörünün önde gelen üreticileri, 15'i aşkın ilde Merpolon ve Merteks merdanelerini tercih ediyor.",
+    imgAlt:'Merteks kauçuk merdaneleri',
+    geo:'Türkiye',
+    stats:['Hizmet ili','Sektör','Yıllık tecrübe','Geneli sevkiyat'],
+    refEy:'Öne Çıkan Referanslar', refH:'Bize güvenen üreticiler', allSectors:'Tüm sektörler',
+    covEy:'Kapsam', covH:'Hizmet verdiğimiz iller',
+    covP:"Türkiye'nin başlıca tekstil ve sanayi merkezlerine sevkiyat yapıyoruz.",
+    distEy:'Sektörel Dağılım', distH:'Merdanelerimizin kullanıldığı alanlar',
+    quote:'“25 yılı aşkın süredir aynı kaliteyi sunuyoruz. Kauçuğun metale mükemmel yapışması ve sabit sertlik, sahada bizi tercih ettiren en önemli sebep.”',
+    ctaH:'Siz de referanslarımız arasına katılın.',
+    ctaP:'Ürünlerimizi işletmenizde denemek için bizimle iletişime geçin.',
+    contact:'İletişim',
+  },
+  en: {
+    title:'References — Merpolon | Merteks Elastomer',
+    ey:'References',
+    h1:'Preferred across Türkiye',
+    lede:'Leading textile and fiber-yarn manufacturers in more than 15 provinces choose Merpolon and Merteks rollers.',
+    imgAlt:'Merteks rubber rollers',
+    geo:'Türkiye',
+    stats:['Provinces served','Industries','Years of experience','Nationwide shipping'],
+    refEy:'Featured references', refH:'Manufacturers who trust us', allSectors:'All industries',
+    covEy:'Coverage', covH:'The provinces we serve',
+    covP:"We ship to Türkiye's leading textile and industrial hubs.",
+    distEy:'Industry breakdown', distH:'Where our rollers are used',
+    quote:'“For over 25 years we have delivered the same quality. The perfect bond of rubber to metal and stable hardness are the main reason plants choose us.”',
+    ctaH:'Join our references.',
+    ctaP:'Contact us to try our products on your line.',
+    contact:'Contact',
+  },
+  de: {
+    title:'Referenzen — Merpolon | Merteks Elastomer',
+    ey:'Referenzen',
+    h1:'Türkeiweit die erste Wahl',
+    lede:'Führende Textil- und Faser-Garn-Hersteller in über 15 Provinzen setzen auf Merpolon- und Merteks-Walzen.',
+    imgAlt:'Merteks Gummiwalzen',
+    geo:'Türkei',
+    stats:['Belieferte Provinzen','Branchen','Jahre Erfahrung','Landesweiter Versand'],
+    refEy:'Ausgewählte Referenzen', refH:'Hersteller, die uns vertrauen', allSectors:'Alle Branchen',
+    covEy:'Reichweite', covH:'Die Provinzen, die wir beliefern',
+    covP:'Wir versenden in die wichtigsten Textil- und Industriezentren der Türkei.',
+    distEy:'Branchenverteilung', distH:'Wo unsere Walzen im Einsatz sind',
+    quote:'„Seit über 25 Jahren liefern wir dieselbe Qualität. Die perfekte Haftung des Gummis am Metall und die konstante Härte sind der wichtigste Grund, warum man uns im Betrieb wählt.“',
+    ctaH:'Werden Sie Teil unserer Referenzen.',
+    ctaP:'Kontaktieren Sie uns, um unsere Produkte an Ihrer Anlage zu testen.',
+    contact:'Kontakt',
+  },
+  ru: {
+    title:'Референсы — Merpolon | Merteks Elastomer',
+    ey:'Референсы',
+    h1:'Нас выбирают по всей Турции',
+    lede:'Ведущие производители текстильной и волоконно-прядильной отрасли более чем в 15 городах выбирают валы Merpolon и Merteks.',
+    imgAlt:'Резиновые валы Merteks',
+    geo:'Турция',
+    stats:['Городов обслуживания', ruPl(n, ['Отрасль','Отрасли','Отраслей']), 'Лет опыта','Доставка по всей стране'],
+    refEy:'Избранные референсы', refH:'Производители, которые нам доверяют', allSectors:'Все отрасли',
+    covEy:'Охват', covH:'Города, которые мы обслуживаем',
+    covP:'Мы отправляем продукцию в основные текстильные и промышленные центры Турции.',
+    distEy:'Распределение по отраслям', distH:'Где применяются наши валы',
+    quote:'«Более 25 лет мы обеспечиваем одно и то же качество. Идеальная адгезия резины к металлу и стабильная твёрдость — главная причина, по которой нас выбирают на производстве.»',
+    ctaH:'Станьте одним из наших референсов.',
+    ctaP:'Свяжитесь с нами, чтобы испытать нашу продукцию на вашем производстве.',
+    contact:'Контакты',
+  },
+  ar: {
+    title:'المراجع — Merpolon | Merteks Elastomer',
+    ey:'المراجع',
+    h1:'خيار المصانع في عموم تركيا',
+    lede:'يختار كبار المنتجين في قطاع النسيج والألياف والغزل في أكثر من خمس عشرة مدينة أسطوانات Merpolon وMerteks.',
+    imgAlt:'أسطوانات Merteks المطاطية',
+    geo:'تركيا',
+    stats:['محافظة نخدمها','قطاعًا','سنة خبرة','شحن إلى عموم البلاد'],
+    refEy:'مراجع مختارة', refH:'منتجون يثقون بنا', allSectors:'كل القطاعات',
+    covEy:'نطاق الخدمة', covH:'المحافظات التي نخدمها',
+    covP:'نشحن إلى أبرز المراكز النسيجية والصناعية في تركيا.',
+    distEy:'التوزّع القطاعي', distH:'أين تُستخدم أسطواناتنا',
+    quote:'«نقدّم الجودة نفسها منذ أكثر من 25 عامًا. والتصاق المطاط المثالي بالمعدن والصلادة الثابتة هما السبب الأهم في اختيارنا في الميدان.»',
+    ctaH:'كونوا أنتم أيضًا ضمن مراجعنا.',
+    ctaP:'تواصلوا معنا لتجربة منتجاتنا في منشأتكم.',
+    contact:'اتصل بنا',
+  },
+}[lang];
+
+const statCells = [['15+', H.stats[0]], [String(n), H.stats[1]], ['25+', H.stats[2]], [H.geo, H.stats[3]]];
+---
+<Base title={H.title} lang={lang} path={`${base}/referanslar/`}>
+  <Header lang={lang} seg="referanslar/" />
+  <main id="main" class="bg-white">
+
+    <!-- HERO -->
+    <section class="border-b border-steel-200">
+      <div class="mx-auto grid max-w-7xl items-stretch lg:grid-cols-[1.2fr_1fr]">
+        <div class="flex flex-col justify-center px-6 py-16 lg:py-20 lg:pr-14" data-reveal-group>
+          <p data-reveal class="flex items-center gap-3 text-xs font-700 uppercase tracking-[0.22em] text-brand-red"><span class="h-px w-10 bg-brand-red"></span>{H.ey}</p>
+          <h1 data-reveal class="mt-6 font-display text-4xl font-800 leading-[1.04] tracking-tight text-navy-900 sm:text-5xl">{H.h1}</h1>
+          <p data-reveal class="mt-6 max-w-lg text-lg leading-relaxed text-navy-500">{H.lede}</p>
+        </div>
+        <div class="relative min-h-[280px] bg-navy-900 lg:min-h-full"><img src="/gallery/kaucuk-kapli-merdane-seti.webp" srcset="/gallery/kaucuk-kapli-merdane-seti-480.webp 480w, /gallery/kaucuk-kapli-merdane-seti-960.webp 960w, /gallery/kaucuk-kapli-merdane-seti.webp 1280w" sizes="(max-width: 768px) 100vw, 50vw" alt={H.imgAlt} width="1063" height="750" class="h-full w-full object-cover"/></div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="border-b border-steel-200 bg-steel-50">
+      <div class="mx-auto grid max-w-7xl grid-cols-2 divide-x divide-steel-200 lg:grid-cols-4">
+        {statCells.map(([v,l]) => (
+          <div class="px-6 py-8"><div class="font-display text-2xl font-800 text-navy-900">{v}</div><div class="mt-1 text-xs uppercase tracking-wider text-navy-500">{l}</div></div>
+        ))}
+      </div>
+    </section>
+
+    <!-- FEATURED REFERENCES -->
+    <section class="mx-auto max-w-7xl px-6 py-20">
+      <div class="max-w-2xl" data-reveal-group>
+        <p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.refEy}</p>
+        <h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.refH}</h2>
+      </div>
+      <div class="mt-12 grid border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group>
+        {references.map(r => { const [name, city] = r.split('—').map(x=>x.trim()); return (
+          <div data-reveal class="group flex items-center gap-4 bg-white p-6 transition hover:bg-navy-900">
+            <div class="flex h-14 w-14 shrink-0 items-center justify-center bg-steel-100 font-display text-xl font-800 text-navy-700 transition group-hover:bg-brand-red group-hover:text-white">{name.charAt(0)}</div>
+            <div><div class="font-display font-700 text-navy-900 transition group-hover:text-white">{name}</div><div class="flex items-center gap-1 text-xs uppercase tracking-wider text-navy-500"><Icon name="map-pin" class="h-3.5 w-3.5"/>{city}</div></div>
+          </div>
+        ); })}
+        <a href={`${base}/sektorler/`} class="group flex items-center justify-center gap-2 bg-steel-50 p-6 text-center text-sm font-700 uppercase tracking-wider text-navy-500 transition hover:bg-brand-red hover:text-white">{H.allSectors} <Icon name="arrow" class="h-4 w-4 transition group-hover:translate-x-1"/></a>
+      </div>
+    </section>
+
+    <!-- COVERAGE -->
+    <section class="border-y border-steel-200 bg-steel-50">
+      <div class="mx-auto max-w-7xl px-6 py-20">
+        <div class="grid gap-10 lg:grid-cols-[1fr_2fr] lg:items-center">
+          <div data-reveal>
+            <p class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.covEy}</p>
+            <h2 class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.covH}</h2>
+            <p class="mt-4 text-navy-500">{H.covP}</p>
+          </div>
+          <div class="flex flex-wrap gap-2.5" data-reveal-group>
+            {coverage.map(c => (lang === 'tr'
+              ? <a href={`/merdane-kaplama/${trSlug(c)}/`} data-reveal class="border border-steel-300 bg-white px-4 py-2 text-sm font-600 text-navy-700 transition hover:border-brand-red hover:text-brand-red">{c}</a>
+              : <span data-reveal class="border border-steel-300 bg-white px-4 py-2 text-sm font-600 text-navy-700">{c}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTOR DISTRIBUTION -->
+    <section class="mx-auto max-w-7xl px-6 py-20">
+      <div class="max-w-2xl" data-reveal-group>
+        <p data-reveal class="text-sm font-700 uppercase tracking-widest text-brand-red">{H.distEy}</p>
+        <h2 data-reveal class="mt-3 font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.distH}</h2>
+      </div>
+      <div class="mt-10 grid grid-cols-2 border-l border-t border-steel-200 [&>*]:border-b [&>*]:border-r [&>*]:border-steel-200 sm:grid-cols-3 lg:grid-cols-6" data-reveal-group>
+        {sectors.slice(0,12).map(s => (<div data-reveal class="flex flex-col items-center gap-2 bg-white px-3 py-6 text-center"><Icon name={s.icon} class="h-6 w-6 text-brand-red"/><span class="text-xs font-600 text-navy-700">{s[lang]}</span></div>))}
+      </div>
+    </section>
+
+    <!-- TESTIMONIAL -->
+    <section class="border-y border-steel-200 bg-navy-900 text-white">
+      <div class="mx-auto max-w-4xl px-6 py-20 text-center" data-reveal>
+        <div class="mx-auto mb-6 h-px w-12 bg-brand-red"></div>
+        <p class="font-display text-2xl font-600 leading-snug tracking-tight sm:text-3xl">{H.quote}</p>
+        <p class="mt-6 text-sm uppercase tracking-widest text-steel-400">Merteks Elastomer</p>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="bg-white">
+      <div class="mx-auto flex max-w-7xl flex-col items-start gap-8 px-6 py-20 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <h2 class="font-display text-3xl font-800 tracking-tight text-navy-900 sm:text-4xl">{H.ctaH}</h2>
+          <p class="mt-4 max-w-xl text-navy-500">{H.ctaP}</p>
+        </div>
+        <div class="flex shrink-0 flex-wrap gap-3">
+          <a href={'tel:'+company.order.replace(/\s/g,'')} class="inline-flex items-center gap-2 bg-brand-red px-6 py-4 text-sm font-700 uppercase tracking-wider text-white transition hover:bg-navy-900"><Icon name="phone" class="h-4 w-4"/>{company.order}</a>
+          <a href={`${base}/iletisim/`} class="inline-flex items-center gap-2 border-2 border-navy-900 px-6 py-4 text-sm font-700 uppercase tracking-wider text-navy-900 transition hover:bg-navy-900 hover:text-white">{H.contact}</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <Footer lang={lang} />
+</Base>
