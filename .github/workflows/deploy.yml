@@ -52,6 +52,11 @@ jobs:
           perl -pi -e 's{https://karacaismail\.github\.io/(?!merpolon/)}{https://karacaismail.github.io/merpolon/}g' dist/sitemap-0.xml dist/sitemap-index.xml
           touch dist/.nojekyll
 
+      # İlk yayın adımı ssh-agent'ı /tmp/ssh-auth.sock'a bağlamış durumda;
+      # ikinci adım aynı sokete bağlanamıyor. Soketi bırakıyoruz.
+      - name: SSH agent soketini serbest bırak
+        run: rm -f /tmp/ssh-auth.sock
+
       - name: Önizlemeyi yayınla
         uses: peaceiris/actions-gh-pages@v4
         with:
