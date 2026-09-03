@@ -1,6 +1,7 @@
 ---
 import { company, nav, ui, positioning, footerExtra } from '../data/site';
 import Icon from './Icon.astro';
+import Logo from './Logo.astro';
 const { lang = 'tr' } = Astro.props;
 const menu = [...nav[lang], ...footerExtra[lang]];
 const legalNote = { tr:'Tüm hakları saklıdır.', en:'All rights reserved.', de:'Alle Rechte vorbehalten.', ru:'Все права защищены.', ar:'جميع الحقوق محفوظة.' }[lang];
@@ -12,10 +13,7 @@ const factory = { tr:'İmalat', en:'Factory', de:'Fertigung', ru:'Произво
   <div class="mx-auto grid max-w-7xl gap-12 px-6 py-16 md:grid-cols-[1.2fr_1.4fr_1.3fr]">
     <!-- brand + socials -->
     <div>
-      <div class="flex items-center gap-3">
-        <img src="/brand/logo-mark.svg" alt="Merpolon" width="44" height="44" class="h-11 w-11" />
-        <span class="font-display text-2xl font-800 text-white">MER<span class="text-brand-redlite">POLON</span></span>
-      </div>
+      <Logo class="h-9 w-auto text-white" />
       <p class="mt-4 max-w-xs text-sm leading-relaxed text-steel-400">{positioning[lang]}</p>
       <div class="mt-6 flex flex-wrap items-center gap-3">
         <a href={company.instagram} target="_blank" rel="noopener" aria-label="Instagram" class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-steel-300 transition hover:border-brand-redlite hover:bg-white/5 hover:text-white"><Icon name="instagram" class="h-5 w-5"/></a>

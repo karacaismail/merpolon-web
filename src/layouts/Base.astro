@@ -68,7 +68,7 @@ const organization = {
   alternateName: ['Merpolon', 'Merteks Merdane', 'Merteks Elastomer'],
   brand: [{ '@type':'Brand', name:'Merpolon' }, { '@type':'Brand', name:'Merteks' }],
   url: `${SITE}/`,
-  logo: { '@type':'ImageObject', url: `${SITE}/brand/logo-mark.svg` },
+  logo: { '@type':'ImageObject', url: `${SITE}/icon-512.png`, width: 512, height: 512 },
   image: ogImage,
   description: defaultDesc,
   foundingDate: '1989',
@@ -138,7 +138,9 @@ const jsonld = JSON.stringify({ '@context':'https://schema.org', '@graph': graph
   {availLangs.map(l => <link rel="alternate" hreflang={l} href={urls[l]} />)}
   <link rel="alternate" hreflang="x-default" href={urls.tr} />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <meta name="theme-color" content="#0B1424" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#011A3B" />
   <meta name="author" content={company.legal} />
   <!-- Local SEO -->
   <meta name="geo.region" content="TR-34" />

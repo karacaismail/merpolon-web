@@ -1,6 +1,7 @@
 ---
 import { company, nav, ui, galleryCats } from '../data/site';
 import Icon from './Icon.astro';
+import Logo from './Logo.astro';
 const { lang = 'tr', seg = '' } = Astro.props;
 const items = nav[lang];
 const base = lang === 'tr' ? '' : '/' + lang;
@@ -18,9 +19,8 @@ const act = (href) => href === path || (isPort(href) && path.startsWith(base + '
 ---
 <header class="sticky top-0 z-40 border-b border-steel-200/70 bg-steel-50/80 backdrop-blur-md">
   <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3">
-    <a href={base + '/'} class="flex shrink-0 items-center gap-3" aria-label="Merpolon">
-      <img src="/brand/logo-mark.svg" alt="Merpolon" width="40" height="40" class="h-10 w-10" />
-      <span class="font-display text-xl font-800 tracking-tight text-navy-800">MER<span class="text-brand-red">POLON</span></span>
+    <a href={base + '/'} class="flex shrink-0 items-center" aria-label="Merpolon">
+      <Logo class="h-7 w-auto text-navy-900 sm:h-8" />
     </a>
 
     <nav class="hidden items-center gap-0.5 lg:flex">
