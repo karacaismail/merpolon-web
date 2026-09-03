@@ -27,55 +27,59 @@ function accordions() {
 
     const panelOf = (btn: HTMLElement) => {
       const sel = btn.getAttribute('data-accordion-target');
-      return sel ? document.querySelector<HTMLElement>(sel) : null;
+      return sel ? root.querySelector<HTMLElement>(sel) || document.querySelector<HTMLElement>(sel) : null;
     };
 
     const paint = (btn: HTMLElement, open: boolean) => {
-      const on = (btn.dataset.activeClasses || '').split(/\s+/).filter(Boolean);
+      const on  = (btn.dataset.activeClasses   || '').split(/\s+/).filter(Boolean);
       const off = (btn.dataset.inactiveClasses || '').split(/\s+/).filter(Boolean);
       btn.classList.remove(...(open ? off : on));
       btn.classList.add(...(open ? on : off));
       btn.setAttribute('aria-expanded', String(open));
     };
 
+    // Yükseklik geçişi: ölçülmüş piksel + CSS transition. Her tarayıcıda çalışır.
+    const apply = (panel: HTMLElement, open: boolean, animate: boolean) => {
+      panel.style.overflow = 'hidden';
+      if (!animate || reduce) {
+        panel.style.transition = 'none';
+        panel.style.height = open ? 'auto' : '0px';
+        panel.style.opacity = open ? '1' : '0';
+        void panel.offsetHeight;             // reflow → transition'ı geri aç
+        panel.style.transition = '';
+        return;
+      }
+      if (open) {
+        panel.style.height = panel.scrollHeight + 'px';
+        panel.style.opacity = '1';
+        const done = (e: TransitionEvent) => {
+          if (e.propertyName !== 'height') return;
+          panel.removeEventListener('transitionend', done);
+          panel.style.height = 'auto';       // içerik sonradan değişirse doğru kalsın
+          panel.style.overflow = '';
+          ScrollTrigger.refresh();
+        };
+        panel.addEventListener('transitionend', done);
+      } else {
+        panel.style.height = panel.getBoundingClientRect().height + 'px';   // auto → px
+        void panel.offsetHeight;                                            // reflow
+        panel.style.height = '0px';
+        panel.style.opacity = '0';
+      }
+    };
+
     const setOpen = (btn: HTMLElement, open: boolean, animate = true) => {
       const panel = panelOf(btn);
       if (!panel) return;
-      const inner = (panel.firstElementChild as HTMLElement) || panel;
       paint(btn, open);
-
-      const icon = btn.querySelector<SVGElement>('[data-accordion-icon]');
-      if (icon) {
-        if (animate && !reduce) gsap.to(icon, { rotation: open ? 180 : 0, duration: DUR.fast, ease: EASE.inOut });
-        else gsap.set(icon, { rotation: open ? 180 : 0 });
-      }
-
-      if (!animate || reduce) {
-        gsap.set(panel, { height: open ? 'auto' : 0, opacity: open ? 1 : 0 });
-        panel.style.overflow = open ? '' : 'hidden';
-        return;
-      }
-
-      gsap.killTweensOf([panel, inner]);
-      panel.style.overflow = 'hidden';
-      if (open) {
-        gsap.set(panel, { height: 'auto' });
-        const h = panel.offsetHeight;
-        gsap.fromTo(panel, { height: 0, opacity: 0 },
-          { height: h, opacity: 1, duration: DUR.base, ease: EASE.inOut,
-            onComplete: () => { panel.style.height = 'auto'; panel.style.overflow = ''; ScrollTrigger.refresh(); } });
-        gsap.fromTo(inner, { y: -10, opacity: 0 },
-          { y: 0, opacity: 1, duration: DUR.base, ease: EASE.out, delay: 0.06 });
-      } else {
-        gsap.to(panel, { height: 0, opacity: 0, duration: DUR.fast + 0.1, ease: EASE.inOut,
-          onComplete: () => ScrollTrigger.refresh() });
-      }
+      apply(panel, open, animate);
     };
 
     buttons.forEach((btn) => {
       const panel = panelOf(btn);
       if (!panel) return;
-      panel.classList.remove('hidden');           // yüksekliği biz yönetiyoruz
+      panel.classList.remove('hidden');        // yüksekliği artık biz yönetiyoruz
+      panel.setAttribute('data-acc-panel', '');
       setOpen(btn, btn.getAttribute('aria-expanded') === 'true', false);
 
       btn.addEventListener('click', (e) => {

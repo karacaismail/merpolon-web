@@ -202,8 +202,14 @@ const jsonld = JSON.stringify({ '@context':'https://schema.org', '@graph': graph
     nav a:hover::after { transform: scaleX(1); }
     nav a[aria-current="page"]::after, nav a.bg-brand-red::after { display: none; }
 
-    /* Akordiyon panelleri: JS yüksekliği yönetir, geçiş GSAP'te */
-    [data-accordion] [data-accordion-icon] { transform-origin: 50% 50%; }
+    /* ── Akordiyon ────────────────────────────────────────────────
+       Yükseklik JS'te ölçülüp piksel olarak atanır; geçişi CSS yapar. */
+    [data-acc-panel] {
+      overflow: hidden;
+      transition: height .45s var(--ease), opacity .3s var(--ease);
+    }
+    [data-accordion-icon] { transform-origin: 50% 50%; transition: transform .4s var(--ease); }
+    [aria-expanded="true"] [data-accordion-icon] { transform: rotate(180deg); }
 
     /* Form alanları */
     input, select, textarea { transition: border-color .3s var(--ease), box-shadow .3s var(--ease), background-color .3s var(--ease); }
