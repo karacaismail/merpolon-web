@@ -1,0 +1,61 @@
+name: Derle ve yayınla
+
+# Kaynağa push → derle → hem GitHub Pages hem merpolon.com yayın deposu güncellenir.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      # ── 1) merpolon.com · kök yol, /merpolon ön eki YOK ───────────
+      - name: merpolon.com derlemesi
+        run: |
+          rm -rf dist
+          SITE_URL="https://merpolon.com/" npm run build
+          perl -pi -e 's{^Sitemap: .*$}{Sitemap: https://merpolon.com/sitemap-index.xml}' dist/robots.txt
+          touch dist/.nojekyll
+
+      - name: Yayın deposuna gönder
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          deploy_key: ${{ secrets.SITE_DEPLOY_KEY }}
+          external_repository: karacaismail/merpolon-site
+          publish_branch: main
+          publish_dir: ./dist
+          force_orphan: true
+          commit_message: "site ${{ github.sha }}"
+
+      # ── 2) GitHub Pages önizlemesi · /merpolon alt yolu ───────────
+      - name: Önizleme derlemesi
+        run: |
+          rm -rf dist
+          npm run build
+          find dist -name '*.html' -print0 | xargs -0 perl -pi -e 's/(href|src)="\/(?!\/)/$1="\/merpolon\//g'
+          find dist -name '*.html' -print0 | xargs -0 perl -pi -e 's{srcset="([^"]*)"}{my $v=$1; $v =~ s{(\A|,\s*)/(?!/)}{$1/merpolon/}g; qq{srcset="$v"}}ge'
+          find dist -name '*.css'  -print0 | xargs -0 perl -pi -e 's/url\(\/(?!\/)/url(\/merpolon\//g'
+          perl -pi -e 's{https://karacaismail\.github\.io/(?!merpolon/)}{https://karacaismail.github.io/merpolon/}g' dist/sitemap-0.xml dist/sitemap-index.xml
+          touch dist/.nojekyll
+
+      - name: Önizlemeyi yayınla
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./dist
+          force_orphan: true
