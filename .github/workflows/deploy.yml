@@ -38,7 +38,10 @@ jobs:
           external_repository: karacaismail/merpolon-site
           publish_branch: main
           publish_dir: ./dist
-          force_orphan: true
+          # force_orphan KULLANMA: her yayında geçmişi silip ebeveynsiz commit yazar,
+          # sunucudaki klonla ortak ata kalmaz ve CyberPanel'in Pull'u
+          # "divergent branches" ile reddeder. Doğrusal geçmiş → Pull fast-forward eder.
+          force_orphan: false
           commit_message: "site ${{ github.sha }}"
 
       # ── 2) GitHub Pages önizlemesi · /merpolon alt yolu ───────────
