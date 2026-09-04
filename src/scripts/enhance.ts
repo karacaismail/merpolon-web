@@ -128,7 +128,7 @@ function reveals() {
    ══════════════════════════════════════════════════════════════ */
 function parallax() {
   const items = Array.from(document.querySelectorAll<HTMLElement>('[data-parallax]')).map((el) => ({
-    el, amt: Math.min(parseFloat(el.dataset.parallax || '') || 12, 16),   // pay %25 → üst sınır 16
+    el, amt: Math.min(parseFloat(el.dataset.parallax || '') || 26, 29),   // pay %70 → üst sınır 29
     host: (el.closest('[data-parallax-host]') as HTMLElement) || el.parentElement || el,
   }));
   if (!items.length) return;

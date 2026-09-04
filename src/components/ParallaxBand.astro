@@ -1,17 +1,17 @@
 ---
 /*  Arka plan görselli tam genişlik bant — kaydırdıkça görsel yavaş kayar.
 
-    <ParallaxBand img="/gallery/x.webp" amount="14" overlay="strong">
+    <ParallaxBand img="/gallery/x.webp" amount="26" overlay="strong">
       …içerik…
     </ParallaxBand>
 
-    Not: görsel kapsayıcısından %50 uzun (h-[150%], top -25%) — kayma payı buradan gelir.
-    Kenar açılmaması için: amount × 1.5 ≤ 25 → amount ≤ 16.
-    Hareket miktarı yüzde; 12 varsayılan.                                        */
+    Görsel kapsayıcıdan %140 uzun (h-[240%], top -70%) — kayma payı buradan gelir.
+    Kısıt: amount × 2.4 ≤ 70  →  amount ≤ 29. Varsayılan 26 (kapsayıcı boyunun
+    %62,4'ü kadar tek yönlü kayma). Payı aşarsan uçlarda görselin kenarı açılır.  */
 const {
   img,
   alt = '',
-  amount = 12,
+  amount = 26,
   overlay = 'base',            // 'base' | 'strong' | 'soft'
   class: cls = '',
   id,
@@ -36,7 +36,7 @@ const veil = {
     alt={alt}
     aria-hidden={alt ? undefined : 'true'}
     width="1500" height="1000" loading="lazy" decoding="async"
-    class="pointer-events-none absolute left-0 top-[-25%] -z-10 h-[150%] w-full object-cover"
+    class="pointer-events-none absolute left-0 top-[-70%] -z-10 h-[240%] w-full object-cover"
   />
   <div class={`pointer-events-none absolute inset-0 -z-10 ${veil}`}></div>
   <slot />
