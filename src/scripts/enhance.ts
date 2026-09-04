@@ -127,13 +127,29 @@ function reveals() {
    3 · PARALLAX — arka plan görselleri kapsayıcıya göre kayar
    ══════════════════════════════════════════════════════════════ */
 function parallax() {
-  if (reduce) return;
-  gsap.utils.toArray<HTMLElement>('[data-parallax]').forEach((el) => {
-    const amt = parseFloat(el.dataset.parallax || '') || 9;   // yüzde
-    gsap.fromTo(el, { yPercent: -amt },
-      { yPercent: amt, ease: 'none',
-        scrollTrigger: { trigger: el.parentElement || el, start: 'top bottom', end: 'bottom top', scrub: 0.6 } });
-  });
+  const items = Array.from(document.querySelectorAll<HTMLElement>('[data-parallax]')).map((el) => ({
+    el, amt: Math.min(parseFloat(el.dataset.parallax || '') || 12, 16),   // pay %25 → üst sınır 16
+    host: (el.closest('[data-parallax-host]') as HTMLElement) || el.parentElement || el,
+  }));
+  if (!items.length) return;
+  if (reduce) { items.forEach(({ el }) => (el.style.transform = 'none')); return; }
+
+  // Doğrudan scroll dinleyicisi — GSAP ticker'a (rAF) bağlı DEĞİL.
+  // Scroll olayları zaten kare hızında sınırlı; birkaç eleman için ölçüm+yazma ucuz.
+  const update = () => {
+    const vh = window.innerHeight;
+    for (const { el, amt, host } of items) {
+      const r = host.getBoundingClientRect();
+      if (r.bottom < -300 || r.top > vh + 300) continue;   // ekran dışını atla
+      // host ekranın altındayken -1, üstünden çıkarken +1
+      const p = ((vh - r.top) / (vh + r.height)) * 2 - 1;
+      el.style.transform = `translate3d(0, ${(p * amt).toFixed(2)}%, 0)`;
+    }
+  };
+  update();
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  window.addEventListener('load', update);
 }
 
 /* ══════════════════════════════════════════════════════════════

@@ -1,0 +1,43 @@
+---
+/*  Arka plan görselli tam genişlik bant — kaydırdıkça görsel yavaş kayar.
+
+    <ParallaxBand img="/gallery/x.webp" amount="14" overlay="strong">
+      …içerik…
+    </ParallaxBand>
+
+    Not: görsel kapsayıcısından %50 uzun (h-[150%], top -25%) — kayma payı buradan gelir.
+    Kenar açılmaması için: amount × 1.5 ≤ 25 → amount ≤ 16.
+    Hareket miktarı yüzde; 12 varsayılan.                                        */
+const {
+  img,
+  alt = '',
+  amount = 12,
+  overlay = 'base',            // 'base' | 'strong' | 'soft'
+  class: cls = '',
+  id,
+} = Astro.props;
+
+const srcset = img
+  ? `${img.replace('.webp', '-480.webp')} 480w, ${img.replace('.webp', '-960.webp')} 960w, ${img} 1500w`
+  : undefined;
+
+const veil = {
+  soft:   'bg-navy-900/60',
+  base:   'bg-navy-900/78',
+  strong: 'bg-navy-900/88',
+}[overlay];
+---
+<section id={id} data-parallax-host class={`relative isolate overflow-hidden bg-navy-900 text-white ${cls}`}>
+  <img
+    data-parallax={String(amount)}
+    src={img}
+    srcset={srcset}
+    sizes="100vw"
+    alt={alt}
+    aria-hidden={alt ? undefined : 'true'}
+    width="1500" height="1000" loading="lazy" decoding="async"
+    class="pointer-events-none absolute left-0 top-[-25%] -z-10 h-[150%] w-full object-cover"
+  />
+  <div class={`pointer-events-none absolute inset-0 -z-10 ${veil}`}></div>
+  <slot />
+</section>

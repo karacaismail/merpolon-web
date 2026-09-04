@@ -4,6 +4,7 @@
 import Base from '../../layouts/Base.astro';
 import Header from '../Header.astro';
 import Footer from '../Footer.astro';
+import ParallaxBand from '../ParallaxBand.astro';
 import Icon from '../Icon.astro';
 import { services, process, company, coverage } from '../../data/site';
 
@@ -142,12 +143,12 @@ const H = {
     )}
 
     <!-- 5 · CTA -->
-    <section class="bg-navy-900 text-white">
+    <ParallaxBand img="/gallery/kaucuk-kapli-silindir.webp" amount="14" overlay="base">
       <div class="mx-auto flex max-w-7xl flex-col items-start gap-8 px-6 py-20 lg:flex-row lg:items-center lg:justify-between">
         <h2 class="font-display text-3xl font-800 tracking-tight sm:text-4xl">{H.ctaH}</h2>
         <a href={'tel:'+company.order.replace(/\s/g,'')} class="inline-flex shrink-0 items-center gap-2 bg-brand-red px-6 py-4 text-sm font-700 uppercase tracking-wider transition hover:bg-white hover:text-navy-900"><Icon name="phone" class="h-4 w-4"/>{company.order}</a>
       </div>
-    </section>
+    </ParallaxBand>
 
   </main>
   <Footer lang={lang} />

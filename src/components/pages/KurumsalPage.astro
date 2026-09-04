@@ -4,6 +4,7 @@
 import Base from '../../layouts/Base.astro';
 import Header from '../Header.astro';
 import Footer from '../Footer.astro';
+import ParallaxBand from '../ParallaxBand.astro';
 import Icon from '../Icon.astro';
 import LiquidBlob from '../LiquidBlob.astro';
 import { company, stats, timeline, visionMission } from '../../data/site';
@@ -267,7 +268,7 @@ const tlItems = H.tl.map(([year, t, d], i) => ({ year, t, d, icon: tlIcons[i] ||
     </section>
 
     <!-- CTA -->
-    <section class="bg-navy-900 text-white">
+    <ParallaxBand img="/gallery/poliuretan-merdane-uretimi.webp" amount="14" overlay="base">
       <div class="mx-auto flex max-w-7xl flex-col items-start gap-8 px-6 py-20 lg:flex-row lg:items-center lg:justify-between">
         <h2 class="font-display text-3xl font-800 tracking-tight sm:text-4xl">{H.ctaH}</h2>
         <div class="flex shrink-0 flex-wrap gap-3">
@@ -275,7 +276,7 @@ const tlItems = H.tl.map(([year, t, d], i) => ({ year, t, d, icon: tlIcons[i] ||
           <a href={`${base}/uretim/`} class="inline-flex items-center gap-2 border border-white/30 px-6 py-4 text-sm font-700 uppercase tracking-wider transition hover:bg-white/10">{H.cta2}</a>
         </div>
       </div>
-    </section>
+    </ParallaxBand>
 
   </main>
   <Footer lang={lang} />

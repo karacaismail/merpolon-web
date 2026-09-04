@@ -6,6 +6,7 @@
 import Base from '../../layouts/Base.astro';
 import Header from '../Header.astro';
 import Footer from '../Footer.astro';
+import ParallaxBand from '../ParallaxBand.astro';
 import Icon from '../Icon.astro';
 import { references, coverage, sectors, company } from '../../data/site';
 
@@ -182,13 +183,13 @@ const statCells = [['15+', H.stats[0]], [String(n), H.stats[1]], ['25+', H.stats
     </section>
 
     <!-- TESTIMONIAL -->
-    <section class="border-y border-steel-200 bg-navy-900 text-white">
+    <ParallaxBand img="/gallery/cift-merdane-grubu.webp" amount="14" overlay="base">
       <div class="mx-auto max-w-4xl px-6 py-20 text-center" data-reveal>
         <div class="mx-auto mb-6 h-px w-12 bg-brand-red"></div>
         <p class="font-display text-2xl font-600 leading-snug tracking-tight sm:text-3xl">{H.quote}</p>
         <p class="mt-6 text-sm uppercase tracking-widest text-steel-400">Merteks Elastomer</p>
       </div>
-    </section>
+    </ParallaxBand>
 
     <!-- CTA -->
     <section class="bg-white">
